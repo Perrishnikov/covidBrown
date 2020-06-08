@@ -1,3 +1,4 @@
 # covidBrown
 
-this is a test
+https://perrishnikov.github.io/covidBrown/
+
