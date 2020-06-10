@@ -70,23 +70,21 @@ function makeCountyChart(days, max, features) {
   const yPixelsPer = 2;
   const yLabelSpacing = 10;
   const height = ((max % yLabelSpacing) + max + yLabelSpacing) * yPixelsPer;
-  console.log(`height: ${height}`);
   const tableHeight = height + 80;
   let yLines = '';
   let yLabels = '';
 
-  //table 
+  //table id="county"
   const width = (days * (barWidth + barSpacing) + startX);
-  console.log(`width: `, width);
-
-  //vertical line
-  for (let i = height; i > 0; i -= yLabelSpacing * yPixelsPer) {
-    yLines += `<line stroke="gray" x1="${startX}" y1="${i}" x2="${width}" y2="${i}"></line>`
-  }
 
   //vertical numbers
-  for (let i = 0; i <= height; i += yLabelSpacing * yPixelsPer) {
-    yLabels += `<text x="${startX - 5}" y="${height - i}">${i / yPixelsPer}</text>`
+  for (let i = 0; i < height; i += yLabelSpacing * yPixelsPer) {
+    yLabels += `<text x="${startX - 5}" y="${height - i + 4}">${i / yPixelsPer}</text>`
+  }
+
+  //vertical lines - gray
+  for (let i = height; i > 0; i -= yLabelSpacing * yPixelsPer) {
+    yLines += `<line stroke="gray" x1="${startX}" y1="${i}" x2="${width + barSpacing}" y2="${i}"></line>`
   }
 
 
@@ -95,7 +93,7 @@ function makeCountyChart(days, max, features) {
     const att = features[i].attributes;
     // console.log(att);
 
-    bars += `<rect x="${startX + i * (barWidth + barSpacing)}" y="${height - att.POS_NEW * yPixelsPer}" width="${barWidth}px" height="${att.POS_NEW * yPixelsPer}px" data-positive="${att.POS_NEW}"/>`
+    bars += `<rect x="${startX + 10 + i * (barWidth + barSpacing)}" y="${height - att.POS_NEW * yPixelsPer}" width="${barWidth}px" height="${att.POS_NEW * yPixelsPer}px" data-positive="${att.POS_NEW}"/>`
 
 
     //adjust spacing for double digit dates
@@ -105,98 +103,50 @@ function makeCountyChart(days, max, features) {
       // let date = new Date(att.LoadDttm).getDate();
       // let month = new Date(att.LoadDttm).getMonth();
       let display = `${date.getMonth()}/${date.getDate()}`;
-console.log(display.length);
       if (display.toString().length == 2) half += 3;
       if (display.toString().length == 3) half += 6;
       if (display.toString().length == 4) half += 9;
       // if (display.toString().length == 4) half += 13;
 
-      xLabels += `<text x="${startX + i * (barWidth + barSpacing) + half}" y="${height + 15}">${display}</text>`
+      xLabels += `<text x="${startX + 10 + i * (barWidth + barSpacing) + half}" y="${height + 15}">${display}</text>`
     }
   }
 
 
-  //parse monthLines
-  let monthHolder = {};
-  let monthLine = '';
-  for (let i = 0; i < features.length; i++) {
-    const att = features[i].attributes;
-    let month = monthNames(new Date(att.LoadDttm).getMonth());
-    // console.log(month);
 
-    if (!monthHolder[month]) {
-      monthHolder[month] = 0;
-    }
-    if (monthHolder[month] === 0) {
-      monthHolder[month] += 1;
-    } else {
-      monthHolder[month] += 1;
-    }
-  }
-
-  //draw monthLines
-  let dayCount = 0;
-  let sink = 0;
-  for (const [key, value] of Object.entries(monthHolder)) {
-    let i = value;
-    // console.log(monthHolder[month]);
-    console.log(`${key}: ${value}`);
-    // for (let i = 0; i < features.length; i++) {
-    // const att = features[i].attributes;
-    // console.log(att);
-
-    var color = random_rgba();
-
-    monthLine += `<line stroke="${color}" x1="${startX + dayCount * (barWidth + barSpacing)}" y1="${height + 20 + sink}" x2="${startX + dayCount + value * (barWidth + barSpacing)}" y2="${height + 20 + sink}"></line>`
-
-    dayCount += value;
-    sink += 2;
-    // }
-    console.log(`dayCount:`, dayCount);
-
-
-  }
-  function random_rgba() {
-    var o = Math.round, r = Math.random, s = 255;
-    return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
-}
-
-  console.log(monthHolder);
-
-  const county = document.querySelector('#county');
-  county.setAttribute('width', width + startX);
-  county.setAttribute('height', tableHeight);
+  // const county = document.querySelector('#county');
+  const county = document.querySelector('#svg-wrapper');
   county.innerHTML = `
-    <title id="title">Brown County Covid Cases</title>
-
-    <g class="labels y-labels">
-      <g>
-        ${yLines}
-      </g>
-      <g>
+    
+    <svg style="position: absolute; background-color: dimgray" width="${startX + 3}" height="${tableHeight}">
+      <title id="title">Brown County Covid Cases</title>
+      <g class="labels y-labels" transform="translate(0)">
         ${yLabels}
       </g>
       <g id="yAxis">
         <line x1="${startX}" y1="0" x2="${startX}" y2="${height}"></line>
       </g>
-      <text x="${startX / 2}" y="${height / 2}" transform="rotate(-90,${startX / 2},${height / 2})" class="label-title">New Cases</text>
-    </g>
+      <text x="${startX / 2}" y="${tableHeight / 2}" transform="rotate(-90,${startX / 2},${tableHeight / 2})" class="label-title">New Cases</text>
 
-    <g class="labels x-labels">
-      <g >
+      <line class="xAxis" x1="${startX}" y1="${height}" x2="${width}" y2="${height}"></ line>
+    </svg>
+
+    <svg x="${startX}" height="${tableHeight}" width="${width + startX}" class="labels x-labels">
+      <g>
+        ${yLines}
+      </g>
+      <g>
         ${bars}
       </g>
       <g class="bars-labels">
         ${xLabels}
       </g>
-      <g class="">
-        ${monthLine}
-      </g>
+
       <g id="xAxis">
-        <line x1="${startX}" y1="${height}" x2="${width}" y2="${height}"></ line>
+        <line class="xAxis" x1="${startX}" y1="${height}" x2="${width + barSpacing}" y2="${height}"></ line>
       </g>
 
-    </g>
+    </svg>
   `
 };
 
