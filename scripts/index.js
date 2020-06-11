@@ -97,7 +97,7 @@ function makeChart(days, max, features) {
       x="${0 + 10 + i * (barWidth + barSpacing)}" 
       y="${height - att.POS_NEW * yPixelsPer}" 
       width="${barWidth}px" 
-      height="${att.POS_NEW > 0 ? att.POS_NEW : 0 * yPixelsPer}px" 
+      height="${att.POS_NEW * yPixelsPer}px" 
       data-positive="${att.POS_NEW}"/>`
 
     //adjust spacing for double digit dates
