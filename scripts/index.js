@@ -91,16 +91,21 @@ function makeChart(days, max, features) {
   //horizontal bars
   for (let i = 0; i < features.length; i++) {
     const att = features[i].attributes;
-    // console.log(att);
+    console.log(att.POS_NEW * yPixelsPer);
 
-    bars += `<rect x="${0 + 10 + i * (barWidth + barSpacing)}" y="${height - att.POS_NEW * yPixelsPer}" width="${barWidth}px" height="${att.POS_NEW * yPixelsPer}px" data-positive="${att.POS_NEW}"/>`
-
+    bars += `<rect 
+      x="${0 + 10 + i * (barWidth + barSpacing)}" 
+      y="${height - att.POS_NEW * yPixelsPer}" 
+      width="${barWidth}px" 
+      height="${att.POS_NEW > 0 ? att.POS_NEW : 0 * yPixelsPer}px" 
+      data-positive="${att.POS_NEW}"/>`
 
     //adjust spacing for double digit dates
-    if (i % 3 == 0) {
+    if (i % 2 == 0) {
       let half = (barWidth + barSpacing) / 2;
       let date = new Date(att.LoadDttm);
-      let display = `${date.getMonth()}/${date.getDate()}`;
+      // console.log(`${date.getMonth()+ 1}/${date.getDate()}`);
+      let display = `${date.getMonth() +1}/${date.getDate()}`;
       if (display.toString().length == 2) half += 3;
       if (display.toString().length == 3) half += 6;
       if (display.toString().length == 4) half += 9;
@@ -123,6 +128,7 @@ function makeChart(days, max, features) {
         <text x="${startX / 2}" y="${tableHeight / 2 -6}" transform="rotate(-90,${startX / 2},${tableHeight / 2})" class="label-title">New Cases</text>
 
         <line class="xAxis" x1="${startX}" y1="${height}" x2="${width}" y2="${height}"></ line>
+
       </svg>
     </div>
 
@@ -153,8 +159,29 @@ function makeCountiesDropdown(){
 };
 
 window.onload = () => {
-  const url = '../data/sampleQuery2.json';
+  
+  const dropdown = document.querySelector('#county-drop')
+  .addEventListener('change', e => {
+    const value = e.target.value;
+    console.log(e.target.value);
+    const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'County'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,POS_NEW, NEG_NEW, TEST_NEW&outSR=4326&f=json`;
+    // `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?outFields=*&where=GEO%20%3D%20'County'%20AND%20NAME%20%3D%20'Rusk'`
 
+    getJson(url)
+    .then(({ features }) => {
+      // updateDomComponent('thisId');
+      // console.log(features);
+      const max = parseData.getMaxY(features);
+      const days = parseData.getDays(features);
+      let counties;
+
+      makeChart(days, max, features)
+
+    });
+  });
+
+
+  const url = '../data/sampleQuery2.json';
   getJson(url)
     .then(({ features }) => {
       // updateDomComponent('thisId');
