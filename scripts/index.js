@@ -30,7 +30,7 @@ async function getJson(url) {
 
 const parseData = {
   getMaxY: data => {
-    let max = 0;
+    let max = 60;
 
     if (Array.isArray(data)) {
       data.forEach(day => {
@@ -70,7 +70,7 @@ function makeChart(days, max, features) {
   const yPixelsPer = 2;
   const yLabelSpacing = 10;
   const height = ((max % yLabelSpacing) + max + yLabelSpacing) * yPixelsPer;
-  const tableHeight = height + 40;
+  const tableHeight = height + 26;
   let yLines = '';
   let yLabels = '';
 
@@ -91,7 +91,6 @@ function makeChart(days, max, features) {
   //horizontal bars
   for (let i = 0; i < features.length; i++) {
     const att = features[i].attributes;
-    console.log(att.POS_NEW * yPixelsPer);
 
     bars += `<rect 
       x="${0 + 10 + i * (barWidth + barSpacing)}" 
@@ -164,7 +163,7 @@ window.onload = () => {
   .addEventListener('change', e => {
     const value = e.target.value;
     console.log(e.target.value);
-    const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'County'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,POS_NEW, NEG_NEW, TEST_NEW&outSR=4326&f=json`;
+    const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'County'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,POS_NEW,NEG_NEW,TEST_NEW&outSR=4326&f=json`;
     // `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?outFields=*&where=GEO%20%3D%20'County'%20AND%20NAME%20%3D%20'Rusk'`
 
     getJson(url)
@@ -180,6 +179,8 @@ window.onload = () => {
     });
   });
 
+  const t = new Date();
+  document.querySelector('#todaysDate').innerHTML = `${t.getMonth() +1}/${t.getUTCDate()}/${t.getUTCFullYear()}`
 
   const url = '../data/sampleQuery2.json';
   getJson(url)
