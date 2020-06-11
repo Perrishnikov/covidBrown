@@ -9,12 +9,32 @@
 </head>
 
 <body>
-  <div id="context">Hello</div>
-  <div id="svg-wrapper" class="svg-wrapper">
-    <svg id="county" class="graph" width="0" height="0" xmlns="http://www.w3.org/2000/svg">
+  <div id="context-wrapper">
+    <div id="context-title">
+      Reported Wisconsin Covid-19 Cases
+    </div>
 
-      <!-- <title id="title">Brown County Covid Cases</title> -->
-      <!-- <g class="grid x-grid" id="xGrid">
+    <div id="context-select">
+      <label>Select County:
+        <select id="county-drop" name="counties">
+          <option value="default" selected >Select</option>
+        </select>
+      </label>
+
+      <span>Updated:</span>
+      <span id="todaysDate">today</span>
+
+    </div>
+
+    
+
+  </div>
+
+  <div id="svg-wrapper" class="svg-wrapper">
+    <!-- <svg id="county" class="graph" width="0" height="0" xmlns="http://www.w3.org/2000/svg"> -->
+
+    <!-- <title id="title">Brown County Covid Cases</title> -->
+    <!-- <g class="grid x-grid" id="xGrid">
         <line x1="90" x2="90" y1="5" y2="371"></line>
       </g>
       <g class="grid y-grid" id="yGrid">
@@ -43,7 +63,7 @@
         <circle cx="697" cy="204" data-value="6.7" r="5"></circle>
         <circle cx="100" cy="0" data-value="" r="10"></circle>
       </g> -->
-    </svg>
+    <!-- </svg> -->
   </div>
   <div id="context">World</div>
 

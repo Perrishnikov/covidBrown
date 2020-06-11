@@ -7,16 +7,60 @@ body {
   display: flex;
   flex-direction: column;
 }
+#context-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  padding: 12px;
+}
+#context-title {
+  display: flex;
+  padding: 4px;
+  font-size: larger;
+  /* align-self: center; */
+  /* width: 100%; */
+}
+#context-select {
+  display: flex;
+  text-align: center;
+  /* justify-content: baseline; */
+  align-items: center;
+}
+#context-select label {
+  display: flex;
+  flex-direction: row;
+  padding: 4px;
+  min-width: 120px;
+  align-items: center;
+
+  /* background-color: aqua; */
+}
+#context-select select {
+  display: flex;
+  flex-direction: column;
+  border-radius: 4px;
+  margin-left: 8px;
+  margin-right: 8px;
+  padding: 4px;
+  width: 100px;
+  /* margin-top: 4px; */
+  background-color: dimgray;
+}
+#context-select #todaysDate{
+  /* background-color: aqua; */
+  margin-left: 8px;
+  margin-right: 8px;
+}
 .svg-wrapper {
-  overflow-x: scroll;
+  display: flex;
   position: relative;
   width: 100%;
 }
-#yAxis line{
+#yAxis line {
   stroke-width: 2px;
   stroke: black;
 }
-.xAxis{
+.xAxis {
   stroke-width: 1px;
   stroke: black;
 }
@@ -32,7 +76,7 @@ body {
   /* height: 500px; */
   /* width: 800px; */
 }
-.bar-labels text{
+.bar-labels text {
   text-anchor: middle;
 }
 .graph .grid {
@@ -53,5 +97,5 @@ body {
 
 .data {
   fill: red;
-  stroke-width: 1; 
+  stroke-width: 1;
 }
