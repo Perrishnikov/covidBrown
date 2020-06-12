@@ -181,6 +181,7 @@ window.onload = () => {
 
   // console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
 
+  console.log('cache the queries.');
   const t = new Date();
   document.querySelector('#todaysDate').innerHTML = `${t.getMonth() +1}/${t.getUTCDate()}/${t.getUTCFullYear()}`
 
