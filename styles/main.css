@@ -1,5 +1,6 @@
 :root {
-  --main-bg-color: brown;
+  /* --main-bg-color: brown; */
+  --pad:.3em;
 }
 body {
   font-family: 'Open Sans', sans-serif;
@@ -38,15 +39,18 @@ body {
   align-items: center;
 }
 #context-select select {
-  display: flex;
-  flex-direction: column;
-  border-radius: 4px;
+  /* display: flex; */
+  /* flex-direction: column; */
+  border-radius: .3em;
   margin-left: 8px;
   margin-right: 8px;
   padding: 4px;
   width: 100px;
-  /* margin-top: 4px; */
+  border: 1px solid #aaa;
   background-color: dimgray;
+}
+#context-select select:focus {
+  outline: none;
 }
 #context-select #todaysDate{
   /* background-color: aqua; */

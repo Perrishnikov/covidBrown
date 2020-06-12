@@ -131,7 +131,7 @@ function makeChart(days, max, features) {
       </svg>
     </div>
 
-    <div style="overflow-x: scroll;">
+    <div style="overflow-x: scroll; overscroll-behavior-x: none;">
       <svg x="${0}" height="${tableHeight}" width="${width + startX}" class="labels x-labels">
         <g>
           ${yLines}
