@@ -6,7 +6,7 @@ import chartAttack from '/scripts/chartAttack.mjs';
 let script = fetch('/scripts/chartAttack.mjs', { headers: {
   'Content-Type': 'text/javascript'
   // 'Content-Type': 'application/x-www-form-urlencoded',
-},}).then(resp => {console.log(resp); return resp}).then(data => console.log(data.json()));
+}}).then(resp => {console.log(resp); return resp}).then(data => console.log(data));
 
 window.onload = () => {
   const todaysDate = document.querySelector('#todaysDate');
