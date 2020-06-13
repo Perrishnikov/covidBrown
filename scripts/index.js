@@ -1,6 +1,6 @@
 import fetchData from '/scripts/fetchData.js';
 import chartAttack from '/scripts/chartAttack.js';
-import { parseData } from '/scripts/fetchData.js';
+// import { parseData } from '/scripts/fetchData.js';
 
 
 
