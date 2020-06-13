@@ -3,7 +3,10 @@ import chartAttack from '/scripts/chartAttack.mjs';
 // import fetchData from './scripts/fetchData.mjs';
 // import chartAttack from './scripts/chartAttack.mjs';
 
-
+let script = fetch('/scripts/chartAttack.mjs', { headers: {
+  'Content-Type': 'text/javascript'
+  // 'Content-Type': 'application/x-www-form-urlencoded',
+},}).then(resp => {console.log(resp); return resp}).then(data => console.log(data.json));
 
 window.onload = () => {
   const todaysDate = document.querySelector('#todaysDate');
