@@ -1,6 +1,7 @@
-import fetchData from './scripts/fetchData.mjs';
-import chartAttack from './scripts/chartAttack.mjs';
-// import { parseData } from '/scripts/fetchData.js';
+import fetchData from '/scripts/fetchData.mjs';
+import chartAttack from '/scripts/chartAttack.mjs';
+// import fetchData from './scripts/fetchData.mjs';
+// import chartAttack from './scripts/chartAttack.mjs';
 
 
 
