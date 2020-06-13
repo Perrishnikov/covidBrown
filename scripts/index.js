@@ -1,5 +1,5 @@
-import fetchData from './scripts/fetchData.js';
-import chartAttack from './scripts/chartAttack.js';
+import fetchData from './scripts/fetchData.mjs';
+import chartAttack from './scripts/chartAttack.mjs';
 // import { parseData } from '/scripts/fetchData.js';
 
 
