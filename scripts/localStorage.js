@@ -1,3 +1,9 @@
+/**
+ * Checks browser for localStorage
+ * https://www.sohamkamani.com/blog/javascript-localstorage-with-ttl-expiry/
+ * @param {'localStorage'} type 
+ * @returns {boolean}
+ */
 function storageAvailable(type) {
   var storage;
   try {
@@ -5,30 +11,23 @@ function storageAvailable(type) {
     var x = '__storage_test__';
     storage.setItem(x, x);
     storage.removeItem(x);
-    // console.log(`localStorage available`);
     return true;
   }
   catch (e) {
-    return e instanceof DOMException && (
-      // everything except Firefox
-      e.code === 22 ||
-      // Firefox
-      e.code === 1014 ||
-      // test name field too, because code might not be present
-      // everything except Firefox
-      e.name === 'QuotaExceededError' ||
-      // Firefox
-      e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
-      // acknowledge QuotaExceededError only if there's something already stored
-      (storage && storage.length !== 0);
+    return false;
   }
 }
 
 
+/**
+ * Gets value from localStorage if exists,
+ * Removes item if expired
+ * @param {string} key
+ * @returns {null|string}
+ */
 function getWithExpiry(key) {
   const itemStr = localStorage.getItem(key);
 
-  // if the item doesn't exist, return null
   if (!itemStr) {
     console.log(`${key} not found`);
     return null;
@@ -41,7 +40,7 @@ function getWithExpiry(key) {
   // compare the expiry time of the item with the current time
   if (now > new Date(item.expiry)) {
     // If the item is expired, delete the item from storage and return null
-    console.log('removing key for ', key);
+    console.log(`removing key for ${key}`);
     localStorage.removeItem(key);
     return null;
   }
@@ -60,7 +59,7 @@ function setWithExpiry(key, value) {
   twoTime.setHours(expirationTime, 00, 0); // 2:00 pm
   const twoOclock = twoTime.toLocaleTimeString();
 
-  /**@type {Date} */
+
   let expiry = new Date();
   expiry.setHours(14, 00, 0);
 
@@ -77,7 +76,7 @@ function setWithExpiry(key, value) {
     expiry: expiry
   };
 
-  console.log('setting localStorage for ', key);
+  console.log(`setting localStorage for ${key}`);
   localStorage.setItem(key, JSON.stringify(item));
   // let k = localStorage.getItem(key);
   // console.log(k);

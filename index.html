@@ -28,81 +28,82 @@
     </div>
 
     <div id="context-select">
-      <label>County:
+      <label>Entity:
         <select id="county-drop" name="counties">
-          <option value="default" selected>Select</option>
-          <option value="Adams">Adams</option>
-          <option value="Ashland">Ashland</option>
-          <option value="Barron">Barron</option>
-          <option value="Bayfield">Bayfield</option>
-          <option value="Brown">Brown</option>
-          <option value="Buffalo">Buffalo</option>
-          <option value="Burnett">Burnett</option>
-          <option value="Calumet">Calumet</option>
-          <option value="Chippewa">Chippewa</option>
-          <option value="Clark">Clark</option>
-          <option value="Columbia">Columbia</option>
-          <option value="Crawford">Crawford</option>
-          <option value="Dane">Dane</option>
-          <option value="Dodge">Dodge</option>
-          <option value="Door">Door</option>
-          <option value="Douglas">Douglas</option>
-          <option value="Dunn">Dunn</option>
-          <option value="Eau Claire">Eau Claire</option>
-          <option value="Florence">Florence</option>
-          <option value="Fond Du Lac">Fond Du Lac</option>
-          <option value="Forest">Forest</option>
-          <option value="Grant">Grant</option>
-          <option value="Green">Green</option>
-          <option value="Green Lake">Green Lake</option>
-          <option value="Iowa">Iowa</option>
-          <option value="Iron">Iron</option>
-          <option value="Jackson">Jackson</option>
-          <option value="Jefferson">Jefferson</option>
-          <option value="Juneau">Juneau</option>
-          <option value="Kenosha">Kenosha</option>
-          <option value="Kewaunee">Kewaunee</option>
-          <option value="La Crosse">La Crosse</option>
-          <option value="Lafayette">Lafayette</option>
-          <option value="Langlade">Langlade</option>
-          <option value="Lincoln">Lincoln</option>
-          <option value="Manitowoc">Manitowoc</option>
-          <option value="Marathon">Marathon</option>
-          <option value="Marinette">Marinette</option>
-          <option value="Marquette">Marquette</option>
-          <option value="Menominee">Menominee</option>
-          <option value="Milwaukee">Milwaukee</option>
-          <option value="Monroe">Monroe</option>
-          <option value="Oconto">Oconto</option>
-          <option value="Oneida">Oneida</option>
-          <option value="Outagamie">Outagamie</option>
-          <option value="Ozaukee">Ozaukee</option>
-          <option value="Pepin">Pepin</option>
-          <option value="Pierce">Pierce</option>
-          <option value="Polk">Polk</option>
-          <option value="Portage">Portage</option>
-          <option value="Price">Price</option>
-          <option value="Racine">Racine</option>
-          <option value="Richland">Richland</option>
-          <option value="Rock">Rock</option>
-          <option value="Rusk">Rusk</option>
-          <option value="St. Croix">St. Croix</option>
-          <option value="Sauk">Sauk</option>
-          <option value="Sawyer">Sawyer</option>
-          <option value="Shawano">Shawano</option>
-          <option value="Sheboygan">Sheboygan</option>
-          <option value="Taylor">Taylor</option>
-          <option value="Trempealeau">Trempealeau</option>
-          <option value="Vernon">Vernon</option>
-          <option value="Vilas">Vilas</option>
-          <option value="Walworth">Walworth</option>
-          <option value="Washburn">Washburn</option>
-          <option value="Washington">Washington</option>
-          <option value="Waukesha">Waukesha</option>
-          <option value="Waupaca">Waupaca</option>
-          <option value="Waushara">Waushara</option>
-          <option value="Winnebago">Winnebago</option>
-          <option value="Wood">Wood</option>
+          <!-- <option value="default" selected>Select</option> -->
+          <option data-geo="state" value="WI" selected>Wisconsin</option>
+          <option data-geo="county" value="Adams">Adams</option>
+          <option data-geo="county" value="Ashland">Ashland</option>
+          <option data-geo="county" value="Barron">Barron</option>
+          <option data-geo="county" value="Bayfield">Bayfield</option>
+          <option data-geo="county" value="Brown">Brown</option>
+          <option data-geo="county" value="Buffalo">Buffalo</option>
+          <option data-geo="county" value="Burnett">Burnett</option>
+          <option data-geo="county" value="Calumet">Calumet</option>
+          <option data-geo="county" value="Chippewa">Chippewa</option>
+          <option data-geo="county" value="Clark">Clark</option>
+          <option data-geo="county" value="Columbia">Columbia</option>
+          <option data-geo="county" value="Crawford">Crawford</option>
+          <option data-geo="county" value="Dane">Dane</option>
+          <option data-geo="county" value="Dodge">Dodge</option>
+          <option data-geo="county" value="Door">Door</option>
+          <option data-geo="county" value="Douglas">Douglas</option>
+          <option data-geo="county" value="Dunn">Dunn</option>
+          <option data-geo="county" value="Eau Claire">Eau Claire</option>
+          <option data-geo="county" value="Florence">Florence</option>
+          <option data-geo="county" value="Fond Du Lac">Fond Du Lac</option>
+          <option data-geo="county" value="Forest">Forest</option>
+          <option data-geo="county" value="Grant">Grant</option>
+          <option data-geo="county" value="Green">Green</option>
+          <option data-geo="county" value="Green Lake">Green Lake</option>
+          <option data-geo="county" value="Iowa">Iowa</option>
+          <option data-geo="county" value="Iron">Iron</option>
+          <option data-geo="county" value="Jackson">Jackson</option>
+          <option data-geo="county" value="Jefferson">Jefferson</option>
+          <option data-geo="county" value="Juneau">Juneau</option>
+          <option data-geo="county" value="Kenosha">Kenosha</option>
+          <option data-geo="county" value="Kewaunee">Kewaunee</option>
+          <option data-geo="county" value="La Crosse">La Crosse</option>
+          <option data-geo="county" value="Lafayette">Lafayette</option>
+          <option data-geo="county" value="Langlade">Langlade</option>
+          <option data-geo="county" value="Lincoln">Lincoln</option>
+          <option data-geo="county" value="Manitowoc">Manitowoc</option>
+          <option data-geo="county" value="Marathon">Marathon</option>
+          <option data-geo="county" value="Marinette">Marinette</option>
+          <option data-geo="county" value="Marquette">Marquette</option>
+          <option data-geo="county" value="Menominee">Menominee</option>
+          <option data-geo="county" value="Milwaukee">Milwaukee</option>
+          <option data-geo="county" value="Monroe">Monroe</option>
+          <option data-geo="county" value="Oconto">Oconto</option>
+          <option data-geo="county" value="Oneida">Oneida</option>
+          <option data-geo="county" value="Outagamie">Outagamie</option>
+          <option data-geo="county" value="Ozaukee">Ozaukee</option>
+          <option data-geo="county" value="Pepin">Pepin</option>
+          <option data-geo="county" value="Pierce">Pierce</option>
+          <option data-geo="county" value="Polk">Polk</option>
+          <option data-geo="county" value="Portage">Portage</option>
+          <option data-geo="county" value="Price">Price</option>
+          <option data-geo="county" value="Racine">Racine</option>
+          <option data-geo="county" value="Richland">Richland</option>
+          <option data-geo="county" value="Rock">Rock</option>
+          <option data-geo="county" value="Rusk">Rusk</option>
+          <option data-geo="county" value="St. Croix">St. Croix</option>
+          <option data-geo="county" value="Sauk">Sauk</option>
+          <option data-geo="county" value="Sawyer">Sawyer</option>
+          <option data-geo="county" value="Shawano">Shawano</option>
+          <option data-geo="county" value="Sheboygan">Sheboygan</option>
+          <option data-geo="county" value="Taylor">Taylor</option>
+          <option data-geo="county" value="Trempealeau">Trempealeau</option>
+          <option data-geo="county" value="Vernon">Vernon</option>
+          <option data-geo="county" value="Vilas">Vilas</option>
+          <option data-geo="county" value="Walworth">Walworth</option>
+          <option data-geo="county" value="Washburn">Washburn</option>
+          <option data-geo="county" value="Washington">Washington</option>
+          <option data-geo="county" value="Waukesha">Waukesha</option>
+          <option data-geo="county" value="Waupaca">Waupaca</option>
+          <option data-geo="county" value="Waushara">Waushara</option>
+          <option data-geo="county" value="Winnebago">Winnebago</option>
+          <option data-geo="county" value="Wood">Wood</option>
         </select>
       </label>
 
