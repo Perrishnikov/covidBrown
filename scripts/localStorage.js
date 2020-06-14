@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 /**
  * Checks browser for localStorage
  * https://www.sohamkamani.com/blog/javascript-localstorage-with-ttl-expiry/
@@ -5,10 +7,10 @@
  * @returns {boolean}
  */
 function storageAvailable(type) {
-  var storage;
+  let storage;
   try {
     storage = window[type];
-    var x = '__storage_test__';
+    let x = '__storage_test__';
     storage.setItem(x, x);
     storage.removeItem(x);
     return true;
@@ -25,7 +27,7 @@ function storageAvailable(type) {
  * @param {string} key
  * @returns {null|string}
  */
-function getWithExpiry(key) {
+async function getWithExpiry(key) {
   const itemStr = localStorage.getItem(key);
 
   if (!itemStr) {
@@ -50,18 +52,18 @@ function getWithExpiry(key) {
 }
 
 
-function setWithExpiry(key, value) {
+async function setWithExpiry(key, value) {
   const expirationTime = 14; // 2:00 pm
 
   const now = new Date();
   const nowTime = now.toLocaleTimeString();
   const twoTime = new Date();
-  twoTime.setHours(expirationTime, 00, 0); // 2:00 pm
+  twoTime.setHours(expirationTime, 0, 0); // 2:00 pm
   const twoOclock = twoTime.toLocaleTimeString();
 
 
   let expiry = new Date();
-  expiry.setHours(14, 00, 0);
+  expiry.setHours(14, 0, 0);
 
   //if it's after 2:00, set date for tomorrow
   if (nowTime > twoOclock) {
@@ -80,4 +82,6 @@ function setWithExpiry(key, value) {
   localStorage.setItem(key, JSON.stringify(item));
   // let k = localStorage.getItem(key);
   // console.log(k);
+
+  return key;
 }

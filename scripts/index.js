@@ -1,9 +1,11 @@
+/* global storageAvailable, getWithExpiry, setWithExpiry, fetchData, parseData, chartAttack */
 
 //[x]TODO - get state numbers.
 //TODO - adjust scale to screen height
 //TODO - console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
 //TODO - summarize county data
 //TODO - 7 day average - display options
+//[x]TODO - fix eslint
 
 const todaysDate = document.querySelector('#todaysDate');
 const wrapper = document.querySelector('#svg-wrapper');
@@ -12,23 +14,23 @@ const dropdown = document.querySelector('#county-drop');
 
 window.onload = () => {
   /**@type {'state'|'county'} */
-  const geo = dropdown.selectedOptions[0].dataset.geo;
+  const geoStart = dropdown.selectedOptions[0].dataset.geo;
   /**@type {string} - county (or state) */
   const selected = dropdown.options[dropdown.selectedIndex].value;
 
   // onload, get selected (WI) data
-  updateDOM(selected, geo);
+  getTheData(selected, geoStart);
 
   // onchange, get county data
   dropdown.addEventListener('change', e => {
     /**@type {'state'|'county'} */
-    const geo = e.target.selectedOptions[0].dataset.geo;
+    const geoChange = e.target.selectedOptions[0].dataset.geo;
     /**@type {string} */
     const value = e.target.value;
 
-    updateDOM(value, geo);
+    getTheData(value, geoChange);
   });
-}
+};
 
 
 /**
@@ -37,50 +39,49 @@ window.onload = () => {
  * @param {'county'|'state'} geo 
  * @returns {void} - manipulates DOM
  */
-function updateDOM(value, geo) {
+async function getTheData(value, geo) {
 
   if (storageAvailable('localStorage')) {
-    const d = new Date();
+    const cachedFeatures = await getWithExpiry(value);
 
-    const cachedValue = getWithExpiry(value);
-
-    if (cachedValue) {
-      const features = cachedValue;
-      const max = parseData.getMaxY(features);
-      const days = parseData.getDays(features);
-
-      // update DOM
-      wrapper.innerHTML = chartAttack(days, max, features);
-
-      todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} (cached)`;
+    if (cachedFeatures) {
+      drawDOM(cachedFeatures);
     }
     /* else, fetch new item and set cached item */
     else {
-      fetchData(value, geo).then(data => {
-        const { features, errors, max, days } = data;
+      const { features, errors } = await fetchData(value, geo);
 
-        if (errors.length === 0) {
+      if (errors.length === 0) {
 
-          setWithExpiry(value, features);
+        let key = await setWithExpiry(value, features);
 
-          //update DOM
-          wrapper.innerHTML = chartAttack(days, max, features);
+        const fetchedFeatures = await getWithExpiry(key);
+        drawDOM(fetchedFeatures);
 
-          todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
-
-        } else {
-          //TODO - add errors to DOM
-          errors.forEach(error => {
-            console.error(error);
-          });
-        }
-
-      });
+      } else {
+        console.log(`errors`);
+        //     //TODO - add errors to DOM
+        //     errors.forEach(error => {
+        //       console.error(error);
+        //     });
+      }
 
     }
   }
   /* no localStorage */
   else {
+    //     //TODO - add errors to DOM
     console.error('Too bad, no localStorage for you');
   }
+}
+
+function drawDOM(features) {
+  const d = new Date();
+  const max = parseData.getMaxY(features);
+  const days = parseData.getDays(features);
+
+  // update DOM
+  wrapper.innerHTML = chartAttack(days, max, features);
+
+  todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} (cached)`;
 }

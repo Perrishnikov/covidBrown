@@ -7,22 +7,17 @@ async function fetchData(value, geo) {
 
   if (response.status == 200) {
     const json = await response.json(); // (3)
-    
     const { features, errors } = validateFeatures(json); // (4)
 
     if (errors.length === 0) {
-      const max = parseData.getMaxY(features);
-      const days = parseData.getDays(features);
-
-      return { features, errors, max, days };
-
+      return { features, errors };
     } else {
-      return { errors }
+      return { errors };
     }
   } else {
-    return new Error(response.status)
+    return { errors: [new Error(response.status)] };
   }
-};
+}
 
 //data model. use this for @type in (localStorage.js)?
 
@@ -30,20 +25,19 @@ async function fetchData(value, geo) {
 // returns features and errors if any
 function validateFeatures(json) {
   let errors = [];
-  let features = [];
+  // let features = [];
 
   if (json.features && Array.isArray(json.features)) {
-    // console.log(json);
-    features = json.features;
     //TODO - needs field validation
 
-    return { features, errors };
+    return { features: json.features, errors };
   } else {
-    errors.push('Features not found or is not an array.')
+    errors.push('Features not found or is not an array.');
     return { errors };
   }
 }
 
+/* eslint-disable-next-line */
 const parseData = {
   getMaxY: data => {
     let max = 60;
@@ -59,4 +53,4 @@ const parseData = {
   getDays: data => {
     return data.length;
   }
-}
+};

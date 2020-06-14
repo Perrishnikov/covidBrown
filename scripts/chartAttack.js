@@ -22,12 +22,12 @@ function chartAttack(days, max, features) {
 
   //vertical numbers
   for (let i = 0; i < height; i += yLabelSpacing * yPixelsPer) {
-    yLabels += `<text x="${startX - 5}" y="${height - i + 4}">${i / yPixelsPer}</text>`
+    yLabels += `<text x="${startX - 5}" y="${height - i + 4}">${i / yPixelsPer}</text>`;
   }
 
   //vertical lines - gray
   for (let i = height; i > 0; i -= yLabelSpacing * yPixelsPer) {
-    yLines += `<line stroke="gray" x1="${0}" y1="${i}" x2="${width + barSpacing}" y2="${i}"></line>`
+    yLines += `<line stroke="gray" x1="${0}" y1="${i}" x2="${width + barSpacing}" y2="${i}"></line>`;
   }
 
 
@@ -40,7 +40,7 @@ function chartAttack(days, max, features) {
       y="${height - att.POS_NEW * yPixelsPer}" 
       width="${barWidth}px" 
       height="${att.POS_NEW * yPixelsPer}px" 
-      data-positive="${att.POS_NEW}"/>`
+      data-positive="${att.POS_NEW}"/>`;
 
     //adjust spacing for double digit dates
     if (i % 2 == 0) {
@@ -52,7 +52,7 @@ function chartAttack(days, max, features) {
       if (display.toString().length == 3) half += 6;
       if (display.toString().length == 4) half += 9;
 
-      xLabels += `<text x="${0 + 10 + i * (barWidth + barSpacing) + half}" y="${height + 15}">${display}</text>`
+      xLabels += `<text x="${0 + 10 + i * (barWidth + barSpacing) + half}" y="${height + 15}">${display}</text>`;
     }
   }
 
@@ -93,5 +93,5 @@ function chartAttack(days, max, features) {
 
       </svg>
     </div>
-  `
+  `;
 }
