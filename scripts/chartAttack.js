@@ -1,5 +1,5 @@
 function chartAttack(days, max, features) {
-  console.log(`days: ${days}, max: ${max}`);
+  // console.log(`days: ${days}, max: ${max}`);
   const startX = 60;
 
 

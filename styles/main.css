@@ -1,3 +1,4 @@
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior */
 :root {
   /* --main-bg-color: brown; */
   --pad:.3em;
@@ -11,7 +12,6 @@ body {
   display: flex;
   flex-direction: column;
   font-size: 1em;
-  overscroll-behavior: contain;
 }
 
 #context-wrapper {
