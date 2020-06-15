@@ -61,14 +61,17 @@ function chartAttack(params) {
   // const wrapper = document.querySelector('#svg-wrapper');
   return `
     <div>
-      <svg  width="${startX + 3}" height="${tableHeight}">
+      <svg width="${startX + 3}" height="${tableHeight}">
         <title id="title">Brown County Covid Cases</title>
+
         <g class="labels y-labels" transform="translate(0)">
           ${yLabels}
         </g>
+
         <g id="yAxis">
           <line x1="${startX}" y1="0" x2="${startX}" y2="${height}"></line>
         </g>
+
         <text x="${startX / 2}" y="${tableHeight / 2 - 6}" transform="rotate(-90,${startX / 2},${tableHeight / 2})" class="label-title">New Cases</text>
 
         <line class="xAxis" x1="${startX}" y1="${height}" x2="${width}" y2="${height}"></ line>
@@ -95,5 +98,81 @@ function chartAttack(params) {
 
       </svg>
     </div>
+  `;
+}
+
+function dynamicChart(params) {
+  let { days, max, features } = params;
+  const contextWrapper = document.querySelector('#context-wrapper');
+  const svgWrapper = document.querySelector('#svg-wrapper');
+
+  //285 or 722
+  let chartHeight = window.innerHeight - contextWrapper.clientHeight;
+  svgWrapper.setAttribute('style', `height:${chartHeight}px; width: 100%`);
+
+  let xAxisTitle = 'New Cases';
+  let yAxisTitle = '';
+  let xAxisValues = ''; //date
+  let yAxisValues = ''; //count
+  let yAxisLines = ''; //appended by for loop
+  let xIndent = 50;
+
+  let l = {
+    yLines: 10, //number of y ticks (makes x line) - rounded up (+1)
+    yTextPadding: 10,
+  };
+  let p = {
+    yLines: 20,
+  };
+
+  // max = 500;
+  let yMaxValue = (Math.ceil(max / l.yLines) * 10);
+  let yLineInc = Math.floor((chartHeight - l.yTextPadding * 2) / l.yLines);
+  // console.log(`yInc: ${yLineInc}`); //line inc
+
+  console.log(`max: ${max}, yMaxValue: ${yMaxValue}, chartHeight: ${chartHeight}px;`);
+  console.log(`w.innerHeight: ${window.innerHeight}, contextWrapper.clientHeight: ${contextWrapper.clientHeight} = chartHeight: ${chartHeight}`);
+
+  let count = 0;
+  //yAxis lines and values
+  for (let i = l.yTextPadding; i <= chartHeight; i += yLineInc) {
+    const yNumberCount = yMaxValue - (count * (yMaxValue / l.yLines));
+
+    //lines (by i == pixel location for each line)
+    yAxisLines += `<line class="xAxis" x1="${0}" y1="${i}" x2="${1300}" y2="${i}"></line>`;
+
+    //numbers (by yMax)
+    yAxisValues += `<text x="${xIndent -2}" y="${i + 5}">${yNumberCount}</text>`;
+    count ++;
+  }
+
+
+
+  // console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}`);
+
+  // console.log(`window innerWidth:${window.innerWidth}, innerHeight:${window.innerHeight}`);
+  // console.dir(contextWrapper);  
+  // console.log(`contextWrapper clientWidth: ${contextWrapper.clientWidth}, clientHeight: ${contextWrapper.clientHeight}`);
+
+  // console.log(features);
+  //${window.innerWidth}px
+  return `
+  <div>
+    <svg style="height:100%; width: ${xIndent}px; background-color:beige;">
+      <title id="title">Brown County Covid Cases</title>
+      
+      <g class="labels y-labels"">
+        ${yAxisValues}
+      </g>
+
+      <text x="${20}" y="${chartHeight / 2 + 40}" transform="rotate(-90,${20},${chartHeight / 2 + 40})" class="label-title">${xAxisTitle}</text>
+      
+    </svg>
+  </div>
+  <div style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
+    <svg x="${20}" height="100%" width="1000px" class="labels x-labels">
+      ${yAxisLines}
+    </svg>
+  </div>
   `;
 }

@@ -25,10 +25,11 @@ body {
   display: flex;
   padding: 4px;
   font-size: 1.1em;
-  flex: 0 1;
+  align-items: center;
+  /* flex: 0 1; */
   /* flex-grow: 1; */
   /* width:100%; */
-  /* justify-content: space-between; */
+  justify-content: space-between;
 }
 #context-select {
   display: flex;
@@ -115,12 +116,27 @@ body {
   stroke-width: 1;
 }
 @media screen and (orientation: landscape) {
+  #context-wrapper {
+    padding: 4px;
+    /* margin-left: 42px; */
+  }
   #context-title {
     background-color: aqua;
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  #context-select {
+    font-size: .6em;
+    padding-top: 2px;
+    padding-bottom: 0px;
   }
 }
 @media screen and (orientation: portrait) {
   #context-title {
     background-color: blue;
+    font-size: .9em;
+  }
+  #context-select {
+    font-size: .6em;
   }
 }

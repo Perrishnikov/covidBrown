@@ -1,4 +1,4 @@
-/* global storageAvailable, getWithExpiry, setWithExpiry, fetchData, parseData, chartAttack */
+/* global storageAvailable, getWithExpiry, setWithExpiry, fetchData, parseData, chartAttack, dynamicChart */
 
 //[x]TODO - get state numbers.
 //TODO - adjust scale to screen height
@@ -8,7 +8,8 @@
 //[x]TODO - fix eslint
 
 const todaysDate = document.querySelector('#todaysDate');
-const wrapper = document.querySelector('#svg-wrapper');
+const svgWrapper = document.querySelector('#svg-wrapper');
+const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings');
 
@@ -31,7 +32,22 @@ window.onload = () => {
     getTheData(value, geoChange);
   });
 
-  // settings.addEventListener('click', () => handleSettings(wrapper));
+  settings.addEventListener('click', () => handleSettings(contextWrapper));
+
+  window.addEventListener('orientationchange', () => {
+    console.log('the orientation of the device is now ' + screen.orientation.angle);
+    /**@type {'state'|'county'} */
+    const geoRotate = dropdown.selectedOptions[0].dataset.geo;
+    /**@type {string} - county (or state) */
+    const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
+
+    window.setTimeout(function () {
+      getTheData(selectedRotate, geoRotate);
+    }, 50);
+
+
+  });
+
 };
 
 
@@ -84,20 +100,18 @@ function drawDOM(features) {
   const days = parseData.getDays(features);
 
   // update DOM
-  wrapper.innerHTML = chartAttack({days, max, features});
+  // svgWrapper.innerHTML = chartAttack({days, max, features});
+
+  svgWrapper.innerHTML = dynamicChart({ days, max, features });
 
   todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
 }
 
-function handleSettings(w){
+function handleSettings(w) {
   console.dir(w);
   console.log('handleSettings');
 }
-console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}`);
-window.onorientationchange = function() { 
-  console.log('the orientation of the device is now ' + screen.orientation.angle);
-  console.log(`scren width: ${screen.width}, height: ${screen.height}`);
-};
+
 
 let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
 const updatePixelRatio = () => {
@@ -109,4 +123,4 @@ const updatePixelRatio = () => {
 
 // updatePixelRatio();
 
-// matchMedia(mqString).addListener(updatePixelRatio);
+matchMedia(mqString).addListener(updatePixelRatio);
