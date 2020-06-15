@@ -69,6 +69,7 @@ body {
 }
 .svg-wrapper {
   display: flex;
+  flex-direction: column;
   position: relative;
   width: 100%;
 }
@@ -109,6 +110,7 @@ body {
   text-transform: uppercase;
   font-size: 12px;
   fill: black;
+  text-anchor: middle;
 }
 
 .data {

@@ -109,7 +109,7 @@ function dynamicChart(params) {
   let xTitleSpace = 0;
   //285 or 722
   let chartHeight = window.innerHeight - contextWrapper.clientHeight;
-  svgWrapper.setAttribute('style', `height:${chartHeight + xTitleSpace}px; width: 100%`);
+  svgWrapper.setAttribute('style', `width: 100%`);
 
   let xAxisValues = ''; //date
   let yAxisValues = ''; //count
@@ -157,21 +157,32 @@ function dynamicChart(params) {
   // console.log(features);
   //${window.innerWidth}px
   return `
-  <div>
-    <svg style="height:100%; width: ${xIndent}px; background-color:beige;">
-      <title id="title">Brown County Covid Cases</title>
-      
-      <g class="labels y-labels"">
-        ${yAxisValues}
-      </g>
+  <div style="display:flex;">
+    <div id="fixed-svg">
+      <svg style="height:${chartHeight}px; width: ${xIndent}px; background-color:beige;">
+        <title id="title">Brown County Covid Cases</title>
+        
+        <g class="labels y-labels"">
+          ${yAxisValues}
+        </g>
 
-      <text x="${20}" y="${chartHeight / 2 + 40}" transform="rotate(-90,${20},${chartHeight / 2 + 40})" class="label-title">New Cases</text>
-      
-    </svg>
+        <text x="${20}" y="${chartHeight / 2}" transform="rotate(-90,${20},${chartHeight / 2})" class="label-title">New Cases</text>
+        
+      </svg>
+    </div>
+    
+    <div id="scrolling-svg" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
+
+      <svg x="${20}" height="${chartHeight}px" width="1000px" class="labels x-labels">
+        ${yAxisLines}
+      </svg>
+
+    </div>
   </div>
-  <div style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
-    <svg x="${20}" height="100%" width="1000px" class="labels x-labels">
-      ${yAxisLines}
+
+  <div id="xTitle">
+    <svg height="40" width="100%">
+      <text x="${contextWrapper.clientWidth /2}" y="20" class="label-title">Dates</text>
     </svg>
   </div>
   `;
