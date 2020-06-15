@@ -1,7 +1,9 @@
-function chartAttack(days, max, features) {
+function chartAttack(params) {
+  const { days, max, features } = params;
   // console.log(`days: ${days}, max: ${max}`);
   const startX = 60;
 
+  //TODO = pixels between y labels (10) & number increments (10)
 
   //x stuff
   const barWidth = 9;

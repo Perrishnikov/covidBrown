@@ -10,10 +10,10 @@
   <title>Wisconsin Covid-19 Count</title>
   <meta property="og:title" content="Wisconsin Covid-19 Count" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="COVID-19_Icon.svg" />
+  <meta property="og:image" content="assets/COVID-19_Icon.svg" />
 
-  <link rel="apple-touch-icon" href="COVID-19_Icon.png">
-  <link rel="icon" href="COVID-19_Icon.svg">
+  <link rel="apple-touch-icon" href="assets/COVID-19_Icon.png">
+  <link rel="icon" href="assets/COVID-19_Icon.svg">
 
   <link rel="stylesheet" href="styles/main.css" media="screen">
   <!-- <link href="desktop.css" rel="stylesheet" media="screen and (min-width: 600px)"> -->
@@ -24,7 +24,10 @@
 <body>
   <div id="context-wrapper">
     <div id="context-title">
-      Reported Wisconsin Covid-19 Cases
+      <span>Reported Wisconsin Covid-19 Cases</span>
+      <svg id="settings" width="24" height="24">
+        <image xlink:href="assets/settings.svg"/>
+      </svg>
     </div>
 
     <div id="context-select">
@@ -111,7 +114,10 @@
       <span id="todaysDate"></span>
 
     </div>
+
   </div>
+
+  
 
   <div id="svg-wrapper" class="svg-wrapper">
     <!-- <svg id="county" class="graph" width="0" height="0" xmlns="http://www.w3.org/2000/svg"> -->
@@ -149,7 +155,7 @@
     <!-- </svg> -->
   </div>
   <div id="context-footer">County Stats</div>
-
+  <div id="context-info">Source and link https://data.dhsgis.wi.gov/datasets/covid-19-historical-data-table/data?page=9&where=GEO%20%3D%20%27County%27%20AND%20NAME%20%3D%20%27Brown%27</div>
 
 
   <!-- <svg class="graph" aria-labelledby="title" role="img">
@@ -190,7 +196,7 @@
   <script type="text/javascript" src="scripts/fetchData.js"></script>
   <script type="text/javascript" src="scripts/index.js"></script>
   <!-- <script type="module" src="scripts/index.mjs"> -->
-  
+
   </script>
 </body>
 

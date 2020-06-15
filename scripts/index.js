@@ -10,7 +10,7 @@
 const todaysDate = document.querySelector('#todaysDate');
 const wrapper = document.querySelector('#svg-wrapper');
 const dropdown = document.querySelector('#county-drop');
-
+const settings = document.querySelector('#settings');
 
 window.onload = () => {
   /**@type {'state'|'county'} */
@@ -30,6 +30,8 @@ window.onload = () => {
 
     getTheData(value, geoChange);
   });
+
+  // settings.addEventListener('click', () => handleSettings(wrapper));
 };
 
 
@@ -54,6 +56,7 @@ async function getTheData(value, geo) {
       if (errors.length === 0) {
 
         let key = await setWithExpiry(value, features);
+        //? message to DOM that this was fetched?
 
         const fetchedFeatures = await getWithExpiry(key);
         drawDOM(fetchedFeatures);
@@ -81,7 +84,29 @@ function drawDOM(features) {
   const days = parseData.getDays(features);
 
   // update DOM
-  wrapper.innerHTML = chartAttack(days, max, features);
+  wrapper.innerHTML = chartAttack({days, max, features});
 
-  todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} (cached)`;
+  todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
 }
+
+function handleSettings(w){
+  console.dir(w);
+  console.log('handleSettings');
+}
+console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}`);
+window.onorientationchange = function() { 
+  console.log('the orientation of the device is now ' + screen.orientation.angle);
+  console.log(`scren width: ${screen.width}, height: ${screen.height}`);
+};
+
+let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+const updatePixelRatio = () => {
+  let pr = window.devicePixelRatio;
+  let prString = (pr * 100).toFixed(0);
+  console.warn(prString);
+  // pixelRatioBox.innerText = `${prString}% (${pr.toFixed(2)})`;
+}
+
+// updatePixelRatio();
+
+// matchMedia(mqString).addListener(updatePixelRatio);

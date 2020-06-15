@@ -1,7 +1,7 @@
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior */
 :root {
   /* --main-bg-color: brown; */
-  --pad:.3em;
+  --pad: .3em;
 }
 body {
   font-family: 'Open Sans', sans-serif;
@@ -25,6 +25,10 @@ body {
   display: flex;
   padding: 4px;
   font-size: 1.1em;
+  flex: 0 1;
+  /* flex-grow: 1; */
+  /* width:100%; */
+  /* justify-content: space-between; */
 }
 #context-select {
   display: flex;
@@ -53,14 +57,14 @@ body {
 #context-select select:focus {
   outline: none;
 }
-#context-select #todaysDate{
+#context-select #todaysDate {
   /* background-color: aqua; */
   margin-left: 8px;
   margin-right: 8px;
 }
-#context-footer{
+#context-footer {
   padding: 12px;
-  padding-top:4px;
+  padding-top: 4px;
 }
 .svg-wrapper {
   display: flex;
@@ -109,4 +113,14 @@ body {
 .data {
   fill: red;
   stroke-width: 1;
+}
+@media screen and (orientation: landscape) {
+  #context-title {
+    background-color: aqua;
+  }
+}
+@media screen and (orientation: portrait) {
+  #context-title {
+    background-color: blue;
+  }
 }
