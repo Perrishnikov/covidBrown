@@ -105,17 +105,17 @@ function dynamicChart(params) {
   let { days, max, features } = params;
   const contextWrapper = document.querySelector('#context-wrapper');
   const svgWrapper = document.querySelector('#svg-wrapper');
-
+  
+  let xTitleSpace = 0;
   //285 or 722
   let chartHeight = window.innerHeight - contextWrapper.clientHeight;
-  svgWrapper.setAttribute('style', `height:${chartHeight}px; width: 100%`);
+  svgWrapper.setAttribute('style', `height:${chartHeight + xTitleSpace}px; width: 100%`);
 
-  let xAxisTitle = 'New Cases';
-  let yAxisTitle = '';
   let xAxisValues = ''; //date
   let yAxisValues = ''; //count
   let yAxisLines = ''; //appended by for loop
   let xIndent = 50;
+  
 
   let l = {
     yLines: 10, //number of y ticks (makes x line) - rounded up (+1)
@@ -165,7 +165,7 @@ function dynamicChart(params) {
         ${yAxisValues}
       </g>
 
-      <text x="${20}" y="${chartHeight / 2 + 40}" transform="rotate(-90,${20},${chartHeight / 2 + 40})" class="label-title">${xAxisTitle}</text>
+      <text x="${20}" y="${chartHeight / 2 + 40}" transform="rotate(-90,${20},${chartHeight / 2 + 40})" class="label-title">New Cases</text>
       
     </svg>
   </div>
