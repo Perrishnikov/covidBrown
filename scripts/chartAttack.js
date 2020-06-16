@@ -105,17 +105,21 @@ function dynamicChart(params) {
   let { days, max, features } = params;
   const contextWrapper = document.querySelector('#context-wrapper');
   const svgWrapper = document.querySelector('#svg-wrapper');
-  
+
   let xTitleSpace = 0;
   //285 or 722
   let chartHeight = window.innerHeight - contextWrapper.clientHeight;
   svgWrapper.setAttribute('style', `width: 100%`);
 
-  let xAxisValues = ''; //date
+  let xAxisLabels = ''; //date
+  let bars = '';
+  const barWidth = 3;
+  const barSpacing = 3;
+
   let yAxisValues = ''; //count
   let yAxisLines = ''; //appended by for loop
   let xIndent = 50;
-  
+
 
   let l = {
     yLines: 10, //number of y ticks (makes x line) - rounded up (+1)
@@ -127,8 +131,11 @@ function dynamicChart(params) {
 
   // max = 500;
   let yMaxValue = (Math.ceil(max / l.yLines) * 10);
-  let yLineInc = Math.floor((chartHeight - l.yTextPadding * 2) / l.yLines);
-  // console.log(`yInc: ${yLineInc}`); //line inc
+  let yLineInc = Math.floor((chartHeight - l.yTextPadding * 2) / l.yLines); //pixel increment per line
+  let yNumbInc = yMaxValue / l.yLines; // number increment per line
+  let ppxPerNumber = yLineInc / yNumbInc;
+  console.log(`yLineInc: ${yLineInc} (px spacing per line); yNumbInc: ${yNumbInc}; ppxPerNumber: ${ppxPerNumber}`); //line inc
+
 
   console.log(`max: ${max}, yMaxValue: ${yMaxValue}, chartHeight: ${chartHeight}px;`);
   console.log(`w.innerHeight: ${window.innerHeight}, contextWrapper.clientHeight: ${contextWrapper.clientHeight} = chartHeight: ${chartHeight}`);
@@ -136,17 +143,44 @@ function dynamicChart(params) {
   let count = 0;
   //yAxis lines and values
   for (let i = l.yTextPadding; i <= chartHeight; i += yLineInc) {
-    const yNumberCount = yMaxValue - (count * (yMaxValue / l.yLines));
+    const yNumberCount = yMaxValue - (count * yNumbInc);
 
     //lines (by i == pixel location for each line)
     yAxisLines += `<line class="xAxis" x1="${0}" y1="${i}" x2="${1300}" y2="${i}"></line>`;
 
     //numbers (by yMax)
-    yAxisValues += `<text x="${xIndent -2}" y="${i + 5}">${yNumberCount}</text>`;
-    count ++;
+    yAxisValues += `<text x="${xIndent - 2}" y="${i + 5}">${yNumberCount}</text>`;
+    count++;
   }
 
 
+  console.log(features);
+  //horizontal bars
+  for (let i = 0; i < features.length; i++) {
+    const att = features[i].attributes;
+    const yOffset = chartHeight - (yLineInc * l.yLines + (l.yTextPadding * 2)); //3 - difference with the rounding heights
+    console.log(yOffset);
+    // console.log(att.POS_NEW * ppxPerNumber);
+    bars += `<rect 
+        x="${0 + 10 + i * (barWidth + barSpacing)}" 
+        y="${Math.round(chartHeight - yOffset - l.yTextPadding - att.POS_NEW * ppxPerNumber)}" 
+        width="${barWidth}px" 
+        height="${Math.round(att.POS_NEW * ppxPerNumber)}px" 
+        data-positive="${att.POS_NEW}"/>`;
+
+    //adjust spacing for double digit dates
+    if (i % 2 == 0) {
+      let half = (barWidth + barSpacing) / 2;
+      let date = new Date(att.LoadDttm);
+      // console.log(`${date.getMonth()+ 1}/${date.getDate()}`);
+      let display = `${date.getMonth() + 1}/${date.getDate()}`;
+      if (display.toString().length == 2) half += 3;
+      if (display.toString().length == 3) half += 6;
+      if (display.toString().length == 4) half += 9;
+
+      // xAxisLabels += `<text x="${0 + 10 + i * (barWidth + barSpacing) + half}" y="${height + 15}">${display}</text>`;
+    }
+  }
 
   // console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}`);
 
@@ -166,7 +200,7 @@ function dynamicChart(params) {
           ${yAxisValues}
         </g>
 
-        <text x="${20}" y="${chartHeight / 2}" transform="rotate(-90,${20},${chartHeight / 2})" class="label-title">New Cases</text>
+        <text x="${23}" y="${chartHeight / 2}" transform="rotate(-90,${23},${chartHeight / 2})" class="label-title">New Cases</text>
         
       </svg>
     </div>
@@ -175,6 +209,7 @@ function dynamicChart(params) {
 
       <svg x="${20}" height="${chartHeight}px" width="1000px" class="labels x-labels">
         ${yAxisLines}
+        ${bars}
       </svg>
 
     </div>
@@ -182,7 +217,7 @@ function dynamicChart(params) {
 
   <div id="xTitle">
     <svg height="40" width="100%">
-      <text x="${contextWrapper.clientWidth /2}" y="20" class="label-title">Dates</text>
+      <text x="${contextWrapper.clientWidth / 2}" y="20" class="label-title">Dates</text>
     </svg>
   </div>
   `;

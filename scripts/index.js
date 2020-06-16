@@ -34,6 +34,7 @@ window.onload = () => {
 
   settings.addEventListener('click', () => handleSettings(contextWrapper));
 
+  //TODO - check for memory leak with addEventListeners
   window.addEventListener('orientationchange', () => {
     console.log('the orientation of the device is now ' + screen.orientation.angle);
     /**@type {'state'|'county'} */
