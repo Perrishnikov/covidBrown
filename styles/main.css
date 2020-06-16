@@ -132,6 +132,9 @@ body {
     padding-top: 2px;
     padding-bottom: 0px;
   }
+  #context-select select {
+    padding: 2px;
+  }
 }
 @media screen and (orientation: portrait) {
   #context-title {

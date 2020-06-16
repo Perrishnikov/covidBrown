@@ -112,14 +112,17 @@ function dynamicChart(params) {
   svgWrapper.setAttribute('style', `width: 100%`);
 
   let xAxisLabels = ''; //date
-  let bars = '';
-  const barWidth = 3;
-  const barSpacing = 3;
+  let xBars = '';
+  const barWidth = 9;
+  const barSpacing = 9;
 
   let yAxisValues = ''; //count
   let yAxisLines = ''; //appended by for loop
   let xIndent = 50;
 
+  let yLabelMargin = 20;
+    //table id="county"
+    const width = (days * (barWidth + barSpacing));
 
   let l = {
     yLines: 10, //number of y ticks (makes x line) - rounded up (+1)
@@ -134,11 +137,11 @@ function dynamicChart(params) {
   let yLineInc = Math.floor((chartHeight - l.yTextPadding * 2) / l.yLines); //pixel increment per line
   let yNumbInc = yMaxValue / l.yLines; // number increment per line
   let ppxPerNumber = yLineInc / yNumbInc;
-  console.log(`yLineInc: ${yLineInc} (px spacing per line); yNumbInc: ${yNumbInc}; ppxPerNumber: ${ppxPerNumber}`); //line inc
+  // console.log(`yLineInc: ${yLineInc} (px spacing per line); yNumbInc: ${yNumbInc}; ppxPerNumber: ${ppxPerNumber}`); //line inc
 
 
-  console.log(`max: ${max}, yMaxValue: ${yMaxValue}, chartHeight: ${chartHeight}px;`);
-  console.log(`w.innerHeight: ${window.innerHeight}, contextWrapper.clientHeight: ${contextWrapper.clientHeight} = chartHeight: ${chartHeight}`);
+  // console.log(`max: ${max}, yMaxValue: ${yMaxValue}, chartHeight: ${chartHeight}px;`);
+  // console.log(`w.innerHeight: ${window.innerHeight}, contextWrapper.clientHeight: ${contextWrapper.clientHeight} = chartHeight: ${chartHeight}`);
 
   let count = 0;
   //yAxis lines and values
@@ -146,7 +149,7 @@ function dynamicChart(params) {
     const yNumberCount = yMaxValue - (count * yNumbInc);
 
     //lines (by i == pixel location for each line)
-    yAxisLines += `<line class="xAxis" x1="${0}" y1="${i}" x2="${1300}" y2="${i}"></line>`;
+    yAxisLines += `<line class="xAxis" x1="${0}" y1="${i}" x2="${width}" y2="${i}"></line>`;
 
     //numbers (by yMax)
     yAxisValues += `<text x="${xIndent - 2}" y="${i + 5}">${yNumberCount}</text>`;
@@ -154,14 +157,13 @@ function dynamicChart(params) {
   }
 
 
-  console.log(features);
+  // console.log(features);
   //horizontal bars
   for (let i = 0; i < features.length; i++) {
     const att = features[i].attributes;
     const yOffset = chartHeight - (yLineInc * l.yLines + (l.yTextPadding * 2)); //3 - difference with the rounding heights
-    console.log(yOffset);
-    // console.log(att.POS_NEW * ppxPerNumber);
-    bars += `<rect 
+
+    xBars += `<rect 
         x="${0 + 10 + i * (barWidth + barSpacing)}" 
         y="${Math.round(chartHeight - yOffset - l.yTextPadding - att.POS_NEW * ppxPerNumber)}" 
         width="${barWidth}px" 
@@ -178,10 +180,45 @@ function dynamicChart(params) {
       if (display.toString().length == 3) half += 6;
       if (display.toString().length == 4) half += 9;
 
-      // xAxisLabels += `<text x="${0 + 10 + i * (barWidth + barSpacing) + half}" y="${height + 15}">${display}</text>`;
+      xAxisLabels += `<text 
+        x="${0 + 10 + i * (barWidth + barSpacing) + half}" 
+        y="${Math.round(chartHeight - yOffset - l.yTextPadding) + 20}">
+        ${display}
+        </text>`;
     }
   }
 
+
+  return `
+  <div style="display:flex;">
+    <div id="fixed-svg">
+      <svg style="height:${chartHeight + yLabelMargin}px; width: ${xIndent}px; background-color:"inherit";">
+        <title id="title">Brown County Covid Cases</title>
+        
+        <g class="labels y-labels"">
+          ${yAxisValues}
+        </g>
+
+        <text x="${20}" y="${chartHeight / 2}" transform="rotate(-90,${20},${chartHeight / 2})" class="label-title">New Cases</text>
+        
+      </svg>
+    </div>
+    
+    <div id="scrolling-svg" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
+
+      <svg x="${xIndent}" height="${chartHeight + yLabelMargin}px" width="${width + xIndent * 2}" class="labels x-labels">
+        <g>${yAxisLines}</g>
+        <g>${xBars}</g>
+        <g>${xAxisLabels}</g>
+      </svg>
+
+    </div>
+  </div>
+
+  <div id="xTitle">
+<span style="display:flex; justify-content:center" class="label-title">Dates</span>
+  </div>
+  `;
   // console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}`);
 
   // console.log(`window innerWidth:${window.innerWidth}, innerHeight:${window.innerHeight}`);
@@ -190,35 +227,4 @@ function dynamicChart(params) {
 
   // console.log(features);
   //${window.innerWidth}px
-  return `
-  <div style="display:flex;">
-    <div id="fixed-svg">
-      <svg style="height:${chartHeight}px; width: ${xIndent}px; background-color:beige;">
-        <title id="title">Brown County Covid Cases</title>
-        
-        <g class="labels y-labels"">
-          ${yAxisValues}
-        </g>
-
-        <text x="${23}" y="${chartHeight / 2}" transform="rotate(-90,${23},${chartHeight / 2})" class="label-title">New Cases</text>
-        
-      </svg>
-    </div>
-    
-    <div id="scrolling-svg" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
-
-      <svg x="${20}" height="${chartHeight}px" width="1000px" class="labels x-labels">
-        ${yAxisLines}
-        ${bars}
-      </svg>
-
-    </div>
-  </div>
-
-  <div id="xTitle">
-    <svg height="40" width="100%">
-      <text x="${contextWrapper.clientWidth / 2}" y="20" class="label-title">Dates</text>
-    </svg>
-  </div>
-  `;
 }
