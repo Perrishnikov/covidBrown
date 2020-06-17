@@ -23,7 +23,7 @@ window.onload = () => {
   const selected = dropdown.options[dropdown.selectedIndex].value;
 
   // onload, get selected (WI) data
-  getTheData(selected, geoStart);
+  getTheData({value: selected, geo:geoStart});
 
   // onchange, get county data
   dropdown.addEventListener('change', e => {
@@ -32,7 +32,7 @@ window.onload = () => {
     /**@type {string} */
     const value = e.target.value;
 
-    getTheData(value, geoChange);
+    getTheData({value, geo:geoChange});
   });
 
   settings.addEventListener('click', () => {
@@ -40,16 +40,18 @@ window.onload = () => {
   });
 
   //*looks okay - check for memory leak with addEventListeners
-  window.addEventListener('orientationchange', () => {
+  window.addEventListener('orientationchange', e => {
     console.log('the orientation of the device is now ' + screen.orientation.angle);
-    /**@type {'state'|'county'} */
-    const geoRotate = dropdown.selectedOptions[0].dataset.geo;
-    /**@type {string} - county (or state) */
-    const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
+    // console.log(screen.orientation);
+
 
     window.setTimeout(function () {
-      getTheData(selectedRotate, geoRotate);
-    }, 50);
+      /**@type {'state'|'county'} */
+      const geoRotate = dropdown.selectedOptions[0].dataset.geo;
+      /**@type {string} - county (or state) */
+      const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
+      getTheData({ value: selectedRotate, geo: geoRotate });
+    }, 100);
 
   });
 
@@ -59,7 +61,7 @@ window.onload = () => {
     let prString = (pr * 100).toFixed(0);
     console.warn(prString);
     // pixelRatioBox.innerText = `${prString}% (${pr.toFixed(2)})`;
-  }
+  };
 
   // updatePixelRatio();
 
@@ -67,6 +69,9 @@ window.onload = () => {
 
 };
 
+// screen.addEventListener('change', () => { 
+//   console.log("... " + screen.orientation.angle);
+// });
 
 /**
  * 
@@ -74,7 +79,7 @@ window.onload = () => {
  * @param {'county'|'state'} geo 
  * @returns {void} - manipulates DOM
  */
-async function getTheData(value, geo) {
+async function getTheData({ value, geo }) {
 
   if (storageAvailable('localStorage')) {
     const cachedFeatures = await getWithExpiry(value);
@@ -130,14 +135,17 @@ function parseTheStats(params) {
   //county highest new (& state)
   //county total 
 
-  return`
+  return `
   <div>Stats</div>
   `;
-  
+
 }
 
 function handleSettings(cW) {
 
 }
-
-
+//Browser 	CSS Prefix	JavaScript Prefix
+// Safari & Chrome	-webkit-	webkit
+// Internet Explorer	-ms-	ms
+// Firefox	-moz-	moz
+// Opera	-o-	
