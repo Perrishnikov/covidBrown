@@ -23,7 +23,7 @@ window.onload = () => {
   const selected = dropdown.options[dropdown.selectedIndex].value;
 
   // onload, get selected (WI) data
-  getTheData({value: selected, geo:geoStart});
+  getTheData({ value: selected, geo: geoStart });
 
   // onchange, get county data
   dropdown.addEventListener('change', e => {
@@ -32,7 +32,7 @@ window.onload = () => {
     /**@type {string} */
     const value = e.target.value;
 
-    getTheData({value, geo:geoChange});
+    getTheData({ value, geo: geoChange });
   });
 
   settings.addEventListener('click', () => {
@@ -44,14 +44,15 @@ window.onload = () => {
     console.log('the orientation of the device is now ' + screen.orientation.angle);
     // console.log(screen.orientation);
 
+    // console.log(e.type);
 
-    window.setTimeout(function () {
-      /**@type {'state'|'county'} */
-      const geoRotate = dropdown.selectedOptions[0].dataset.geo;
-      /**@type {string} - county (or state) */
-      const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
-      getTheData({ value: selectedRotate, geo: geoRotate });
-    }, 100);
+    // window.setTimeout(function () {
+    //   /**@type {'state'|'county'} */
+    //   const geoRotate = dropdown.selectedOptions[0].dataset.geo;
+    //   /**@type {string} - county (or state) */
+    //   const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
+    //   getTheData({ value: selectedRotate, geo: geoRotate });
+    // }, 100);
 
   });
 
@@ -66,6 +67,15 @@ window.onload = () => {
   // updatePixelRatio();
 
   matchMedia(mqString).addListener(updatePixelRatio);
+
+  window.addEventListener('resize', function () {
+    // Get screen size (inner/outerWidth, inner/outerHeight)
+    /**@type {'state'|'county'} */
+    const geoRotate = dropdown.selectedOptions[0].dataset.geo;
+    /**@type {string} - county (or state) */
+    const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
+    getTheData({ value: selectedRotate, geo: geoRotate });
+  }, false);
 
 };
 

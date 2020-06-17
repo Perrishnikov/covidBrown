@@ -138,7 +138,7 @@ function dynamicChart(params) {
 
   // max = 500;
   let yMaxValue = Math.ceil(max / l.yLines) * l.yLines; //round this up
-  let yLineInc = Math.round((chartHeight - l.yTextPadding * 2) / l.yLines); //pixel increment per line
+  let yLineInc = (chartHeight - l.yTextPadding * 2) / l.yLines; //pixel increment per line
   let yNumbInc = yMaxValue / l.yLines; // number increment per line
   let ppxPerNumber = roundToNearestHundredth(yLineInc / yNumbInc); //easy on the rounding here - can break if less than .00
   // console.log(`yLineInc: ${yLineInc} (px spacing per line); yNumbInc: ${yNumbInc}; ppxPerNumber: ${ppxPerNumber}`); //line inc
@@ -149,7 +149,7 @@ function dynamicChart(params) {
 
   let count = 0;
   //yAxis lines and values
-  for (let i = l.yTextPadding; i <= chartHeight; i += yLineInc) {
+  for (let i = l.yTextPadding; i < chartHeight; i += yLineInc) {
     const yNumberCount = yMaxValue - (count * yNumbInc);
     // console.log(`y location: ${i}`); console.count()
     //lines (by i == pixel location for each line)
