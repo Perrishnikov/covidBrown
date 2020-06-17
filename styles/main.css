@@ -43,6 +43,7 @@ body {
   padding: 4px;
   min-width: 120px;
   align-items: center;
+  /* https://stackoverflow.com/questions/6483425/prevent-iphone-from-zooming-in-on-select-in-web-app/13468469#13468469*/
 }
 #context-select select {
   /* display: flex; */
@@ -54,6 +55,7 @@ body {
   width: 100px;
   border: 1px solid #aaa;
   background-color: dimgray;
+  font-size: 16px; /* https://stackoverflow.com/questions/6483425/prevent-iphone-from-zooming-in-on-select-in-web-app/13468469#13468469*/
 }
 #context-select select:focus {
   outline: none;
@@ -117,6 +119,7 @@ body {
   fill: red;
   stroke-width: 1;
 }
+/* TODO = change this to breakpoints instead */
 @media screen and (orientation: landscape) {
   #context-wrapper {
     padding: 4px;
@@ -143,5 +146,12 @@ body {
   }
   #context-select {
     font-size: .6em;
+  }
+}
+@media (hover: none) { 
+  /* custom css for devices where the primary input mechanism cannot hover at all or cannot conveniently hover; 
+  https://stackoverflow.com/questions/12469875/how-to-code-css-media-queries-targeting-all-mobile-devices-and-tablets/42835826#42835826 */
+  body {
+    /* background-color: green; */
   }
 }

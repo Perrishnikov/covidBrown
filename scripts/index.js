@@ -1,10 +1,12 @@
 /* global storageAvailable, getWithExpiry, setWithExpiry, fetchData, parseData, chartAttack, dynamicChart */
 
 //[x]TODO - get state numbers.
-//TODO - adjust scale to screen height
+//[x]TODO - adjust scale to screen height
 //TODO - console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
 //TODO - summarize county data
 //TODO - 7 day average - display options
+//TODO - change orientation to breakpoints. Check for iOS for font-size
+//TODO - settings modal
 //[x]TODO - fix eslint
 
 const todaysDate = document.querySelector('#todaysDate');
@@ -12,6 +14,7 @@ const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings');
+const stats = document.querySelector('#context-stats');
 
 window.onload = () => {
   /**@type {'state'|'county'} */
@@ -32,9 +35,11 @@ window.onload = () => {
     getTheData(value, geoChange);
   });
 
-  settings.addEventListener('click', () => handleSettings(contextWrapper));
+  settings.addEventListener('click', () => {
+    console.log('handleSettings');
+  });
 
-  //TODO - check for memory leak with addEventListeners
+  //*looks okay - check for memory leak with addEventListeners
   window.addEventListener('orientationchange', () => {
     console.log('the orientation of the device is now ' + screen.orientation.angle);
     /**@type {'state'|'county'} */
@@ -46,8 +51,19 @@ window.onload = () => {
       getTheData(selectedRotate, geoRotate);
     }, 50);
 
-
   });
+
+  let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+  const updatePixelRatio = () => {
+    let pr = window.devicePixelRatio;
+    let prString = (pr * 100).toFixed(0);
+    console.warn(prString);
+    // pixelRatioBox.innerText = `${prString}% (${pr.toFixed(2)})`;
+  }
+
+  // updatePixelRatio();
+
+  matchMedia(mqString).addListener(updatePixelRatio);
 
 };
 
@@ -106,22 +122,22 @@ function drawDOM(features) {
   svgWrapper.innerHTML = dynamicChart({ days, max, features });
 
   todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
+
+  // stats.innerHTML = parseTheStats(features);
 }
 
-function handleSettings(w) {
-  console.dir(w);
-  console.log('handleSettings');
+function parseTheStats(params) {
+  //county highest new (& state)
+  //county total 
+
+  return`
+  <div>Stats</div>
+  `;
+  
+}
+
+function handleSettings(cW) {
+
 }
 
 
-let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
-const updatePixelRatio = () => {
-  let pr = window.devicePixelRatio;
-  let prString = (pr * 100).toFixed(0);
-  console.warn(prString);
-  // pixelRatioBox.innerText = `${prString}% (${pr.toFixed(2)})`;
-}
-
-// updatePixelRatio();
-
-matchMedia(mqString).addListener(updatePixelRatio);

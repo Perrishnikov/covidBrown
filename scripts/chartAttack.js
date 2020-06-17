@@ -101,15 +101,17 @@ function chartAttack(params) {
   `;
 }
 
+//devicePixelRatios 
+//okay: 2.625 (Pixel 2), 3.5 (Pixel 2 XL), 3 (XS), 4 
 function dynamicChart(params) {
   let { days, max, features } = params;
-  const contextWrapper = document.querySelector('#context-wrapper');
-  const svgWrapper = document.querySelector('#svg-wrapper');
+  const contextWrapper = document.querySelector('#context-wrapper'); //move this up
+  // const svgWrapper = document.querySelector('#svg-wrapper');
 
-  let xTitleSpace = 0;
+  let yLabelMargin = 20;
   //285 or 722
-  let chartHeight = window.innerHeight - contextWrapper.clientHeight;
-  svgWrapper.setAttribute('style', `width: 100%`);
+  let chartHeight = window.innerHeight - contextWrapper.clientHeight - yLabelMargin;
+  // svgWrapper.setAttribute('style', `width: 100%`); //? needed?
 
   let xAxisLabels = ''; //date
   let xBars = '';
@@ -120,23 +122,25 @@ function dynamicChart(params) {
   let yAxisLines = ''; //appended by for loop
   let xIndent = 50;
 
-  let yLabelMargin = 20;
-    //table id="county"
-    const width = (days * (barWidth + barSpacing));
+
+  //table id="county"
+  const width = (days * (barWidth + barSpacing));
 
   let l = {
-    yLines: 10, //number of y ticks (makes x line) - rounded up (+1)
+    yLines: 20, //number of y ticks (makes x line) - rounded up (+1) 
     yTextPadding: 10,
   };
   let p = {
     yLines: 20,
   };
 
+  // console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}........`);
+
   // max = 500;
-  let yMaxValue = (Math.ceil(max / l.yLines) * 10);
-  let yLineInc = Math.floor((chartHeight - l.yTextPadding * 2) / l.yLines); //pixel increment per line
+  let yMaxValue = Math.ceil(max / l.yLines) * l.yLines; //round this up
+  let yLineInc = Math.round((chartHeight - l.yTextPadding * 2) / l.yLines); //pixel increment per line
   let yNumbInc = yMaxValue / l.yLines; // number increment per line
-  let ppxPerNumber = yLineInc / yNumbInc;
+  let ppxPerNumber = roundToNearestHundredth(yLineInc / yNumbInc); //easy on the rounding here - can break if less than .00
   // console.log(`yLineInc: ${yLineInc} (px spacing per line); yNumbInc: ${yNumbInc}; ppxPerNumber: ${ppxPerNumber}`); //line inc
 
 
@@ -147,7 +151,7 @@ function dynamicChart(params) {
   //yAxis lines and values
   for (let i = l.yTextPadding; i <= chartHeight; i += yLineInc) {
     const yNumberCount = yMaxValue - (count * yNumbInc);
-
+    // console.log(`y location: ${i}`); console.count()
     //lines (by i == pixel location for each line)
     yAxisLines += `<line class="xAxis" x1="${0}" y1="${i}" x2="${width}" y2="${i}"></line>`;
 
@@ -182,7 +186,7 @@ function dynamicChart(params) {
 
       xAxisLabels += `<text 
         x="${0 + 10 + i * (barWidth + barSpacing) + half}" 
-        y="${Math.round(chartHeight - yOffset - l.yTextPadding) + 20}">
+        y="${Math.round(chartHeight - yOffset - l.yTextPadding) + 16}">
         ${display}
         </text>`;
     }
@@ -206,7 +210,7 @@ function dynamicChart(params) {
     
     <div id="scrolling-svg" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
 
-      <svg x="${xIndent}" height="${chartHeight + yLabelMargin}px" width="${width + xIndent * 2}" class="labels x-labels">
+      <svg x="${xIndent}" height="${chartHeight + yLabelMargin}px" width="${width + xIndent}" class="labels x-labels">
         <g>${yAxisLines}</g>
         <g>${xBars}</g>
         <g>${xAxisLabels}</g>
@@ -219,7 +223,7 @@ function dynamicChart(params) {
 <span style="display:flex; justify-content:center" class="label-title">Dates</span>
   </div>
   `;
-  // console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}`);
+
 
   // console.log(`window innerWidth:${window.innerWidth}, innerHeight:${window.innerHeight}`);
   // console.dir(contextWrapper);  
@@ -227,4 +231,18 @@ function dynamicChart(params) {
 
   // console.log(features);
   //${window.innerWidth}px
+}
+
+function roundToNearesOnes(number) {
+  return Math.round(number);
+}
+
+
+function roundToNearestHundredth(number) {
+  return Math.round((number) * 100) / 100;
+}
+
+
+function roundToNearestTenth(number) {
+  return Math.round((number) * 10) / 10;
 }
