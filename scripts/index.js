@@ -16,44 +16,29 @@ const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings');
 const stats = document.querySelector('#context-stats');
 
-window.onload = () => {
+window.onload = async () => {
   /**@type {'state'|'county'} */
-  const geoStart = dropdown.selectedOptions[0].dataset.geo;
+  const geo = dropdown.selectedOptions[0].dataset.geo;
   /**@type {string} - county (or state) */
   const selected = dropdown.options[dropdown.selectedIndex].value;
 
   // onload, get selected (WI) data
-  getTheData({ value: selected, geo: geoStart });
+  let d1 = await getTheData({ value: selected, geo });
+  render(d1);
 
   // onchange, get county data
-  dropdown.addEventListener('change', e => {
-    /**@type {'state'|'county'} */
-    const geoChange = e.target.selectedOptions[0].dataset.geo;
+  dropdown.addEventListener('change', async (e) => {
+    // /**@type {'state'|'county'} */
+    // const geoChange = e.target.selectedOptions[0].dataset.geo;
     /**@type {string} */
     const value = e.target.value;
 
-    getTheData({ value, geo: geoChange });
+    let d2 = await getTheData({ value, geo });
+    render(d2);
   });
 
   settings.addEventListener('click', () => {
     console.log('handleSettings');
-  });
-
-  //*looks okay - check for memory leak with addEventListeners
-  window.addEventListener('orientationchange', e => {
-    console.log('the orientation of the device is now ' + screen.orientation.angle);
-    // console.log(screen.orientation);
-
-    // console.log(e.type);
-
-    // window.setTimeout(function () {
-    //   /**@type {'state'|'county'} */
-    //   const geoRotate = dropdown.selectedOptions[0].dataset.geo;
-    //   /**@type {string} - county (or state) */
-    //   const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
-    //   getTheData({ value: selectedRotate, geo: geoRotate });
-    // }, 100);
-
   });
 
   let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
@@ -65,19 +50,37 @@ window.onload = () => {
   };
 
   // updatePixelRatio();
-
   matchMedia(mqString).addListener(updatePixelRatio);
 
-  window.addEventListener('resize', function () {
-    // Get screen size (inner/outerWidth, inner/outerHeight)
-    /**@type {'state'|'county'} */
-    const geoRotate = dropdown.selectedOptions[0].dataset.geo;
-    /**@type {string} - county (or state) */
-    const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
-    getTheData({ value: selectedRotate, geo: geoRotate });
-  }, false);
-
 };
+
+window.addEventListener('resize', async () => {
+  // console.log('the orientation of the device is now ' + screen.orientation.angle);
+
+  /**@type {'state'|'county'} */
+  const geoRotate = dropdown.selectedOptions[0].dataset.geo;
+  /**@type {string} - county (or state) */
+  const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
+
+  // console.log(`immediate window.innerHeight: ${window.innerHeight}`);
+  // getTheData({ value: selectedRotate, geo: geoRotate });
+
+  let firstData = await getTheData({ value: selectedRotate, geo: geoRotate });
+  // console.log('firstData', firstData);
+  render(firstData);
+
+  // window.setTimeout(function () {
+  //   /**@type {'state'|'county'} */
+  //   // const geoRotateInner = dropdown.selectedOptions[0].dataset.geo;
+  //   /**@type {string} - county (or state) */
+  //   // const selectedRotateInner = dropdown.options[dropdown.selectedIndex].value;
+
+  //   // let iN = await scoped(first);
+  //   // console.log(iN);
+  //   console.log(` after timeout, window.innerHeight: ${window.innerHeight}`);
+  //   // getTheData({ value: selectedRotateInner, geo: geoRotateInner });
+  // }, 1000);
+});
 
 // screen.addEventListener('change', () => { 
 //   console.log("... " + screen.orientation.angle);
@@ -90,12 +93,14 @@ window.onload = () => {
  * @returns {void} - manipulates DOM
  */
 async function getTheData({ value, geo }) {
+  // let cachedFeatures, fetchedFeatures, errors;
 
   if (storageAvailable('localStorage')) {
     const cachedFeatures = await getWithExpiry(value);
 
     if (cachedFeatures) {
-      drawDOM(cachedFeatures);
+      // drawDOM(cachedFeatures);
+      return { cachedFeatures }
     }
     /* else, fetch new item and set cached item */
     else {
@@ -107,10 +112,12 @@ async function getTheData({ value, geo }) {
         //? message to DOM that this was fetched?
 
         const fetchedFeatures = await getWithExpiry(key);
-        drawDOM(fetchedFeatures);
+        return { fetchedFeatures };
+        // drawDOM(fetchedFeatures);
 
       } else {
         console.log(`errors`);
+        return { errors }
         //     //TODO - add errors to DOM
         //     errors.forEach(error => {
         //       console.error(error);
@@ -126,15 +133,16 @@ async function getTheData({ value, geo }) {
   }
 }
 
-function drawDOM(features) {
+function render(params) {
+  const features = params.cachedFeatures || params.fetchedFeatures; //TODO - add others
+
   const d = new Date();
   const max = parseData.getMaxY(features);
   const days = parseData.getDays(features);
+  const windowHeight = window.innerHeight;
+  // console.log('render - windowHeight: ', windowHeight);
 
-  // update DOM
-  // svgWrapper.innerHTML = chartAttack({days, max, features});
-
-  svgWrapper.innerHTML = dynamicChart({ days, max, features });
+  svgWrapper.innerHTML = dynamicChart({ days, max, features, windowHeight, contextWrapper });
 
   todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
 

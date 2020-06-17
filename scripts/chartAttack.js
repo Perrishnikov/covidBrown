@@ -104,13 +104,13 @@ function chartAttack(params) {
 //devicePixelRatios 
 //okay: 2.625 (Pixel 2), 3.5 (Pixel 2 XL), 3 (XS), 4 
 function dynamicChart(params) {
-  let { days, max, features } = params;
-  const contextWrapper = document.querySelector('#context-wrapper'); //move this up
+  let { days, max, features, windowHeight, contextWrapper } = params;
+
   // const svgWrapper = document.querySelector('#svg-wrapper');
 
   let yLabelMargin = 20;
   //285 or 722
-  let chartHeight = window.innerHeight - contextWrapper.clientHeight - yLabelMargin;
+  let chartHeight = windowHeight - contextWrapper.clientHeight - yLabelMargin;
   // svgWrapper.setAttribute('style', `width: 100%`); //? needed?
 
   let xAxisLabels = ''; //date
