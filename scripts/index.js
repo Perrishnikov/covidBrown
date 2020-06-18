@@ -1,6 +1,4 @@
 /* global storageAvailable, getWithExpiry, setWithExpiry, fetchData, parseData, chartAttack, dynamicChart */
-import { html, render } from 'https://unpkg.com/lit-html?module';
-import { hello } from './test.js';
 
 //[x]TODO - get state numbers.
 //[x]TODO - adjust scale to screen height
@@ -20,45 +18,42 @@ const stats = document.querySelector('#context-stats');
 
 window.onload = async () => {
   const myTemplate = (name) => html`<p>Hello ${name}</p>`;
-  console.log(hello());
-  // Render the template to the document
-  render(myTemplate('World'), document.body);
 
   
-  // /**@type {'state'|'county'} */
-  // const geo = dropdown.selectedOptions[0].dataset.geo;
-  // /**@type {string} - county (or state) */
-  // const selected = dropdown.options[dropdown.selectedIndex].value;
+  /**@type {'state'|'county'} */
+  const geo = dropdown.selectedOptions[0].dataset.geo;
+  /**@type {string} - county (or state) */
+  const selected = dropdown.options[dropdown.selectedIndex].value;
 
-  // // onload, get selected (WI) data
-  // let d1 = await getTheData({ value: selected, geo });
-  // render(d1);
+  // onload, get selected (WI) data
+  let d1 = await getTheData({ value: selected, geo });
+  render(d1);
 
-  // // onchange, get county data
-  // dropdown.addEventListener('change', async (e) => {
-  //   // /**@type {'state'|'county'} */
-  //   const geoChange = e.target.selectedOptions[0].dataset.geo;
-  //   /**@type {string} */
-  //   const value = e.target.value;
+  // onchange, get county data
+  dropdown.addEventListener('change', async (e) => {
+    // /**@type {'state'|'county'} */
+    const geoChange = e.target.selectedOptions[0].dataset.geo;
+    /**@type {string} */
+    const value = e.target.value;
 
-  //   let d2 = await getTheData({ value, geo: geoChange });
-  //   render(d2);
-  // });
+    let d2 = await getTheData({ value, geo: geoChange });
+    render(d2);
+  });
 
-  // settings.addEventListener('click', () => {
-  //   console.log('handleSettings');
-  // });
+  settings.addEventListener('click', () => {
+    console.log('handleSettings');
+  });
 
-  // let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
-  // const updatePixelRatio = () => {
-  //   let pr = window.devicePixelRatio;
-  //   let prString = (pr * 100).toFixed(0);
-  //   console.warn(prString);
-  //   // pixelRatioBox.innerText = `${prString}% (${pr.toFixed(2)})`;
-  // };
+  let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+  const updatePixelRatio = () => {
+    let pr = window.devicePixelRatio;
+    let prString = (pr * 100).toFixed(0);
+    console.warn(prString);
+    // pixelRatioBox.innerText = `${prString}% (${pr.toFixed(2)})`;
+  };
 
-  // // updatePixelRatio();
-  // matchMedia(mqString).addListener(updatePixelRatio);
+  // updatePixelRatio();
+  matchMedia(mqString).addListener(updatePixelRatio);
 
 };
 
@@ -141,21 +136,21 @@ async function getTheData({ value, geo }) {
   }
 }
 
-// function render(params) {
-//   const features = params.cachedFeatures || params.fetchedFeatures; //TODO - add others
+function render(params) {
+  const features = params.cachedFeatures || params.fetchedFeatures; //TODO - add others
 
-//   const d = new Date();
-//   const max = parseData.getMaxY(features);
-//   const days = parseData.getDays(features);
-//   const windowHeight = window.innerHeight;
-//   // console.log('render - windowHeight: ', windowHeight);
+  const d = new Date();
+  const max = parseData.getMaxY(features);
+  const days = parseData.getDays(features);
+  const windowHeight = window.innerHeight;
+  // console.log('render - windowHeight: ', windowHeight);
 
-//   svgWrapper.innerHTML = dynamicChart({ days, max, features, windowHeight, contextWrapper });
+  svgWrapper.innerHTML = dynamicChart({ days, max, features, windowHeight, contextWrapper });
 
-//   todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
+  todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
 
-//   // stats.innerHTML = parseTheStats(features);
-// }
+  // stats.innerHTML = parseTheStats(features);
+}
 
 function parseTheStats(params) {
   //county highest new (& state)
