@@ -29,11 +29,11 @@ window.onload = async () => {
   // onchange, get county data
   dropdown.addEventListener('change', async (e) => {
     // /**@type {'state'|'county'} */
-    // const geoChange = e.target.selectedOptions[0].dataset.geo;
+    const geoChange = e.target.selectedOptions[0].dataset.geo;
     /**@type {string} */
     const value = e.target.value;
 
-    let d2 = await getTheData({ value, geo });
+    let d2 = await getTheData({ value, geo: geoChange });
     render(d2);
   });
 
