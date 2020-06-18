@@ -85,3 +85,5 @@ async function setWithExpiry(key, value) {
 
   return key;
 }
+
+export { storageAvailable, getWithExpiry, setWithExpiry }

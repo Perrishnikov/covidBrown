@@ -1,5 +1,12 @@
 /* global storageAvailable, getWithExpiry, setWithExpiry, fetchData, parseData, chartAttack, dynamicChart */
 
+// import { html, render } from 'https://unpkg.com/lit-html?module';
+// import { hello } from './test.js';
+import { storageAvailable, getWithExpiry, setWithExpiry } from './localStorage.js';
+import { fetchData, parseData } from './fetchData.js';
+import { dynamicChart } from './chartAttack.js';
+
+
 //[x]TODO - get state numbers.
 //[x]TODO - adjust scale to screen height
 //TODO - console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -17,9 +24,7 @@ const settings = document.querySelector('#settings');
 const stats = document.querySelector('#context-stats');
 
 window.onload = async () => {
-  const myTemplate = (name) => html`<p>Hello ${name}</p>`;
 
-  
   /**@type {'state'|'county'} */
   const geo = dropdown.selectedOptions[0].dataset.geo;
   /**@type {string} - county (or state) */
@@ -29,33 +34,36 @@ window.onload = async () => {
   let d1 = await getTheData({ value: selected, geo });
   render(d1);
 
-  // onchange, get county data
-  dropdown.addEventListener('change', async (e) => {
-    // /**@type {'state'|'county'} */
-    const geoChange = e.target.selectedOptions[0].dataset.geo;
-    /**@type {string} */
-    const value = e.target.value;
 
-    let d2 = await getTheData({ value, geo: geoChange });
-    render(d2);
-  });
 
-  settings.addEventListener('click', () => {
-    console.log('handleSettings');
-  });
+  // let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
+  // const updatePixelRatio = () => {
+  //   let pr = window.devicePixelRatio;
+  //   let prString = (pr * 100).toFixed(0);
+  //   console.warn(prString);
+  //   // pixelRatioBox.innerText = `${prString}% (${pr.toFixed(2)})`;
+  // };
 
-  let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
-  const updatePixelRatio = () => {
-    let pr = window.devicePixelRatio;
-    let prString = (pr * 100).toFixed(0);
-    console.warn(prString);
-    // pixelRatioBox.innerText = `${prString}% (${pr.toFixed(2)})`;
-  };
+  // // updatePixelRatio();
+  // matchMedia(mqString).addListener(updatePixelRatio);
 
-  // updatePixelRatio();
-  matchMedia(mqString).addListener(updatePixelRatio);
 
 };
+
+// onchange, get county data
+dropdown.addEventListener('change', async (e) => {
+  // /**@type {'state'|'county'} */
+  const geoChange = e.target.selectedOptions[0].dataset.geo;
+  /**@type {string} */
+  const value = e.target.value;
+
+  let d2 = await getTheData({ value, geo: geoChange });
+  render(d2);
+});
+
+settings.addEventListener('click', () => {
+  console.log('handleSettings');
+});
 
 window.addEventListener('resize', async () => {
   // console.log('the orientation of the device is now ' + screen.orientation.angle);
