@@ -54,3 +54,5 @@ const parseData = {
     return data.length;
   }
 };
+
+export { fetchData, parseData };

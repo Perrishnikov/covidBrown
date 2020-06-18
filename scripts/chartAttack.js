@@ -246,3 +246,5 @@ function roundToNearestHundredth(number) {
 function roundToNearestTenth(number) {
   return Math.round((number) * 10) / 10;
 }
+
+export { dynamicChart };
