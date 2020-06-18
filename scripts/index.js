@@ -1,5 +1,7 @@
 /* global storageAvailable, getWithExpiry, setWithExpiry, fetchData, parseData, chartAttack, dynamicChart */
 import { html, render } from 'https://unpkg.com/lit-html?module';
+import { hello } from './test.js';
+
 //[x]TODO - get state numbers.
 //[x]TODO - adjust scale to screen height
 //TODO - console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -18,9 +20,11 @@ const stats = document.querySelector('#context-stats');
 
 window.onload = async () => {
   const myTemplate = (name) => html`<p>Hello ${name}</p>`;
-
+  console.log(hello());
   // Render the template to the document
   render(myTemplate('World'), document.body);
+
+  
   // /**@type {'state'|'county'} */
   // const geo = dropdown.selectedOptions[0].dataset.geo;
   // /**@type {string} - county (or state) */
