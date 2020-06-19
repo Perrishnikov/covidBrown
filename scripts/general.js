@@ -1,6 +1,27 @@
 /* eslint-disable no-unused-vars */
 
 /**
+ * Use Fetch 
+ * @param {string} url 
+ */
+async function fetchData(url) {
+  const response = await fetch(url);
+
+  if (response.status == 200) {
+    const json = await response.json();
+
+    if (json) {
+      return { json, errors: [] };
+    } else {
+      return { errors: ['Features not found or is not an array.'] };
+    }
+  } else {
+    return { errors: [new Error(response.status)] };
+  }
+}
+
+
+/**
  * Checks browser for localStorage
  * https://www.sohamkamani.com/blog/javascript-localstorage-with-ttl-expiry/
  * @param {'localStorage'} type 
@@ -52,6 +73,13 @@ async function getWithExpiry(key) {
 }
 
 
+/**
+ * Gets value from localStorage if exists,
+ * Removes item if expired
+ * @param {string} key
+ * @param {[]} value
+ * @returns {null|string}
+ */
 async function setWithExpiry(key, value) {
   const expirationTime = 14; // 2:00 pm
 
@@ -86,4 +114,4 @@ async function setWithExpiry(key, value) {
   return key;
 }
 
-export { storageAvailable, getWithExpiry, setWithExpiry }
+export { storageAvailable, getWithExpiry, setWithExpiry, fetchData };

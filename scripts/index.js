@@ -1,9 +1,11 @@
-/* global storageAvailable, getWithExpiry, setWithExpiry, fetchData, parseData, chartAttack, dynamicChart */
+/* global */
 
-// import { html, render } from 'https://unpkg.com/lit-html?module';
+// import { html, render } from 'https://unpkg.com/lit-html?module'; //PROD
+// import { html, render } from '../node_modules/lit-html/lit-html.js'; //DEV
 // import { hello } from './test.js';
-import { storageAvailable, getWithExpiry, setWithExpiry } from './localStorage.js';
-import { fetchData, parseData } from './fetchData.js';
+// import { storageAvailable, getWithExpiry, setWithExpiry } from './localStorage.js';
+import { storageAvailable, getWithExpiry, setWithExpiry, fetchData } from './general.js';
+import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
 
 
@@ -15,7 +17,7 @@ import { dynamicChart } from './chartAttack.js';
 //TODO - change orientation to breakpoints. Check for iOS for font-size
 //TODO - settings modal
 //[x]TODO - fix eslint
-
+let state = {};
 const todaysDate = document.querySelector('#todaysDate');
 const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
@@ -31,10 +33,10 @@ window.onload = async () => {
   const selected = dropdown.options[dropdown.selectedIndex].value;
 
   // onload, get selected (WI) data
-  let d1 = await getTheData({ value: selected, geo });
-  render(d1);
-
-
+  let d1 = await getChartData({ value: selected, geo });
+  // console.log(d1);
+  state = d1;
+  renderOld(d1);
 
   // let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
   // const updatePixelRatio = () => {
@@ -46,19 +48,18 @@ window.onload = async () => {
 
   // // updatePixelRatio();
   // matchMedia(mqString).addListener(updatePixelRatio);
-
-
 };
 
 // onchange, get county data
 dropdown.addEventListener('change', async (e) => {
-  // /**@type {'state'|'county'} */
+
+  /**@type {'state'|'county'} */
   const geoChange = e.target.selectedOptions[0].dataset.geo;
   /**@type {string} */
   const value = e.target.value;
 
-  let d2 = await getTheData({ value, geo: geoChange });
-  render(d2);
+  let d2 = await getChartData({ value, geo: geoChange });
+  renderOld(d2);
 });
 
 settings.addEventListener('click', () => {
@@ -73,12 +74,18 @@ window.addEventListener('resize', async () => {
   /**@type {string} - county (or state) */
   const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
 
-  // console.log(`immediate window.innerHeight: ${window.innerHeight}`);
+  console.log(`immediate window.innerHeight: ${window.innerHeight}`);
   // getTheData({ value: selectedRotate, geo: geoRotate });
 
-  let firstData = await getTheData({ value: selectedRotate, geo: geoRotate });
+  let firstData = await getChartData({ value: selectedRotate, geo: geoRotate })
+    .then(d => {
+      console.log(`Then window.innerHeight: ${window.innerHeight}`);
+      return d;
+    });
   // console.log('firstData', firstData);
-  render(firstData);
+  //? instead of re-rendering, let's pass in new width and height...
+  state = firstData;
+  renderOld(firstData);
 
   // window.setTimeout(function () {
   //   /**@type {'state'|'county'} */
@@ -99,61 +106,70 @@ window.addEventListener('resize', async () => {
 
 /**
  * 
- * @param {string} value - county name
+ * @param {string} value - county name or state
  * @param {'county'|'state'} geo 
- * @returns {void} - manipulates DOM
+ * @returns {{cachedFeatures:object, fetchedFeatures:object, errors:object}} - manipulates DOM
  */
-async function getTheData({ value, geo }) {
-  // let cachedFeatures, fetchedFeatures, errors;
+async function getChartData({ value, geo }) {
 
   if (storageAvailable('localStorage')) {
     const cachedFeatures = await getWithExpiry(value);
 
     if (cachedFeatures) {
-      // drawDOM(cachedFeatures);
-      return { cachedFeatures }
+      return { cachedFeatures };
     }
     /* else, fetch new item and set cached item */
     else {
-      const { features, errors } = await fetchData(value, geo);
+      const { json, errors } = await fetchData(getUrl(value, geo));
 
+      /* check for fetching error */
       if (errors.length === 0) {
 
-        let key = await setWithExpiry(value, features);
-        //? message to DOM that this was fetched?
+        const { features, validationErrors } = validateFeatures(json);
 
-        const fetchedFeatures = await getWithExpiry(key);
-        return { fetchedFeatures };
-        // drawDOM(fetchedFeatures);
+        /* check for parsing errors */
+        if (validationErrors.length === 0) {
+          let key = await setWithExpiry(value, features);
+          //? message to DOM that this was fetched?
+
+          const fetchedFeatures = await getWithExpiry(key);
+          return { fetchedFeatures };
+        } else {
+          return { errors: validationErrors };
+        }
+
 
       } else {
         console.log(`errors`);
-        return { errors }
-        //     //TODO - add errors to DOM
-        //     errors.forEach(error => {
-        //       console.error(error);
-        //     });
+        return { errors };
+        //TODO - add errors to DOM
       }
 
     }
   }
   /* no localStorage */
   else {
-    //     //TODO - add errors to DOM
-    console.error('Too bad, no localStorage for you');
+    //TODO - add errors to DOM
+    return { errors: ['Too bad, no localStorage for you'] };
   }
 }
 
-function render(params) {
-  const features = params.cachedFeatures || params.fetchedFeatures; //TODO - add others
 
+function renderOld(params) {
+  const features = params.cachedFeatures || params.fetchedFeatures;
+  const errors = params.errors;
+
+  const  orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
   const d = new Date();
-  const max = parseData.getMaxY(features);
-  const days = parseData.getDays(features);
-  const windowHeight = window.innerHeight;
-  // console.log('render - windowHeight: ', windowHeight);
+  //TODO = check state
 
-  svgWrapper.innerHTML = dynamicChart({ days, max, features, windowHeight, contextWrapper });
+  svgWrapper.innerHTML = dynamicChart({
+    data: features,
+    numOfDays: parseData.numOfDays(features),
+    highestCasesPerDay: parseData.highestCasesPerDay(features),
+    windowHeight: window.innerHeight - contextWrapper.clientHeight,
+    orientation,
+  });
 
   todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
 

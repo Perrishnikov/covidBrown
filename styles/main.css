@@ -4,32 +4,27 @@
   --pad: .3em;
 }
 body {
+  display: flex;
+  flex-direction: column;
   font-family: 'Open Sans', sans-serif;
   width: 100%;
   background-color: dimgray;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
   font-size: 1em;
 }
-
 #context-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: start;
   padding: 12px;
-  /* margin-left: 42px; */
 }
 #context-title {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 4px;
   font-size: 1.1em;
-  align-items: center;
-  /* flex: 0 1; */
-  /* flex-grow: 1; */
-  /* width:100%; */
-  justify-content: space-between;
 }
 #context-select {
   display: flex;
@@ -41,24 +36,23 @@ body {
   display: flex;
   flex-direction: row;
   padding: 4px;
-  min-width: 120px;
   align-items: center;
   /* https://stackoverflow.com/questions/6483425/prevent-iphone-from-zooming-in-on-select-in-web-app/13468469#13468469*/
 }
 #context-select select {
-  /* display: flex; */
-  /* flex-direction: column; */
   border-radius: .3em;
   margin-left: 8px;
-  margin-right: 8px;
-  padding: 4px;
-  width: 100px;
+  margin-right: 8px;  
   border: 1px solid #aaa;
   background-color: dimgray;
   font-size: 16px; /* https://stackoverflow.com/questions/6483425/prevent-iphone-from-zooming-in-on-select-in-web-app/13468469#13468469*/
 }
 #context-select select:focus {
   outline: none;
+}
+#context-select option {
+  /* background-color: aquamarine; */
+  /* text-align: center; */
 }
 #context-select #todaysDate {
   /* background-color: aqua; */

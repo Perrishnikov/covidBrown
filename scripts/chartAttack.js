@@ -103,73 +103,76 @@ function chartAttack(params) {
 
 //devicePixelRatios 
 //okay: 2.625 (Pixel 2), 3.5 (Pixel 2 XL), 3 (XS), 4 
+/**
+ * 
+ * @param {object} params 
+ * @param {number} params.numOfDays
+ * @param {number} params.highestCasesPerDay
+ * @param {number} params.windowHeight
+ * @param {'portrait'|'landscape'} params.orientation
+ */
 function dynamicChart(params) {
-  let { days, max, features, windowHeight, contextWrapper } = params;
+  const { data, numOfDays, highestCasesPerDay, windowHeight, orientation } = params;
 
-  // const svgWrapper = document.querySelector('#svg-wrapper');
-
-  let yLabelMargin = 20;
-  //285 or 722
-  let chartHeight = windowHeight - contextWrapper.clientHeight - yLabelMargin;
-  // svgWrapper.setAttribute('style', `width: 100%`); //? needed?
-
-  let xAxisLabels = ''; //date
-  let xBars = '';
+  //x-axis
+  let xAxisLabels = ''; //data labels (dates)
+  let xBars = ''; //data values (number)
   const barWidth = 9;
   const barSpacing = 9;
+  const chartWidth = (numOfDays * (barWidth + barSpacing));
 
-  let yAxisValues = ''; //count
+  //y-axis
+  let yAxisValues = ''; //count (cases)
   let yAxisLines = ''; //appended by for loop
-  let xIndent = 50;
+  const yAxisWidth = 50; //width of y-axis area
+  const yLabelMargin = 20; //space at bottom for dates
+  const chartHeight = windowHeight - yLabelMargin; //285 or 722
 
-
-  //table id="county"
-  const width = (days * (barWidth + barSpacing));
-
+  //orientation
   let l = {
-    yLines: 20, //number of y ticks (makes x line) - rounded up (+1) 
+    yLineCount: 20, //number of y ticks (makes x line) - rounded up (+1) 
     yTextPadding: 10,
   };
   let p = {
-    yLines: 20,
+    yLineCount: 40,
+    yTextPadding: 10,
   };
+  const yLineCount = orientation === 'landscape' ? l.yLineCount : p.yLineCount;
+  const yTextPadding = orientation === 'landscape' ? l.yTextPadding : p.yTextPadding;
+
+  //calculated
+  const yMaxValue = Math.ceil(highestCasesPerDay / yLineCount) * yLineCount; //round this up
+  const yLineInc = (chartHeight - l.yTextPadding * 2) / yLineCount; //pixel increment per line
+  const yNumbInc = yMaxValue / yLineCount; // number increment per line
+  const ppxPerNumber = roundToNearestHundredth(yLineInc / yNumbInc); //easy on the rounding here - can break if less than .00
 
   // console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}........`);
-
-  // max = 500;
-  let yMaxValue = Math.ceil(max / l.yLines) * l.yLines; //round this up
-  let yLineInc = (chartHeight - l.yTextPadding * 2) / l.yLines; //pixel increment per line
-  let yNumbInc = yMaxValue / l.yLines; // number increment per line
-  let ppxPerNumber = roundToNearestHundredth(yLineInc / yNumbInc); //easy on the rounding here - can break if less than .00
+  //calculated
   // console.log(`yLineInc: ${yLineInc} (px spacing per line); yNumbInc: ${yNumbInc}; ppxPerNumber: ${ppxPerNumber}`); //line inc
-
-
   // console.log(`max: ${max}, yMaxValue: ${yMaxValue}, chartHeight: ${chartHeight}px;`);
   // console.log(`w.innerHeight: ${window.innerHeight}, contextWrapper.clientHeight: ${contextWrapper.clientHeight} = chartHeight: ${chartHeight}`);
 
-  let count = 0;
   //yAxis lines and values
-  for (let i = l.yTextPadding; i < chartHeight; i += yLineInc) {
+  let count = 0;
+  for (let i = yTextPadding; i < chartHeight; i += yLineInc) {
     const yNumberCount = yMaxValue - (count * yNumbInc);
     // console.log(`y location: ${i}`); console.count()
     //lines (by i == pixel location for each line)
-    yAxisLines += `<line class="xAxis" x1="${0}" y1="${i}" x2="${width}" y2="${i}"></line>`;
+    yAxisLines += `<line class="xAxis" x1="${0}" y1="${i}" x2="${chartWidth}" y2="${i}"></line>`;
 
     //numbers (by yMax)
-    yAxisValues += `<text x="${xIndent - 2}" y="${i + 5}">${yNumberCount}</text>`;
+    yAxisValues += `<text x="${yAxisWidth - 2}" y="${i + 5}">${yNumberCount}</text>`;
     count++;
   }
 
-
-  // console.log(features);
   //horizontal bars
-  for (let i = 0; i < features.length; i++) {
-    const att = features[i].attributes;
-    const yOffset = chartHeight - (yLineInc * l.yLines + (l.yTextPadding * 2)); //3 - difference with the rounding heights
+  for (let i = 0; i < data.length; i++) {
+    const att = data[i].attributes;
+    const yOffset = chartHeight - (yLineInc * yLineCount + (yTextPadding * 2)); //3 - difference with the rounding heights
 
     xBars += `<rect 
         x="${0 + 10 + i * (barWidth + barSpacing)}" 
-        y="${Math.round(chartHeight - yOffset - l.yTextPadding - att.POS_NEW * ppxPerNumber)}" 
+        y="${Math.round(chartHeight - yOffset - yTextPadding - att.POS_NEW * ppxPerNumber)}" 
         width="${barWidth}px" 
         height="${Math.round(att.POS_NEW * ppxPerNumber)}px" 
         data-positive="${att.POS_NEW}"/>`;
@@ -186,7 +189,7 @@ function dynamicChart(params) {
 
       xAxisLabels += `<text 
         x="${0 + 10 + i * (barWidth + barSpacing) + half}" 
-        y="${Math.round(chartHeight - yOffset - l.yTextPadding) + 16}">
+        y="${Math.round(chartHeight - yOffset - yTextPadding) + 16}">
         ${display}
         </text>`;
     }
@@ -196,7 +199,7 @@ function dynamicChart(params) {
   return `
   <div style="display:flex;">
     <div id="fixed-svg">
-      <svg style="height:${chartHeight + yLabelMargin}px; width: ${xIndent}px; background-color:"inherit";">
+      <svg style="height:${chartHeight + yLabelMargin}px; width: ${yAxisWidth}px;>
         <title id="title">Brown County Covid Cases</title>
         
         <g class="labels y-labels"">
@@ -210,7 +213,7 @@ function dynamicChart(params) {
     
     <div id="scrolling-svg" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
 
-      <svg x="${xIndent}" height="${chartHeight + yLabelMargin}px" width="${width + xIndent}" class="labels x-labels">
+      <svg x="${yAxisWidth}" height="${chartHeight + yLabelMargin}px" width="${chartWidth + yAxisWidth}" class="labels x-labels">
         <g>${yAxisLines}</g>
         <g>${xBars}</g>
         <g>${xAxisLabels}</g>
@@ -220,17 +223,9 @@ function dynamicChart(params) {
   </div>
 
   <div id="xTitle">
-<span style="display:flex; justify-content:center" class="label-title">Dates</span>
+    <span style="display:flex; justify-content:center" class="label-title">Dates</span>
   </div>
   `;
-
-
-  // console.log(`window innerWidth:${window.innerWidth}, innerHeight:${window.innerHeight}`);
-  // console.dir(contextWrapper);  
-  // console.log(`contextWrapper clientWidth: ${contextWrapper.clientWidth}, clientHeight: ${contextWrapper.clientHeight}`);
-
-  // console.log(features);
-  //${window.innerWidth}px
 }
 
 function roundToNearesOnes(number) {
