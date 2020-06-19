@@ -16,16 +16,30 @@
   <link rel="icon" href="assets/COVID-19_Icon.svg">
 
   <link rel="stylesheet" href="styles/main.css" media="screen">
+  <link rel="stylesheet" href="styles/modal.css" media="screen">
   <!-- <link href="desktop.css" rel="stylesheet" media="screen and (min-width: 600px)"> -->
 </head>
 
 <body>
+  <!-- Modal -->
+  <div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+
+      <div class="box">Content</div>
+    </div>
+    <div id="modal-close" class="button modal-close">
+      <img src="/assets/x-circleX.svg" />
+    </div>
+  </div>
+
+  <!-- Context -->
   <div id="context-wrapper">
     <div id="context-title">
       <span>Reported Wisconsin Covid-19 Cases</span>
-      <svg id="settings" width="24" height="24">
-        <image xlink:href="assets/settings.svg" />
-      </svg>
+      <span id="settings" class="button">
+        <img src="/assets/settings.svg" />
+      </span>
     </div>
 
     <div id="context-select">
@@ -119,12 +133,12 @@
           <span id="expiryDate"></span>
         </div>
       </div>
-      
+
     </div>
 
   </div>
 
-
+  <!-- SVG -->
   <div id="svg-wrapper" class="svg-wrapper">
     <span>Loading...</span>
   </div>

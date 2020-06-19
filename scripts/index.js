@@ -13,6 +13,7 @@ import { dynamicChart } from './chartAttack.js';
 //TODO - 7 day average - display options
 //TODO - change orientation to breakpoints. Check for iOS for font-size
 //TODO - settings modal
+//TODO = set scroll to max right on chart
 //[x]TODO - fix eslint
 
 const todaysDate = document.querySelector('#todaysDate');
@@ -59,28 +60,22 @@ dropdown.addEventListener('change', async (e) => {
   baseRender(d2);
 });
 
-settings.addEventListener('click', () => {
-  console.log('handleSettings');
-});
-
+//mobile orientation change or resize browser
 window.addEventListener('resize', async () => {
   // console.log('the orientation of the device is now ' + screen.orientation.angle);
+  // console.log(`immediate window.innerHeight: ${window.innerHeight}`);
 
   /**@type {'state'|'county'} */
   const geoRotate = dropdown.selectedOptions[0].dataset.geo;
   /**@type {string} - county (or state) */
   const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
 
-  // console.log(`immediate window.innerHeight: ${window.innerHeight}`);
-  // getTheData({ value: selectedRotate, geo: geoRotate });
+  const firstData = await getChartData({ value: selectedRotate, geo: geoRotate });
+  // .then(d => {
+  // console.log(`Then window.innerHeight: ${window.innerHeight}`);
+  // return d;
+  // });
 
-  let firstData = await getChartData({ value: selectedRotate, geo: geoRotate })
-    .then(d => {
-      console.log(`Then window.innerHeight: ${window.innerHeight}`);
-      return d;
-    });
-  // console.log('firstData', firstData);
-  //? instead of re-rendering, let's pass in new width and height...
   baseRender(firstData);
 
   // window.setTimeout(function () {
@@ -178,21 +173,25 @@ function baseRender(params) {
   // stats.innerHTML = parseTheStats(features);
 }
 
-function parseTheStats(params) {
-  //county highest new (& state)
-  //county total 
+// let modalBtn = document.getElementById('modal-btn');
+let modal = document.querySelector('.modal');
+let closeBtn = document.querySelector('#modal-close');
 
-  return `
-  <div>Stats</div>
-  `;
-
+settings.addEventListener('click', () => {
+  modal.style.display = 'flex';
+});
+// modalBtn.onclick = function () {
+//   modal.style.display = 'block';
+// };
+closeBtn.onclick = function () {
+  modal.style.display = 'none';
+};
+window.onclick = function (e) {
+  if (e.target === document.querySelector('.modal-background')) {
+    modal.style.display = 'none';
+  }
 }
 
 function handleSettings(cW) {
 
 }
-//Browser 	CSS Prefix	JavaScript Prefix
-// Safari & Chrome	-webkit-	webkit
-// Internet Explorer	-ms-	ms
-// Firefox	-moz-	moz
-// Opera	-o-	
