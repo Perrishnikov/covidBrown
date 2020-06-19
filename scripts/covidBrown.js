@@ -13,7 +13,8 @@ function getUrl(value, geo) {
 /**
  * returns features and errors if any
  * data model. use this for @type in (localStorage.js)?
- * @param {JSON} json 
+ * @param {JSON} json
+ * @returns {{features:object, errors:[]}}
  */
 function validateFeatures(json) {
   //TODO - needs field validation
@@ -30,10 +31,10 @@ function validateFeatures(json) {
   }
 }
 
-/* eslint-disable-next-line */
+
 const parseData = {
   highestCasesPerDay: data => {
-    let max = 60;
+    let max = 30;
 
     data.forEach(day => {
       // console.log(day.attributes.POS_NEW);

@@ -2,12 +2,9 @@
 
 // import { html, render } from 'https://unpkg.com/lit-html?module'; //PROD
 // import { html, render } from '../node_modules/lit-html/lit-html.js'; //DEV
-// import { hello } from './test.js';
-// import { storageAvailable, getWithExpiry, setWithExpiry } from './localStorage.js';
 import { storageAvailable, getWithExpiry, setWithExpiry, fetchData } from './general.js';
 import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
-
 
 //[x]TODO - get state numbers.
 //[x]TODO - adjust scale to screen height
@@ -17,13 +14,14 @@ import { dynamicChart } from './chartAttack.js';
 //TODO - change orientation to breakpoints. Check for iOS for font-size
 //TODO - settings modal
 //[x]TODO - fix eslint
-let state = {};
+
 const todaysDate = document.querySelector('#todaysDate');
+const expiryDate = document.querySelector('#expiryDate');
 const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings');
-const stats = document.querySelector('#context-stats');
+// const stats = document.querySelector('#context-stats');
 
 window.onload = async () => {
 
@@ -35,8 +33,7 @@ window.onload = async () => {
   // onload, get selected (WI) data
   let d1 = await getChartData({ value: selected, geo });
   // console.log(d1);
-  state = d1;
-  renderOld(d1);
+  baseRender(d1);
 
   // let mqString = `(resolution: ${window.devicePixelRatio}dppx)`;
   // const updatePixelRatio = () => {
@@ -59,7 +56,7 @@ dropdown.addEventListener('change', async (e) => {
   const value = e.target.value;
 
   let d2 = await getChartData({ value, geo: geoChange });
-  renderOld(d2);
+  baseRender(d2);
 });
 
 settings.addEventListener('click', () => {
@@ -74,7 +71,7 @@ window.addEventListener('resize', async () => {
   /**@type {string} - county (or state) */
   const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
 
-  console.log(`immediate window.innerHeight: ${window.innerHeight}`);
+  // console.log(`immediate window.innerHeight: ${window.innerHeight}`);
   // getTheData({ value: selectedRotate, geo: geoRotate });
 
   let firstData = await getChartData({ value: selectedRotate, geo: geoRotate })
@@ -84,8 +81,7 @@ window.addEventListener('resize', async () => {
     });
   // console.log('firstData', firstData);
   //? instead of re-rendering, let's pass in new width and height...
-  state = firstData;
-  renderOld(firstData);
+  baseRender(firstData);
 
   // window.setTimeout(function () {
   //   /**@type {'state'|'county'} */
@@ -113,10 +109,11 @@ window.addEventListener('resize', async () => {
 async function getChartData({ value, geo }) {
 
   if (storageAvailable('localStorage')) {
-    const cachedFeatures = await getWithExpiry(value);
+    // const cachedFeatures = await getWithExpiry(value);
+    let { data, expiry } = await getWithExpiry(value);
 
-    if (cachedFeatures) {
-      return { cachedFeatures };
+    if (data) {
+      return { cachedFeatures: data, expiry };
     }
     /* else, fetch new item and set cached item */
     else {
@@ -132,8 +129,9 @@ async function getChartData({ value, geo }) {
           let key = await setWithExpiry(value, features);
           //? message to DOM that this was fetched?
 
-          const fetchedFeatures = await getWithExpiry(key);
-          return { fetchedFeatures };
+          // eslint-disable-next-line no-shadow
+          let { data, expiry } = await getWithExpiry(key);
+          return { fetchedFeatures: data, expiry };
         } else {
           return { errors: validationErrors };
         }
@@ -155,12 +153,14 @@ async function getChartData({ value, geo }) {
 }
 
 
-function renderOld(params) {
+function baseRender(params) {
   const features = params.cachedFeatures || params.fetchedFeatures;
-  const errors = params.errors;
+  // console.log(features);
+  const { expiry, errors } = params;
 
-  const  orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+  const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
   const d = new Date();
+  const e = new Date(expiry);
   //TODO = check state
 
   svgWrapper.innerHTML = dynamicChart({
@@ -172,6 +172,8 @@ function renderOld(params) {
   });
 
   todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
+
+  expiryDate.innerHTML = `${e.getMonth() + 1}/${e.getDate()}/${e.getFullYear()} ${e.toLocaleTimeString()}`;
 
   // stats.innerHTML = parseTheStats(features);
 }

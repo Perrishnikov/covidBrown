@@ -49,27 +49,29 @@ function storageAvailable(type) {
  * @returns {null|string}
  */
 async function getWithExpiry(key) {
+  // console.log(key);
   const itemStr = localStorage.getItem(key);
 
   if (!itemStr) {
     console.log(`${key} not found`);
-    return null;
+    return { data: null, expiry: null };
   }
 
   //convert the item to a JSON string, since we can only store strings in localStorage.
   const item = JSON.parse(itemStr);
   const now = new Date();
+  const expDate = new Date(item.expiry);
 
   // compare the expiry time of the item with the current time
-  if (now > new Date(item.expiry)) {
+  if (now > expDate) {
     // If the item is expired, delete the item from storage and return null
     console.log(`removing key for ${key}`);
     localStorage.removeItem(key);
-    return null;
+    return { data: null, expiry: null };
   }
 
-  console.log(`cached value found for ${key}`);
-  return item.value;
+  console.log(`cached value found for ${key} with expiry of ${expDate.toLocaleTimeString()} on ${expDate.toLocaleDateString()}`);
+  return { data: item.value, expiry: expDate };
 }
 
 

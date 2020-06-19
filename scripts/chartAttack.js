@@ -168,13 +168,14 @@ function dynamicChart(params) {
   //horizontal bars
   for (let i = 0; i < data.length; i++) {
     const att = data[i].attributes;
+    const POS_NEW = att.POS_NEW > 0 ? att.POS_NEW : 0;
     const yOffset = chartHeight - (yLineInc * yLineCount + (yTextPadding * 2)); //3 - difference with the rounding heights
 
     xBars += `<rect 
         x="${0 + 10 + i * (barWidth + barSpacing)}" 
-        y="${Math.round(chartHeight - yOffset - yTextPadding - att.POS_NEW * ppxPerNumber)}" 
+        y="${Math.round(chartHeight - yOffset - yTextPadding - POS_NEW * ppxPerNumber)}" 
         width="${barWidth}px" 
-        height="${Math.round(att.POS_NEW * ppxPerNumber)}px" 
+        height="${Math.round(POS_NEW * ppxPerNumber)}px" 
         data-positive="${att.POS_NEW}"/>`;
 
     //adjust spacing for double digit dates
