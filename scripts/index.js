@@ -12,7 +12,7 @@ import { dynamicChart } from './chartAttack.js';
 //TODO - summarize county data
 //TODO - 7 day average - display options
 //TODO - change orientation to breakpoints. Check for iOS for font-size
-//TODO - settings modal
+//[x]TODO - settings modal
 //TODO = set scroll to max right on chart
 //[x]TODO - fix eslint
 
@@ -22,6 +22,7 @@ const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings');
+const showChartAverage = document.querySelector('#showChartAverage');
 // const stats = document.querySelector('#context-stats');
 
 window.onload = async () => {
@@ -135,14 +136,12 @@ async function getChartData({ value, geo }) {
       } else {
         console.log(`errors`);
         return { errors };
-        //TODO - add errors to DOM
       }
 
     }
   }
   /* no localStorage */
   else {
-    //TODO - add errors to DOM
     return { errors: ['Too bad, no localStorage for you'] };
   }
 }
@@ -153,24 +152,30 @@ function baseRender(params) {
   // console.log(features);
   const { expiry, errors } = params;
 
-  const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-  const d = new Date();
-  const e = new Date(expiry);
-  //TODO = check state
+  if (!errors) {
+    const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+    const d = new Date();
+    const e = new Date(expiry);
 
-  svgWrapper.innerHTML = dynamicChart({
-    data: features,
-    numOfDays: parseData.numOfDays(features),
-    highestCasesPerDay: parseData.highestCasesPerDay(features),
-    windowHeight: window.innerHeight - contextWrapper.clientHeight,
-    orientation,
-  });
+    svgWrapper.innerHTML = dynamicChart({
+      data: features,
+      numOfDays: parseData.numOfDays(features),
+      highestCasesPerDay: parseData.highestCasesPerDay(features),
+      windowHeight: window.innerHeight - contextWrapper.clientHeight,
+      orientation,
+    });
 
-  todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
+    todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
 
-  expiryDate.innerHTML = `${e.getMonth() + 1}/${e.getDate()}/${e.getFullYear()} ${e.toLocaleTimeString()}`;
+    expiryDate.innerHTML = `${e.getMonth() + 1}/${e.getDate()}/${e.getFullYear()} ${e.toLocaleTimeString()}`;
 
-  // stats.innerHTML = parseTheStats(features);
+  } else {
+
+    svgWrapper.innerHTML = errors.map(error => {
+      return `<div>${error}</div>`;
+    });
+  }
+
 }
 
 // let modalBtn = document.getElementById('modal-btn');
@@ -190,7 +195,15 @@ window.onclick = function (e) {
   if (e.target === document.querySelector('.modal-background')) {
     modal.style.display = 'none';
   }
-}
+};
+
+showChartAverage.addEventListener('change', () => {
+
+  if (showChartAverage.checked) {
+    const chartAverageDays = document.querySelector('#chartAverageDays');
+    console.dir(chartAverageDays.value);
+  }
+});
 
 function handleSettings(cW) {
 

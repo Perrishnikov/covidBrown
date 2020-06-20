@@ -128,13 +128,15 @@ function dynamicChart(params) {
   const yLabelMargin = 20; //space at bottom for dates
   const chartHeight = windowHeight - yLabelMargin; //285 or 722
 
+  console.assert(chartHeight / 40 > 10.5, `chartHeight ration is too small ${chartHeight} ...${chartHeight / 40} adjust p.yLineCount `); //<420
+
   //orientation
   let l = {
     yLineCount: 20, //number of y ticks (makes x line) - rounded up (+1) 
     yTextPadding: 10,
   };
   let p = {
-    yLineCount: 40,
+    yLineCount: 40, // 
     yTextPadding: 10,
   };
   const yLineCount = orientation === 'landscape' ? l.yLineCount : p.yLineCount;

@@ -53,25 +53,27 @@ async function getWithExpiry(key) {
   const itemStr = localStorage.getItem(key);
 
   if (!itemStr) {
-    console.log(`${key} not found`);
+    console.log(`${key} not found - go fetch`);
     return { data: null, expiry: null };
   }
+  else {
+    //convert the item to a JSON string, since we can only store strings in localStorage.
+    const item = JSON.parse(itemStr);
+    const now = new Date();
+    const expDate = new Date(item.expiry);
 
-  //convert the item to a JSON string, since we can only store strings in localStorage.
-  const item = JSON.parse(itemStr);
-  const now = new Date();
-  const expDate = new Date(item.expiry);
+    // compare the expiry time of the item with the current time
+    if (now > expDate) {
+      // If the item is expired, delete the item from storage and return null
+      console.log(`removing expired values for ${key}`);
+      localStorage.removeItem(key);
+      return { data: null, expiry: null };
+    }
 
-  // compare the expiry time of the item with the current time
-  if (now > expDate) {
-    // If the item is expired, delete the item from storage and return null
-    console.log(`removing key for ${key}`);
-    localStorage.removeItem(key);
-    return { data: null, expiry: null };
+    console.log(`cached value found for ${key} with expiry of ${expDate.toLocaleTimeString()} on ${expDate.toLocaleDateString()}`);
+    
+    return { data: item.value, expiry: expDate };
   }
-
-  console.log(`cached value found for ${key} with expiry of ${expDate.toLocaleTimeString()} on ${expDate.toLocaleDateString()}`);
-  return { data: item.value, expiry: expDate };
 }
 
 
@@ -93,13 +95,13 @@ async function setWithExpiry(key, value) {
 
 
   let expiry = new Date();
-  expiry.setHours(14, 0, 0);
+  expiry.setHours(expirationTime, 0, 0);
 
   //if it's after 2:00, set date for tomorrow
   if (nowTime > twoOclock) {
-    expiry.setDate(new Date().getDate() + 1);
+    expiry.setDate(new Date().getDate() + 1); //tomorrow at 2:00
   } else {
-    expiry.setDate(new Date().getDate());
+    expiry.setDate(new Date().getDate()); //today at 2:00
   }
   // `item` is an object which contains the original value
   // as well as the time when it's supposed to expire
