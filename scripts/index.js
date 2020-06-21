@@ -13,7 +13,7 @@ import { dynamicChart } from './chartAttack.js';
 //TODO - 7 day average - display options
 //TODO - change orientation to breakpoints. Check for iOS for font-size
 //[x]TODO - settings modal
-//TODO = set scroll to max right on chart
+//[x]TODO = set scroll to max right on chart
 //[x]TODO - fix eslint
 
 const todaysDate = document.querySelector('#todaysDate');
@@ -22,6 +22,8 @@ const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings');
+
+//Modal settings:
 const showChartAverage = document.querySelector('#showChartAverage');
 // const stats = document.querySelector('#context-stats');
 
@@ -157,6 +159,10 @@ function baseRender(params) {
     const d = new Date();
     const e = new Date(expiry);
 
+    // const { average, sum } = parseData.averagePOS_NEW(features);
+    const sma = parseData.smaPOS_NEW(features, 7);
+    console.log(sma);
+
     svgWrapper.innerHTML = dynamicChart({
       data: features,
       numOfDays: parseData.numOfDays(features),
@@ -169,6 +175,10 @@ function baseRender(params) {
 
     expiryDate.innerHTML = `${e.getMonth() + 1}/${e.getDate()}/${e.getFullYear()} ${e.toLocaleTimeString()}`;
 
+    // TODO - scrollingSvg created in chartAttack - needs to be disconnected 
+    const scrollingSvg = document.querySelector('#scrolling-svg');
+    scrollingSvg.scrollLeft = 1414;
+
   } else {
 
     svgWrapper.innerHTML = errors.map(error => {
@@ -179,15 +189,12 @@ function baseRender(params) {
 }
 
 // let modalBtn = document.getElementById('modal-btn');
-let modal = document.querySelector('.modal');
-let closeBtn = document.querySelector('#modal-close');
+const modal = document.querySelector('.modal');
+const closeBtn = document.querySelector('#modal-close');
 
 settings.addEventListener('click', () => {
   modal.style.display = 'flex';
 });
-// modalBtn.onclick = function () {
-//   modal.style.display = 'block';
-// };
 closeBtn.onclick = function () {
   modal.style.display = 'none';
 };

@@ -24,15 +24,8 @@
   <!-- Modal -->
   <div class="modal">
     <div class="modal-background"></div>
-    <!-- <div class="modal-content">
-
-      <div class="box">Content</div>
-    </div>
-    <div id="modal-close" class="button modal-close">
-      <img src="/assets/x-circleX.svg" />
-    </div> -->
+    
     <div class="modal-card">
-
       <header class="modal-card-head">
         <p class="modal-card-title">Settings</p>
         <!-- <button class="delete" aria-label="close"></button> -->
@@ -43,14 +36,14 @@
 
       <section class="modal-card-body">
         <div class="content">
-          <label style="display: flex; align-items: center;"class="">
+          <label style="display: flex; align-items: center;" class="">
             <input id="showChartAverage" type="checkbox">
-            <span style="margin-left: 6px;" >Show </span>
+            <span style="margin-left: 6px;">Show </span>
             <input style="width:35px; background-color: beige; margin-left: 6px; margin-right: 6px; text-align: center;" id="chartAverageDays" class="input" type="number" value="7">
             <span> day average</span>
           </label>
         </div>
-        
+
         <!-- Content ... -->
       </section>
       <footer class="modal-card-foot">
@@ -150,8 +143,13 @@
         </select>
       </label>
 
-      <div style="display: flex;">
+      <div style="display: flex; align-items: center;">
+        <div id="" style="display:none; margin-right: 4px; margin-left: -4px;;">
+          <img src="/assets/star.svg" />
+        </div>
+
         <div style="min-width:40px; display: flex; flex-direction: column; align-items: flex-start;">
+
           <span>Now:</span>
           <span>Expires:</span>
         </div>

@@ -31,7 +31,14 @@ function validateFeatures(json) {
   }
 }
 
-
+/**
+ * @type {{
+ * highestCasesPerDay: (data:[]) => number,
+ * numOfDays: (data:[]) => number,
+ * averagePOS_NEW: (data:[]) => {average:number, sum:number},
+ * smaPOS_NEW: (data:[], period:number) => {period:number, sma:{date:Date, value:number}[]}
+ * }
+ */
 const parseData = {
   highestCasesPerDay: data => {
     let max = 30;
@@ -44,8 +51,44 @@ const parseData = {
     });
     return max;
   },
+
   numOfDays: data => {
     return data.length;
+  },
+
+  averagePOS_NEW: (data) => {
+    const sum = data.reduce((prev, curr, index) => {
+      // console.log(data[index]);
+      curr = data[index].attributes.POS_NEW;
+      return prev + curr;
+    }, 0);
+    const average = Math.round((sum / data.length)) || 0;
+
+    // console.log(`The sum is: ${sum}. The average is: ${average}.`);
+    return { average, sum };
+  },
+
+  smaPOS_NEW: (data, period) => {
+    /**@type {Date} */
+    let date;
+    /**@type {number} */
+    let value;
+    const sma = data.map((element, index, arr) => {
+      date = new Date(arr[index].attributes.LoadDttm).toLocaleDateString();
+
+      if (index < period) {
+        value = null;
+
+      } else {
+        const slice = arr.slice(index - period, index);
+
+        value = parseData.averagePOS_NEW(slice);
+      }
+
+      return { date, value, period };
+    });
+
+    return { sma, period };
   }
 };
 

@@ -1,6 +1,6 @@
 .modal {
   align-items: center;
-  display: flex;
+  display: none; /* here */
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
