@@ -103,17 +103,28 @@ function chartAttack(params) {
 
 //devicePixelRatios 
 //okay: 2.625 (Pixel 2), 3.5 (Pixel 2 XL), 3 (XS), 4 
+
 /**
  * 
+ * @param {{sma: {date:Date, period:number, value:number|null}[], period:number}} data 
+ * @returns void - Update DOM
+ */
+function makeSma(data){
+  //TODO
+}
+
+/**
  * @param {object} params 
  * @param {number} params.numOfDays
  * @param {number} params.highestCasesPerDay
  * @param {number} params.windowHeight
  * @param {'portrait'|'landscape'} params.orientation
+ * @param {[]|null} params.sma
  */
 function dynamicChart(params) {
-  const { data, numOfDays, highestCasesPerDay, windowHeight, orientation } = params;
+  const { data, numOfDays, highestCasesPerDay, windowHeight, orientation, sma } = params;
 
+  console.log(sma);
   //x-axis
   let xAxisLabels = ''; //data labels (dates)
   let xBars = ''; //data values (number)
@@ -198,6 +209,10 @@ function dynamicChart(params) {
     }
   }
 
+  if(sma){
+    console.log(sma);
+  }
+
 
   return `
   <div style="display:flex;">
@@ -214,9 +229,9 @@ function dynamicChart(params) {
       </svg>
     </div>
     
-    <div id="scrolling-svg" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
+    <div id="scrolling-div" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
 
-      <svg x="${yAxisWidth}" height="${chartHeight + yLabelMargin}px" width="${chartWidth + yAxisWidth}" class="labels x-labels">
+      <svg id="svg-chart" x="${yAxisWidth}" height="${chartHeight + yLabelMargin}px" width="${chartWidth + yAxisWidth}" class="labels x-labels">
         <g>${yAxisLines}</g>
         <g>${xBars}</g>
         <g>${xAxisLabels}</g>

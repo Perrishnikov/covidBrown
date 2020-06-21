@@ -23,9 +23,6 @@ const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings');
 
-//Modal settings:
-const showChartAverage = document.querySelector('#showChartAverage');
-// const stats = document.querySelector('#context-stats');
 
 window.onload = async () => {
 
@@ -72,26 +69,19 @@ window.addEventListener('resize', async () => {
   const geoRotate = dropdown.selectedOptions[0].dataset.geo;
   /**@type {string} - county (or state) */
   const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
-
   const firstData = await getChartData({ value: selectedRotate, geo: geoRotate });
-  // .then(d => {
-  // console.log(`Then window.innerHeight: ${window.innerHeight}`);
-  // return d;
-  // });
-
   baseRender(firstData);
 
-  // window.setTimeout(function () {
-  //   /**@type {'state'|'county'} */
-  //   // const geoRotateInner = dropdown.selectedOptions[0].dataset.geo;
-  //   /**@type {string} - county (or state) */
-  //   // const selectedRotateInner = dropdown.options[dropdown.selectedIndex].value;
+  window.setTimeout(async () => {
+    /**@type {'state'|'county'} */
+    const geoRotateInner = dropdown.selectedOptions[0].dataset.geo;
+    /**@type {string} - county (or state) */
+    const selectedRotateInner = dropdown.options[dropdown.selectedIndex].value;
 
-  //   // let iN = await scoped(first);
-  //   // console.log(iN);
-  //   console.log(` after timeout, window.innerHeight: ${window.innerHeight}`);
-  //   // getTheData({ value: selectedRotateInner, geo: geoRotateInner });
-  // }, 1000);
+    // console.log(` after timeout, window.innerHeight: ${window.innerHeight}`);
+    const secondData = await getChartData({ value: selectedRotateInner, geo: geoRotateInner });
+    baseRender(secondData);
+  }, 500);
 });
 
 // screen.addEventListener('change', () => { 
@@ -149,6 +139,14 @@ async function getChartData({ value, geo }) {
 }
 
 
+/**
+ * 
+ * @param {object} params
+ * @param {*} [params.cachedFeatures]
+ * @param {*} [params.fetchedFeatures]
+ * @param {string[]} params.errors
+ * @return {void} - updates DOM
+ */
 function baseRender(params) {
   const features = params.cachedFeatures || params.fetchedFeatures;
   // console.log(features);
@@ -159,16 +157,13 @@ function baseRender(params) {
     const d = new Date();
     const e = new Date(expiry);
 
-    // const { average, sum } = parseData.averagePOS_NEW(features);
-    const sma = parseData.smaPOS_NEW(features, 7);
-    console.log(sma);
-
     svgWrapper.innerHTML = dynamicChart({
       data: features,
       numOfDays: parseData.numOfDays(features),
       highestCasesPerDay: parseData.highestCasesPerDay(features),
       windowHeight: window.innerHeight - contextWrapper.clientHeight,
       orientation,
+      // sma,
     });
 
     todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
@@ -176,8 +171,11 @@ function baseRender(params) {
     expiryDate.innerHTML = `${e.getMonth() + 1}/${e.getDate()}/${e.getFullYear()} ${e.toLocaleTimeString()}`;
 
     // TODO - scrollingSvg created in chartAttack - needs to be disconnected 
-    const scrollingSvg = document.querySelector('#scrolling-svg');
-    scrollingSvg.scrollLeft = 1414;
+    const scrollingDiv = document.querySelector('#scrolling-div');
+    scrollingDiv.scrollLeft = scrollingDiv.scrollLeftMax;
+
+    /** SETTINGS OPTIONS */
+    // const { average, sum } = parseData.averagePOS_NEW(features);
 
   } else {
 
@@ -188,7 +186,12 @@ function baseRender(params) {
 
 }
 
-// let modalBtn = document.getElementById('modal-btn');
+//Modal settings:
+
+// const stats = document.querySelector('#context-stats');
+//stats: county population
+// top five counties in states (pie cahrt)
+
 const modal = document.querySelector('.modal');
 const closeBtn = document.querySelector('#modal-close');
 
@@ -204,14 +207,30 @@ window.onclick = function (e) {
   }
 };
 
-showChartAverage.addEventListener('change', () => {
 
-  if (showChartAverage.checked) {
-    const chartAverageDays = document.querySelector('#chartAverageDays');
-    console.dir(chartAverageDays.value);
-  }
-});
+// const showChartAverage = document.querySelector('#showChartAverage');
+// showChartAverage.addEventListener('change', handleSma);
 
-function handleSettings(cW) {
+/** Settings Handlers */
+// function handleSma(features) {
+//   const sma = showChartAverage.checked ? parseData.smaPOS_NEW(features, 7) : null;
 
-}
+//   if (sma) {
+//     handleSma();
+//   }
+
+//   if (showChartAverage.checked) {
+//     const chartAverageDays = document.querySelector('#chartAverageDays'); //number of days to average
+//     const svgChart = document.querySelector('#svg-chart');
+//     let g = document.createElement('g');
+//     g.setAttribute('id', 'text');
+//     g.innerHTML = `<text x="20" y="20"> Hello</text>`;
+//     svgChart.append(g);
+
+//     console.dir(chartAverageDays.value);
+//   } else {
+//     const t = document.querySelector('#text');
+//     t.remove(t);
+
+//   }
+// }
