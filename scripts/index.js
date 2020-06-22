@@ -209,7 +209,7 @@ window.onclick = function (e) {
 };
 
 window.ontouch = function (e) {
-  console.log('touchStart');
+  console.log('touchstart');
   if (e.target === document.querySelector('.modal-background')) {
     modal.style.display = 'none';
   }
