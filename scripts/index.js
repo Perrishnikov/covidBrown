@@ -9,6 +9,7 @@ import { dynamicChart } from './chartAttack.js';
 //[x]TODO - get state numbers.
 //[x]TODO - adjust scale to screen height
 //TODO - console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
+// console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
 //TODO - summarize county data
 //TODO - 7 day average - display options
 //TODO - change orientation to breakpoints. Check for iOS for font-size
@@ -208,6 +209,7 @@ window.onclick = function (e) {
 };
 
 window.ontouch = function (e) {
+  console.log('touchStart');
   if (e.target === document.querySelector('.modal-background')) {
     modal.style.display = 'none';
   }
