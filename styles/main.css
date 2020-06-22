@@ -119,8 +119,8 @@ body {
   cursor: pointer;
 }
 .icon{
-  stroke: whitesmoke;
-  color: whitesmoke;
+  stroke: whitesmoke !important;
+  color: whitesmoke !important;
 }
 /* TODO = change this to breakpoints instead */
 @media screen and (orientation: landscape) {
