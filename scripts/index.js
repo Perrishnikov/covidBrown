@@ -208,7 +208,7 @@ window.onclick = function (e) {
   }
 };
 
-window.ontouch = function (e) {
+window.ontouchstart = function (e) {
   console.log('touchstart');
   if (e.target === document.querySelector('.modal-background')) {
     modal.style.display = 'none';
