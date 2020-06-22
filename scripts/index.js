@@ -47,43 +47,69 @@ window.onload = async () => {
 
   // // updatePixelRatio();
   // matchMedia(mqString).addListener(updatePixelRatio);
+  const modal = document.querySelector('.modal');
+  const closeBtn = document.querySelector('#modal-close');
+
+  settings.addEventListener('click', () => {
+    modal.style.display = 'flex';
+  });
+  closeBtn.onclick = function () {
+    modal.style.display = 'none';
+  };
+  window.onclick = function (e) {
+    if (e.target === document.querySelector('.modal-background')) {
+      modal.style.display = 'none';
+    }
+  };
+  window.addEventListener('touchstart', e => {
+    // window.ontouchstart = function (e) {
+
+    // console.log('touchstart');
+    if (e.target === document.querySelector('.modal-background')) {
+      modal.style.display = 'none';
+    }
+    // };
+  });
+
+  // onchange, get county data
+  dropdown.addEventListener('change', async (e) => {
+
+    /**@type {'state'|'county'} */
+    const geoChange = e.target.selectedOptions[0].dataset.geo;
+    /**@type {string} */
+    const value = e.target.value;
+
+    let d2 = await getChartData({ value, geo: geoChange });
+    baseRender(d2);
+  });
+
+  //mobile orientation change or resize browser
+  window.addEventListener('resize', async () => {
+    // console.log('the orientation of the device is now ' + screen.orientation.angle);
+    // console.log(`immediate window.innerHeight: ${window.innerHeight}`);
+
+    /**@type {'state'|'county'} */
+    const geoRotate = dropdown.selectedOptions[0].dataset.geo;
+    /**@type {string} - county (or state) */
+    const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
+    const firstData = await getChartData({ value: selectedRotate, geo: geoRotate });
+    baseRender(firstData);
+
+    // window.setTimeout(async () => {
+    //   /**@type {'state'|'county'} */
+    //   const geoRotateInner = dropdown.selectedOptions[0].dataset.geo;
+    //   /**@type {string} - county (or state) */
+    //   const selectedRotateInner = dropdown.options[dropdown.selectedIndex].value;
+
+    //   // console.log(` after timeout, window.innerHeight: ${window.innerHeight}`);
+    //   const secondData = await getChartData({ value: selectedRotateInner, geo: geoRotateInner });
+    //   baseRender(secondData);
+    // }, 500);
+  });
+
 };
 
-// onchange, get county data
-dropdown.addEventListener('change', async (e) => {
 
-  /**@type {'state'|'county'} */
-  const geoChange = e.target.selectedOptions[0].dataset.geo;
-  /**@type {string} */
-  const value = e.target.value;
-
-  let d2 = await getChartData({ value, geo: geoChange });
-  baseRender(d2);
-});
-
-//mobile orientation change or resize browser
-window.addEventListener('resize', async () => {
-  // console.log('the orientation of the device is now ' + screen.orientation.angle);
-  // console.log(`immediate window.innerHeight: ${window.innerHeight}`);
-
-  /**@type {'state'|'county'} */
-  const geoRotate = dropdown.selectedOptions[0].dataset.geo;
-  /**@type {string} - county (or state) */
-  const selectedRotate = dropdown.options[dropdown.selectedIndex].value;
-  const firstData = await getChartData({ value: selectedRotate, geo: geoRotate });
-  baseRender(firstData);
-
-  // window.setTimeout(async () => {
-  //   /**@type {'state'|'county'} */
-  //   const geoRotateInner = dropdown.selectedOptions[0].dataset.geo;
-  //   /**@type {string} - county (or state) */
-  //   const selectedRotateInner = dropdown.options[dropdown.selectedIndex].value;
-
-  //   // console.log(` after timeout, window.innerHeight: ${window.innerHeight}`);
-  //   const secondData = await getChartData({ value: selectedRotateInner, geo: geoRotateInner });
-  //   baseRender(secondData);
-  // }, 500);
-});
 
 // screen.addEventListener('change', () => { 
 //   console.log("... " + screen.orientation.angle);
@@ -193,27 +219,7 @@ function baseRender(params) {
 //stats: county population
 // top five counties in states (pie cahrt)
 
-const modal = document.querySelector('.modal');
-const closeBtn = document.querySelector('#modal-close');
 
-settings.addEventListener('click', () => {
-  modal.style.display = 'flex';
-});
-closeBtn.onclick = function () {
-  modal.style.display = 'none';
-};
-window.onclick = function (e) {
-  if (e.target === document.querySelector('.modal-background')) {
-    modal.style.display = 'none';
-  }
-};
-
-window.ontouchstart = function (e) {
-  console.log('touchstart');
-  if (e.target === document.querySelector('.modal-background')) {
-    modal.style.display = 'none';
-  }
-};
 // const showChartAverage = document.querySelector('#showChartAverage');
 // showChartAverage.addEventListener('change', handleSma);
 
