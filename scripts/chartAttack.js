@@ -124,7 +124,6 @@ function makeSma(data){
 function dynamicChart(params) {
   const { data, numOfDays, highestCasesPerDay, windowHeight, orientation, sma } = params;
 
-  console.log(sma);
   //x-axis
   let xAxisLabels = ''; //data labels (dates)
   let xBars = ''; //data values (number)
@@ -143,11 +142,11 @@ function dynamicChart(params) {
 
   //orientation
   let l = {
-    yLineCount: 20, //number of y ticks (makes x line) - rounded up (+1) 
+    yLineCount: 19, //number of y ticks (makes x line) - rounded up (+1) 
     yTextPadding: 10,
   };
   let p = {
-    yLineCount: 40, // 
+    yLineCount: 39, // 
     yTextPadding: 10,
   };
   const yLineCount = orientation === 'landscape' ? l.yLineCount : p.yLineCount;

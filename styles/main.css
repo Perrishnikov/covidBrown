@@ -118,6 +118,10 @@ body {
 .button {
   cursor: pointer;
 }
+.icon{
+  stroke: whitesmoke;
+  color: whitesmoke;
+}
 /* TODO = change this to breakpoints instead */
 @media screen and (orientation: landscape) {
   #context-wrapper {

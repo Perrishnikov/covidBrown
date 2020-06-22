@@ -72,16 +72,16 @@ window.addEventListener('resize', async () => {
   const firstData = await getChartData({ value: selectedRotate, geo: geoRotate });
   baseRender(firstData);
 
-  window.setTimeout(async () => {
-    /**@type {'state'|'county'} */
-    const geoRotateInner = dropdown.selectedOptions[0].dataset.geo;
-    /**@type {string} - county (or state) */
-    const selectedRotateInner = dropdown.options[dropdown.selectedIndex].value;
+  // window.setTimeout(async () => {
+  //   /**@type {'state'|'county'} */
+  //   const geoRotateInner = dropdown.selectedOptions[0].dataset.geo;
+  //   /**@type {string} - county (or state) */
+  //   const selectedRotateInner = dropdown.options[dropdown.selectedIndex].value;
 
-    // console.log(` after timeout, window.innerHeight: ${window.innerHeight}`);
-    const secondData = await getChartData({ value: selectedRotateInner, geo: geoRotateInner });
-    baseRender(secondData);
-  }, 500);
+  //   // console.log(` after timeout, window.innerHeight: ${window.innerHeight}`);
+  //   const secondData = await getChartData({ value: selectedRotateInner, geo: geoRotateInner });
+  //   baseRender(secondData);
+  // }, 500);
 });
 
 // screen.addEventListener('change', () => { 
@@ -171,9 +171,9 @@ function baseRender(params) {
     expiryDate.innerHTML = `${e.getMonth() + 1}/${e.getDate()}/${e.getFullYear()} ${e.toLocaleTimeString()}`;
 
     // TODO - scrollingSvg created in chartAttack - needs to be disconnected 
-    const scrollingDiv = document.querySelector('#scrolling-div');
-    scrollingDiv.scrollLeft = scrollingDiv.scrollLeftMax;
-
+    // const scrollingDiv = document.querySelector('#scrolling-div');
+    // scrollingDiv.scrollLeft = scrollingDiv.scrollLeftMax;
+    document.querySelector('#scrolling-div').scrollLeft += 5000;
     /** SETTINGS OPTIONS */
     // const { average, sum } = parseData.averagePOS_NEW(features);
 
