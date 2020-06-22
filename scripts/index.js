@@ -207,7 +207,11 @@ window.onclick = function (e) {
   }
 };
 
-
+window.ontouch = function (e) {
+  if (e.target === document.querySelector('.modal-background')) {
+    modal.style.display = 'none';
+  }
+};
 // const showChartAverage = document.querySelector('#showChartAverage');
 // showChartAverage.addEventListener('change', handleSma);
 

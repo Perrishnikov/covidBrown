@@ -1,6 +1,6 @@
 .modal {
   align-items: center;
-  display: none; /* here */
+  display: flex; /* here */
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
@@ -40,15 +40,18 @@
   }
 }
 .modal-close {
-  position: fixed;
-  right: 16px;
-  top: 16px;
-  z-index: 20;
+  /* position: fixed; */
+  /* right: 16px; */
+  /* top: 16px; */
+  /* z-index: 20; */
 }
 .modal-card-head {
   border-bottom: 1px solid #dbdbdb;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .modal-card-foot,
 .modal-card-head {
