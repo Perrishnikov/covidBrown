@@ -5,6 +5,7 @@
 import { storageAvailable, getWithExpiry, setWithExpiry, fetchData } from './general.js';
 import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
+import { componentSma } from './settingOptions.js';
 
 
 const todaysDate = document.querySelector('#todaysDate');
@@ -12,8 +13,9 @@ const expiryDate = document.querySelector('#expiryDate');
 const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
-const settings = document.querySelector('#settings');
-
+const settings = document.querySelector('#settings-icon');
+const version = document.querySelector('#version');
+const VERSION = 2.1;
 
 /**
  * https://davidwalsh.name/pubsub-javascript 
@@ -51,6 +53,7 @@ const events = (function () {
 
 
 async function handleDropdown() {
+
   /**@type {HTMLOptionElement} */
   const selected = dropdown.options[dropdown.selectedIndex];
   /**@type {'state'|'county'} */
@@ -68,10 +71,7 @@ const SUBS = events.subscribe('UPDATE', async (obj) => {
 });
 
 
-window.onload = () => handleDropdown();
-//mobile orientation change or resize browser
-window.addEventListener('resize', handleDropdown);
-dropdown.addEventListener('change', handleDropdown);
+window.onload = () => init();
 
 
 /**
@@ -173,26 +173,45 @@ function baseRender(params) {
 }
 
 
-/** MODAL */
-const modal = document.querySelector('.modal');
-const closeBtn = document.querySelector('#modal-close');
+function init() {
+  handleDropdown();
+  //mobile orientation change or resize browser
+  window.addEventListener('resize', handleDropdown);
+  dropdown.addEventListener('change', handleDropdown);
 
-settings.addEventListener('click', () => {
-  modal.style.display = 'flex';
-});
-closeBtn.onclick = function () {
-  modal.style.display = 'none';
-};
-window.onclick = function (e) {
-  if (e.target === document.querySelector('.modal-background')) {
+  version.innerHTML = `v${VERSION}`;
+
+  /** MODAL */
+  const modal = document.querySelector('.modal');
+  const closeBtn = document.querySelector('#modal-close');
+
+  settings.addEventListener('click', () => {
+    modal.style.display = 'flex';
+  });
+  closeBtn.onclick = function () {
     modal.style.display = 'none';
-  }
-};
-window.addEventListener('touchstart', e => {
-  if (e.target === document.querySelector('.modal-background')) {
-    modal.style.display = 'none';
-  }
-});
+  };
+  window.onclick = function (e) {
+    if (e.target === document.querySelector('.modal-background')) {
+      modal.style.display = 'none';
+    }
+  };
+  window.addEventListener('touchstart', e => {
+    if (e.target === document.querySelector('.modal-background')) {
+      modal.style.display = 'none';
+    }
+  });
+  loadSettingOptions();
+}
+
+function loadSettingOptions() {
+  const settingOptions = document.querySelector('#setting-options');
+  settingOptions.innerHTML = componentSma();
+
+  //SMA
+  const showChartAverage = document.querySelector('#showChartAverage');
+  showChartAverage.addEventListener('change', (e) => console.log(e));
+}
 
 //Modal settings:
 
