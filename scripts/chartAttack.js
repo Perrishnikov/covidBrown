@@ -109,7 +109,7 @@ function chartAttack(params) {
  * @param {{sma: {date:Date, period:number, value:number|null}[], period:number}} data 
  * @returns void - Update DOM
  */
-function makeSma(data){
+function makeSma(data) {
   //TODO
 }
 
@@ -127,8 +127,8 @@ function dynamicChart(params) {
   //x-axis
   let xAxisLabels = ''; //data labels (dates)
   let xBars = ''; //data values (number)
-  const barWidth = 9;
-  const barSpacing = 9;
+  const barWidth = 8;
+  const barSpacing = 8;
   const chartWidth = (numOfDays * (barWidth + barSpacing));
 
   //y-axis
@@ -157,6 +157,9 @@ function dynamicChart(params) {
   const yLineInc = (chartHeight - l.yTextPadding * 2) / yLineCount; //pixel increment per line
   const yNumbInc = yMaxValue / yLineCount; // number increment per line
   const ppxPerNumber = roundToNearestHundredth(yLineInc / yNumbInc); //easy on the rounding here - can break if less than .00
+
+  let smaLines = '';
+  let smaLegend;
 
   // console.log(`screen width: ${screen.width}, height: ${screen.height}, pixelRatio: ${window.devicePixelRatio}........`);
   //calculated
@@ -208,8 +211,31 @@ function dynamicChart(params) {
     }
   }
 
-  if(sma){
-    console.log(sma);
+  //sma
+  if (sma) {
+    // console.log(sma);
+    const yOffset = chartHeight - (yLineInc * yLineCount + (yTextPadding * 2)); //3 - difference with the rounding heights
+    let average, date, period, x, y;
+
+    smaLegend = `
+    <circle style="fill:red;" cx="${sma.sma.length * (barWidth + barSpacing) - 75}" cy="${15}" r="2"/>    
+    <text style="text-anchor: end; fill:red" x="${sma.sma.length * (barWidth + barSpacing)}" y="${20}">${sma.period} day SMA</text>`;
+
+    for (let i = 0; i < sma.sma.length; i++) {
+      average = sma.sma[i].value ? sma.sma[i].value.average : 0;
+      date = sma.sma[i].date;
+      period = sma.sma[i].period;
+      x = Math.round(+ 10 + i * (barWidth + barSpacing) + (barWidth / 2));
+      y = Math.round(chartHeight - yOffset - yTextPadding - average * ppxPerNumber);
+
+      smaLines += `<circle style="fill:red;"
+        data-date="${date}"
+        data-period="${period}"
+        data-sma="${average}"
+        cx="${x}" 
+        cy="${y}" 
+        r="2"/>`;
+    }
   }
 
 
@@ -219,7 +245,7 @@ function dynamicChart(params) {
       <svg style="height:${chartHeight + yLabelMargin}px; width: ${yAxisWidth}px;>
         <title id="title">Brown County Covid Cases</title>
         
-        <g class="labels y-labels"">
+        <g id="chart-" class="labels y-labels"">
           ${yAxisValues}
         </g>
 
@@ -231,9 +257,10 @@ function dynamicChart(params) {
     <div id="scrolling-div" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
 
       <svg id="svg-chart" x="${yAxisWidth}" height="${chartHeight + yLabelMargin}px" width="${chartWidth + yAxisWidth}" class="labels x-labels">
-        <g>${yAxisLines}</g>
-        <g>${xBars}</g>
-        <g>${xAxisLabels}</g>
+        <g id="chart-xy-axis-lines">${yAxisLines}</g>
+        <g id="chart-x-bars">${xBars}</g>
+        <g id="chart-x-axis-labels">${xAxisLabels}</g>
+        <g id="chart-sma">${smaLines}${smaLegend}</g>
       </svg>
 
     </div>

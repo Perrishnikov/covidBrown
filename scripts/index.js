@@ -15,10 +15,67 @@ const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings-icon');
 const version = document.querySelector('#version');
-const VERSION = 2.1;
+
+// const STATE = {
+//   smaIsChecked: true,
+//   smaDays: 7,
+//   geo: '',
+//   value: '',
+// };
+
+const STATE = (function () {
+  let self = {
+    version: 1.1,
+    smaIsChecked: true,
+    smaDays: 7,
+    geo: '',
+    value: ''
+  };
+
+
+  return {
+    get: thing => {
+
+      return self[thing] ? self[thing] : self;
+    },
+    setState: (obj) => {
+
+      if (obj) {
+
+        let tempObj = {};
+        for (let i in self) {
+          tempObj[i] = self[i];
+        }
+
+        // console.log(tempObj);
+        // console.log(Object.isFrozen(tempObj));
+
+        for (const prop in obj) {
+          if (obj.hasOwnProperty(prop)) {
+            // console.log(`obj.${prop} = ${obj[prop]}`);
+            tempObj[prop] = obj[prop];
+            // Object.freeze(self[prop]);
+          }
+        }
+
+        self = tempObj;
+
+        Object.freeze(self);
+
+        events.publish('UPDATE', self);
+        return self[obj];
+      } else {
+        // console.error('not found');
+        return null;
+      }
+    }
+  };
+
+}());
 
 /**
  * https://davidwalsh.name/pubsub-javascript 
+ * Pub Sub
 */
 const events = (function () {
   let topics = {};
@@ -52,26 +109,12 @@ const events = (function () {
 })();
 
 
-async function handleDropdown() {
-
-  /**@type {HTMLOptionElement} */
-  const selected = dropdown.options[dropdown.selectedIndex];
-  /**@type {'state'|'county'} */
-  const geo = selected.dataset.geo;
-  /**@type {string} - county (or state) */
-  const value = selected.value;
-
-  events.publish('UPDATE', { geo, value });
-}
-
 // eslint-disable-next-line no-unused-vars
-const SUBS = events.subscribe('UPDATE', async (obj) => {
-  const data = await getChartData(obj);
-  baseRender(data);
+const SUBS = events.subscribe('UPDATE', async (state) => {
+  const data = await getChartData(state);
+  baseRender({ data, state });
 });
 
-
-window.onload = () => init();
 
 
 /**
@@ -133,10 +176,10 @@ async function getChartData({ value, geo }) {
  * @param {string[]} params.errors
  * @return {void} - updates DOM
  */
-function baseRender(params) {
-  const features = params.cachedFeatures || params.fetchedFeatures;
-  // console.log(features);
-  const { expiry, errors } = params;
+function baseRender({ data, state }) {
+  const features = data.cachedFeatures || data.fetchedFeatures;
+  
+  const { expiry, errors } = data;
 
   if (!errors) {
     const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
@@ -149,7 +192,7 @@ function baseRender(params) {
       highestCasesPerDay: parseData.highestCasesPerDay(features),
       windowHeight: window.innerHeight - contextWrapper.clientHeight,
       orientation,
-      // sma,
+      sma: state.smaIsChecked ? parseData.smaPOS_NEW(features, state.smaDays) : null,
     });
 
     todaysDate.innerHTML = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${d.toLocaleTimeString()}`;
@@ -173,13 +216,29 @@ function baseRender(params) {
 }
 
 
+async function handleDropdown() {
+
+  /**@type {HTMLOptionElement} */
+  const selected = dropdown.options[dropdown.selectedIndex];
+  /**@type {'state'|'county'} */
+  const geo = selected.dataset.geo;
+  /**@type {string} - county (or state) */
+  const value = selected.value;
+
+  STATE.setState({ geo, value });
+}
+
+
+window.onload = () => init();
+
+
 function init() {
   handleDropdown();
   //mobile orientation change or resize browser
   window.addEventListener('resize', handleDropdown);
   dropdown.addEventListener('change', handleDropdown);
 
-  version.innerHTML = `v${VERSION}`;
+  version.innerHTML = `v${STATE.get('version')}`;
 
   /** MODAL */
   const modal = document.querySelector('.modal');
@@ -204,13 +263,35 @@ function init() {
   loadSettingOptions();
 }
 
+/**
+ * Dynamically insert settings components into DOM
+ * Called from init
+ */
 function loadSettingOptions() {
   const settingOptions = document.querySelector('#setting-options');
-  settingOptions.innerHTML = componentSma();
+  //All of the settings components go here
+  settingOptions.innerHTML = componentSma(STATE);
 
-  //SMA
-  const showChartAverage = document.querySelector('#showChartAverage');
-  showChartAverage.addEventListener('change', (e) => console.log(e));
+  //SMA - from component
+  const smaCheckbox = document.querySelector('#sma-checkbox');
+  smaCheckbox.addEventListener('change', e => {
+    const checked = e.target.checked;
+
+    STATE.setState({ smaIsChecked: checked });
+
+    // console.log(`checked: ${checked}, STATE`, STATE.get());
+
+  });
+
+  const smaDays = document.querySelector('#sma-days');
+  smaDays.addEventListener('change', e => {
+    const value = e.target.value;
+
+    STATE.setState({ smaDays: parseInt(value) });
+
+    // console.log(`value: ${value}, STATE`, STATE.get());
+  });
+
 }
 
 //Modal settings:
