@@ -25,7 +25,7 @@ const version = document.querySelector('#version');
 
 const STATE = (function () {
   let self = {
-    version: 1.1,
+    version: 1.2,
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
