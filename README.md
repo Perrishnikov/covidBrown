@@ -24,6 +24,7 @@ https://perrishnikov.github.io/covidBrown/
 * clean up dates
 * clean up stying, css, and id's
 * create legend
+* link to github
 
 * touch svg elements w/ popup
 * top 5 counties on WI chart. Add to stats

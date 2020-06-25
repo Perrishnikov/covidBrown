@@ -6,6 +6,7 @@ import { storageAvailable, getWithExpiry, setWithExpiry, fetchData } from './gen
 import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
 import { componentSma } from './settingOptions.js';
+import { events } from './pub-sub.js';
 
 
 const todaysDate = document.querySelector('#todaysDate');
@@ -16,12 +17,6 @@ const dropdown = document.querySelector('#county-drop');
 const settings = document.querySelector('#settings-icon');
 const version = document.querySelector('#version');
 
-// const STATE = {
-//   smaIsChecked: true,
-//   smaDays: 7,
-//   geo: '',
-//   value: '',
-// };
 
 const STATE = (function () {
   let self = {
@@ -40,15 +35,13 @@ const STATE = (function () {
     },
     setState: (obj) => {
 
-      if (obj) {
+      if (obj && typeof obj === 'object') {
 
+        // duplicate frozen object
         let tempObj = {};
         for (let i in self) {
           tempObj[i] = self[i];
         }
-
-        // console.log(tempObj);
-        // console.log(Object.isFrozen(tempObj));
 
         for (const prop in obj) {
           if (obj.hasOwnProperty(prop)) {
@@ -58,6 +51,7 @@ const STATE = (function () {
           }
         }
 
+        //replace with unfrozen
         self = tempObj;
 
         Object.freeze(self);
@@ -65,7 +59,7 @@ const STATE = (function () {
         events.publish('UPDATE', self);
         return self[obj];
       } else {
-        // console.error('not found');
+        console.error('not found');
         return null;
       }
     }
@@ -73,48 +67,16 @@ const STATE = (function () {
 
 }());
 
+
 /**
- * https://davidwalsh.name/pubsub-javascript 
- * Pub Sub
-*/
-const events = (function () {
-  let topics = {};
-  let hOP = topics.hasOwnProperty;
-
-  return {
-    subscribe: (topic, listener) => {
-      // Create the topic's object if not yet created
-      if (!hOP.call(topics, topic)) topics[topic] = [];
-
-      // Add the listener to queue
-      let index = topics[topic].push(listener) - 1;
-
-      // Provide handle back for removal of topic
-      return {
-        remove: () => {
-          delete topics[topic][index];
-        }
-      };
-    },
-    publish: (topic, info) => {
-      // If the topic doesn't exist, or there's no listeners in queue, just leave
-      if (!hOP.call(topics, topic)) return;
-
-      // Cycle through topics queue, fire!
-      topics[topic].forEach(function (item) {
-        item(info != undefined ? info : {});
-      });
-    }
-  };
-})();
-
-
+ * SUBSCRIBER for pub-sub
+ * when state is set, it calls this 
+ */
 // eslint-disable-next-line no-unused-vars
 const SUBS = events.subscribe('UPDATE', async (state) => {
   const data = await getChartData(state);
   baseRender({ data, state });
 });
-
 
 
 /**
@@ -170,15 +132,15 @@ async function getChartData({ value, geo }) {
 
 /**
  * 
- * @param {object} params
- * @param {[]} [params.cachedFeatures]
- * @param {[]} [params.fetchedFeatures]
- * @param {string[]} params.errors
+ * param {object} params
+ * param {[]} [params.cachedFeatures]
+ * param {[]} [params.fetchedFeatures]
+ * param {string[]} params.errors
  * @return {void} - updates DOM
  */
 function baseRender({ data, state }) {
   const features = data.cachedFeatures || data.fetchedFeatures;
-  
+
   const { expiry, errors } = data;
 
   if (!errors) {
@@ -203,14 +165,12 @@ function baseRender({ data, state }) {
     // const scrollingDiv = document.querySelector('#scrolling-div');
     // scrollingDiv.scrollLeft = scrollingDiv.scrollLeftMax;
     document.querySelector('#scrolling-div').scrollLeft += 5000;
-    /** SETTINGS OPTIONS */
-    // const { average, sum } = parseData.averagePOS_NEW(features);
 
   } else {
 
     svgWrapper.innerHTML = errors.map(error => {
       return `<div>${error}</div>`;
-    });
+    }).join('');
   }
 
 }
@@ -234,6 +194,7 @@ window.onload = () => init();
 
 function init() {
   handleDropdown();
+
   //mobile orientation change or resize browser
   window.addEventListener('resize', handleDropdown);
   dropdown.addEventListener('change', handleDropdown);
@@ -263,7 +224,9 @@ function init() {
   loadSettingOptions();
 }
 
+
 /**
+ * MODAL
  * Dynamically insert settings components into DOM
  * Called from init
  */
@@ -280,7 +243,6 @@ function loadSettingOptions() {
     STATE.setState({ smaIsChecked: checked });
 
     // console.log(`checked: ${checked}, STATE`, STATE.get());
-
   });
 
   const smaDays = document.querySelector('#sma-days');
@@ -293,37 +255,3 @@ function loadSettingOptions() {
   });
 
 }
-
-//Modal settings:
-
-// const stats = document.querySelector('#context-stats');
-//stats: county population
-// top five counties in states (pie cahrt)
-
-
-// const showChartAverage = document.querySelector('#showChartAverage');
-// showChartAverage.addEventListener('change', handleSma);
-
-/** Settings Handlers */
-// function handleSma(features) {
-//   const sma = showChartAverage.checked ? parseData.smaPOS_NEW(features, 7) : null;
-
-//   if (sma) {
-//     handleSma();
-//   }
-
-//   if (showChartAverage.checked) {
-//     const chartAverageDays = document.querySelector('#chartAverageDays'); //number of days to average
-//     const svgChart = document.querySelector('#svg-chart');
-//     let g = document.createElement('g');
-//     g.setAttribute('id', 'text');
-//     g.innerHTML = `<text x="20" y="20"> Hello</text>`;
-//     svgChart.append(g);
-
-//     console.dir(chartAverageDays.value);
-//   } else {
-//     const t = document.querySelector('#text');
-//     t.remove(t);
-
-//   }
-// }
