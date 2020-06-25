@@ -20,6 +20,7 @@ https://perrishnikov.github.io/covidBrown/
 * MVP
 
 ## TODO
+* !fix iOS input bug
 * clean up dates
 * clean up stying, css, and id's
 * create legend
