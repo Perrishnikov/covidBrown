@@ -146,7 +146,7 @@ function dynamicChart(params) {
     yTextPadding: 10,
   };
   let p = {
-    yLineCount: 37, // 
+    yLineCount: 33, // 
     yTextPadding: 10,
   };
   const yLineCount = orientation === 'landscape' ? l.yLineCount : p.yLineCount;
