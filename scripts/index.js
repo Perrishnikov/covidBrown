@@ -5,7 +5,7 @@
 import { storageAvailable, getWithExpiry, setWithExpiry, fetchData } from './general.js';
 import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
-import { componentSma } from './settingOptions.js';
+import { componentSma, viewForPositive, openModalWith } from './modal.js';
 import { events } from './pub-sub.js';
 
 
@@ -14,12 +14,14 @@ const expiryDate = document.querySelector('#expiryDate');
 const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
-const settings = document.querySelector('#settings-icon');
-const version = document.querySelector('#version');
+const masterModal = document.querySelector('#masterModal'); //set html
+const settingsIcon = document.querySelector('#settings-icon'); //add listner
+// const version = document.querySelector('#version');
 
 
 const STATE = (function () {
   let self = {
+
     version: 1.2,
     smaIsChecked: true,
     smaDays: 7,
@@ -199,29 +201,101 @@ function init() {
   window.addEventListener('resize', handleDropdown);
   dropdown.addEventListener('change', handleDropdown);
 
-  version.innerHTML = `v${STATE.get('version')}`;
+  /* set verion in modal */
+  // version.innerHTML = `v${STATE.get('version')}`;
 
   /** MODAL */
-  const modal = document.querySelector('.modal');
-  const closeBtn = document.querySelector('#modal-close');
+  // const modal = document.querySelector('#modal');
 
-  settings.addEventListener('click', () => {
-    modal.style.display = 'flex';
+
+  settingsIcon.addEventListener('click', () => {
+    const html = openModalWith({
+      title: 'Settings',
+      version: STATE.get('version'),
+      props: componentSma(STATE)
+    });
+
+    masterModal.innerHTML = html;
+    masterModal.style.display = 'flex';
   });
-  closeBtn.onclick = function () {
-    modal.style.display = 'none';
-  };
-  window.onclick = function (e) {
-    if (e.target === document.querySelector('.modal-background')) {
-      modal.style.display = 'none';
+
+  // modalOpener.addEventListener('click', () => {
+  //   const settingsParams = {
+  //     title: 'settings',
+  //     version: STATE.get('version'),
+
+
+  //   }
+
+  // masterModal.style.display = 'flex';
+  // });
+
+
+  window.addEventListener('click', e => {
+    //!HACK THE EVENT LISTENERS
+
+    /* MODAL LISTENERS */
+    const modalBackground = document.querySelector('.modal-background');
+    const smaCheckbox = document.querySelector('#sma-checkbox');
+    const smaDays = document.querySelector('#sma-days');
+
+    // console.dir(e.target);
+    /* Close the modal */
+    if (e.target === modalBackground || e.target.closest('#modal-close')) {
+      masterModal.style.display = 'none';
     }
-  };
+    if (e.target === smaCheckbox) {
+      const checked = e.target.checked;
+      STATE.setState({ smaIsChecked: checked });
+      // console.log(`checked: ${checked}, STATE`, STATE.get());
+    }
+    if (e.target === smaDays) {
+      const value = e.target.value;
+      STATE.setState({ smaDays: parseInt(value) });
+      console.log(`value: ${value}, STATE`, STATE.get());
+    }
+    
+
+  });
+
   window.addEventListener('touchstart', e => {
+    //!HACK THE EVENT LISTENERS
     if (e.target === document.querySelector('.modal-background')) {
-      modal.style.display = 'none';
+      masterModal.style.display = 'none';
     }
   });
-  loadSettingOptions();
+
+  /** WINDOW */
+  svgWrapper.addEventListener('click', e => {
+    console.log(`svgWrapper`);
+    // const { x, y } = e;
+    // console.log(`e.x: ${x}, e.y:${y}`);
+
+    /** @type {SVGAElement} */
+    const closest = e.target.closest(`[data-positive]`);
+    if (closest) {
+      const value = closest.dataset.positive;
+      console.dir(value);
+      console.log(closest);
+
+      // const html = openModalWith({
+      //   title: 'Settings',
+      //   version: STATE.get('version'),
+      //   props: componentSma(STATE)
+      // });
+  
+      // masterModal.innerHTML = html;
+      // masterModal.style.display = 'flex';
+      
+    }
+
+
+    // const t = e.target;
+    // console.dir(e.target);
+  });
+
+  //DO this last for eventListeners 
+  // loadSettingOptions();
 }
 
 
@@ -230,28 +304,28 @@ function init() {
  * Dynamically insert settings components into DOM
  * Called from init
  */
-function loadSettingOptions() {
-  const settingOptions = document.querySelector('#setting-options');
-  //All of the settings components go here
-  settingOptions.innerHTML = componentSma(STATE);
+// function loadSettingOptions() {
+//   const settingOptions = document.querySelector('#setting-options');
+//   //All of the settings components go here
+//   settingOptions.innerHTML = componentSma(STATE);
 
-  //SMA - from component
-  const smaCheckbox = document.querySelector('#sma-checkbox');
-  smaCheckbox.addEventListener('change', e => {
-    const checked = e.target.checked;
+//   //SMA - from component
+//   const smaCheckbox = document.querySelector('#sma-checkbox');
+//   smaCheckbox.addEventListener('change', e => {
+//     const checked = e.target.checked;
 
-    STATE.setState({ smaIsChecked: checked });
+//     STATE.setState({ smaIsChecked: checked });
 
-    // console.log(`checked: ${checked}, STATE`, STATE.get());
-  });
+//     console.log(`checked: ${checked}, STATE`, STATE.get());
+//   });
 
-  const smaDays = document.querySelector('#sma-days');
-  smaDays.addEventListener('change', e => {
-    const value = e.target.value;
+//   const smaDays = document.querySelector('#sma-days');
+//   smaDays.addEventListener('change', e => {
+//     const value = e.target.value;
 
-    STATE.setState({ smaDays: parseInt(value) });
+//     STATE.setState({ smaDays: parseInt(value) });
 
-    // console.log(`value: ${value}, STATE`, STATE.get());
-  });
+//     console.log(`value: ${value}, STATE`, STATE.get());
+//   });
 
-}
+// }

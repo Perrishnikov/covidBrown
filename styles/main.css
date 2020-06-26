@@ -1,9 +1,23 @@
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior */
+
+
 :root {
-  /* --main-bg-color: brown; */
-  --pad: .3em;
+  --dark: #222;
+  --bg-lighter: #333;
+  --bg-lightest: #555;
+  --text: whitesmoke;
+  --b1: rgb(49, 123, 172);
+  /*darkest*/
+  --b2: rgb(0, 171, 229);
+  /*darker*/
+  --b3: rgb(131, 210, 244);
+  /*light*/
+}
+svg {
+  /* stroke: var(--dark); */
 }
 body {
+  color: var(--dark);
   display: flex;
   flex-direction: column;
   font-family: 'Open Sans', sans-serif;

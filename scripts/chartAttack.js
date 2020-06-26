@@ -186,17 +186,22 @@ function dynamicChart(params) {
     const POS_NEW = att.POS_NEW > 0 ? att.POS_NEW : 0;
     const yOffset = chartHeight - (yLineInc * yLineCount + (yTextPadding * 2)); //3 - difference with the rounding heights
 
+    let date = new Date(att.LoadDttm);
+    // date = sma.sma[i].date;
+
     xBars += `<rect 
         x="${0 + 10 + i * (barWidth + barSpacing)}" 
         y="${Math.round(chartHeight - yOffset - yTextPadding - POS_NEW * ppxPerNumber)}" 
         width="${barWidth}px" 
         height="${Math.round(POS_NEW * ppxPerNumber)}px" 
-        data-positive="${att.POS_NEW}"/>`;
+        data-positive="${att.POS_NEW}"
+        data-date="${date.toLocaleString()}"
+        />`;
 
     //adjust spacing for double digit dates
     if (i % 2 == 0) {
       let half = (barWidth + barSpacing) / 2;
-      let date = new Date(att.LoadDttm);
+      // let date = new Date(att.LoadDttm);
       // console.log(`${date.getMonth()+ 1}/${date.getDate()}`);
       let display = `${date.getMonth() + 1}/${date.getDate()}`;
       if (display.toString().length == 2) half += 3;
