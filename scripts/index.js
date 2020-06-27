@@ -217,15 +217,34 @@ function init() {
   });
 
 
-  // if (isMobile()) {
-    // window.addEventListener('touchend', addWindowListeners);
-  // } else {
+  if (isMobile()) {
+    // console.log('isMobile');
+    // Test via a getter in the options object to see if the passive property is accessed
+    // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+    // https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
+    let supportsPassive = false;
+    try {
+      let opts = Object.defineProperty({}, 'passive', {
+        get: () => {
+          supportsPassive = true;
+        }
+      });
+      window.addEventListener('testPassive', null, opts);
+      window.removeEventListener('testPassive', null, opts);
+    } catch (e) { console.error('error on detection');}
+    
+
+    window.addEventListener('touchstart', addWindowListeners, supportsPassive ? { passive: true } : false);
+  } else {
+    // console.log('not Mobile');
     window.addEventListener('click', addWindowListeners);
-  // }
+  }
 
 
   function addWindowListeners(e) {
     //!HACK THE EVENT LISTENERS
+    // console.dir(e.target);
+
     /* MODAL LISTENERS */
     const modalBackground = document.querySelector('.modal-background');
     const smaCheckbox = document.querySelector('#sma-checkbox');

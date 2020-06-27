@@ -2,6 +2,10 @@
 
 https://perrishnikov.github.io/covidBrown/
 
+
+## v1.3.1
+* increased size of touch events for fingers
+
 ## v1.3
 * link to github
 * touch svg elements w/ popup

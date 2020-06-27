@@ -104,14 +104,6 @@ function chartAttack(params) {
 //devicePixelRatios 
 //okay: 2.625 (Pixel 2), 3.5 (Pixel 2 XL), 3 (XS), 4 
 
-/**
- * 
- * @param {{sma: {date:Date, period:number, value:number|null}[], period:number}} data 
- * @returns void - Update DOM
- */
-function makeSma(data) {
-  //TODO
-}
 
 /**
  * @param {object} params 
@@ -127,8 +119,8 @@ function dynamicChart(params) {
   //x-axis
   let xAxisLabels = ''; //data labels (dates)
   let xBars = ''; //data values (number)
-  const barWidth = 8;
-  const barSpacing = 8;
+  const barWidth = 10;
+  const barSpacing = 10;
   const chartWidth = (numOfDays * (barWidth + barSpacing));
 
   //y-axis
@@ -190,13 +182,26 @@ function dynamicChart(params) {
     // date = sma.sma[i].date;
 
     xBars += `<rect 
-        x="${0 + 10 + i * (barWidth + barSpacing)}" 
+        style="fill-opacity: 0;"
+        x="${0 + 10 + i * (barWidth + barSpacing) - (barSpacing * .5)}" 
         y="${Math.round(chartHeight - yOffset - yTextPadding - POS_NEW * ppxPerNumber)}" 
-        width="${barWidth}px" 
+        width="${barWidth + (barSpacing * 1)}px" 
         height="${Math.round(POS_NEW * ppxPerNumber)}px" 
         data-positive="${att.POS_NEW}"
         data-date="${date.toLocaleDateString()}"
-        />`;
+        />
+        <rect 
+        style="fill:black;"
+        x="${0 + 10 + i * (barWidth + barSpacing)}" 
+        y="${Math.round(chartHeight - yOffset - yTextPadding - POS_NEW * ppxPerNumber)}" 
+        width="${barWidth}px" 
+        height="${Math.round(POS_NEW * ppxPerNumber)}px"
+        data-positive="${att.POS_NEW}"
+        data-date="${date.toLocaleDateString()}"
+        />
+        `;
+
+
 
     //adjust spacing for double digit dates
     if (i % 2 == 0) {
@@ -233,14 +238,26 @@ function dynamicChart(params) {
       x = Math.round(+ 10 + i * (barWidth + barSpacing) + (barWidth / 2));
       y = Math.round(chartHeight - yOffset - yTextPadding - average * ppxPerNumber);
 
-      smaLines += `<circle style="fill:red;"
+      // first circle is to increase touch area and is trans. Second circle is the color displayed on screen.
+      smaLines += `
+      <circle 
+        style="fill-opacity: 0;"
+        cx="${x}" 
+        cy="${y}"
         data-class="sma1"
         data-date="${date}"
         data-period="${period}"
         data-sma="${average}"
+        r="${barWidth}"/>
+      <circle 
+        style="fill:red;"
         cx="${x}" 
-        cy="${y}" 
-        r="2"/>`;
+        cy="${y}"
+        data-class="sma1"
+        data-date="${date}"
+        data-period="${period}"
+        data-sma="${average}"
+        r="${barWidth /3}"/>`;
     }
   }
 
