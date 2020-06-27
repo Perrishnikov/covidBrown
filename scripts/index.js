@@ -217,28 +217,41 @@ function init() {
   });
 
 
-  if (isMobile()) {
-    // console.log('isMobile');
-    // Test via a getter in the options object to see if the passive property is accessed
-    // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
-    // https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
-    let supportsPassive = false;
-    try {
-      let opts = Object.defineProperty({}, 'passive', {
-        get: () => {
-          supportsPassive = true;
-        }
-      });
-      window.addEventListener('testPassive', null, opts);
-      window.removeEventListener('testPassive', null, opts);
-    } catch (e) { console.error('error on detection');}
+  // if (isMobile()) {
+  //   // console.log('isMobile');
+  //   // Test via a getter in the options object to see if the passive property is accessed
+  //   // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+  //   // https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
+  //   let supportsPassive = false;
+  //   try {
+  //     let opts = Object.defineProperty({}, 'passive', {
+  //       get: () => {
+  //         supportsPassive = true;
+  //       }
+  //     });
+  //     window.addEventListener('testPassive', null, opts);
+  //     window.removeEventListener('testPassive', null, opts);
+  //   } catch (e) { console.error('error on detection');}
     
 
-    window.addEventListener('touchstart', addWindowListeners, supportsPassive ? { passive: true } : false);
-  } else {
-    // console.log('not Mobile');
-    window.addEventListener('click', addWindowListeners);
-  }
+  //   window.addEventListener('touchstart', addWindowListeners, supportsPassive ? { passive: true } : false);
+  // } else {
+  //   // console.log('not Mobile');
+  //   window.addEventListener('click', addWindowListeners);
+  // }
+
+  let supportsPassive = false;
+  try {
+    let opts = Object.defineProperty({}, 'passive', {
+      get: () => {
+        supportsPassive = true;
+      }
+    });
+    window.addEventListener('testPassive', null, opts);
+    window.removeEventListener('testPassive', null, opts);
+  } catch (e) { console.error('error on detection');}
+
+  window.addEventListener('click', addWindowListeners, supportsPassive ? { passive: true } : false);
 
 
   function addWindowListeners(e) {
