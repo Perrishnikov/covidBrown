@@ -21,7 +21,7 @@ const settingsIcon = document.querySelector('#settings-icon'); //add listner
 const STATE = (function () {
   let self = {
 
-    version: 1.3,
+    version: '1.3.1',
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
