@@ -2,10 +2,10 @@
 
 // import { html, render } from 'https://unpkg.com/lit-html?module'; //PROD
 // import { html, render } from '../node_modules/lit-html/lit-html.js'; //DEV
-import { storageAvailable, getWithExpiry, setWithExpiry, fetchData } from './general.js';
+import { storageAvailable, getWithExpiry, setWithExpiry, fetchData, isMobile } from './general.js';
 import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
-import { componentSma, viewForPositive, openModalWith } from './modal.js';
+import { componentSma, viewDataPositive, openModalWith, viewSma } from './modal.js';
 import { events } from './pub-sub.js';
 
 
@@ -16,13 +16,12 @@ const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const masterModal = document.querySelector('#masterModal'); //set html
 const settingsIcon = document.querySelector('#settings-icon'); //add listner
-// const version = document.querySelector('#version');
 
 
 const STATE = (function () {
   let self = {
 
-    version: 1.2,
+    version: 1.3,
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
@@ -178,6 +177,9 @@ function baseRender({ data, state }) {
 }
 
 
+/**
+ * Set preliminary state for geo and entity
+ */
 async function handleDropdown() {
 
   /**@type {HTMLOptionElement} */
@@ -201,39 +203,29 @@ function init() {
   window.addEventListener('resize', handleDropdown);
   dropdown.addEventListener('change', handleDropdown);
 
-  /* set verion in modal */
-  // version.innerHTML = `v${STATE.get('version')}`;
-
-  /** MODAL */
-  // const modal = document.querySelector('#modal');
-
 
   settingsIcon.addEventListener('click', () => {
+    const comp = componentSma(STATE);
     const html = openModalWith({
       title: 'Settings',
       version: STATE.get('version'),
-      props: componentSma(STATE)
+      props: comp,
     });
 
     masterModal.innerHTML = html;
     masterModal.style.display = 'flex';
   });
 
-  // modalOpener.addEventListener('click', () => {
-  //   const settingsParams = {
-  //     title: 'settings',
-  //     version: STATE.get('version'),
+
+  // if (isMobile()) {
+    // window.addEventListener('touchend', addWindowListeners);
+  // } else {
+    window.addEventListener('click', addWindowListeners);
+  // }
 
 
-  //   }
-
-  // masterModal.style.display = 'flex';
-  // });
-
-
-  window.addEventListener('click', e => {
+  function addWindowListeners(e) {
     //!HACK THE EVENT LISTENERS
-
     /* MODAL LISTENERS */
     const modalBackground = document.querySelector('.modal-background');
     const smaCheckbox = document.querySelector('#sma-checkbox');
@@ -244,6 +236,8 @@ function init() {
     if (e.target === modalBackground || e.target.closest('#modal-close')) {
       masterModal.style.display = 'none';
     }
+
+    /** MODAL SETTINGS */
     if (e.target === smaCheckbox) {
       const checked = e.target.checked;
       STATE.setState({ smaIsChecked: checked });
@@ -252,80 +246,84 @@ function init() {
     if (e.target === smaDays) {
       const value = e.target.value;
       STATE.setState({ smaDays: parseInt(value) });
-      console.log(`value: ${value}, STATE`, STATE.get());
+      // console.log(`value: ${value}, STATE`, STATE.get());
     }
-    
-
-  });
-
-  window.addEventListener('touchstart', e => {
-    //!HACK THE EVENT LISTENERS
-    if (e.target === document.querySelector('.modal-background')) {
-      masterModal.style.display = 'none';
-    }
-  });
-
-  /** WINDOW */
-  svgWrapper.addEventListener('click', e => {
-    console.log(`svgWrapper`);
-    // const { x, y } = e;
-    // console.log(`e.x: ${x}, e.y:${y}`);
 
     /** @type {SVGAElement} */
     const closest = e.target.closest(`[data-positive]`);
     if (closest) {
-      const value = closest.dataset.positive;
-      console.dir(value);
-      console.log(closest);
+      const html = openModalWith({
+        title: 'Details',
+        version: STATE.get('version'),
+        props: viewDataPositive({
+          positive: closest.dataset.positive,
+          date: closest.dataset.date,
+        })
+      });
 
-      // const html = openModalWith({
-      //   title: 'Settings',
-      //   version: STATE.get('version'),
-      //   props: componentSma(STATE)
-      // });
-  
-      // masterModal.innerHTML = html;
-      // masterModal.style.display = 'flex';
-      
+      masterModal.innerHTML = html;
+      masterModal.style.display = 'flex';
     }
 
+    /** OPEN MODAL */
+    /** @type {SVGAElement} */
+    const sma1 = e.target.closest(`[data-class="sma1"]`);
+    if (sma1) {
+      const html = openModalWith({
+        title: 'Date Details',
+        version: STATE.get('version'),
+        props: viewSma({
+          // positive: closest.dataset.positive,
+          period: sma1.dataset.period,
+          date: sma1.dataset.date,
+          sma: sma1.dataset.sma,
+        })
+      });
 
-    // const t = e.target;
-    // console.dir(e.target);
-  });
+      masterModal.innerHTML = html;
+      masterModal.style.display = 'flex';
+    }
 
-  //DO this last for eventListeners 
-  // loadSettingOptions();
+  }
+
+
+  /** WINDOW */
+  // window.addEventListener('click', e => {
+
+  // /** @type {SVGAElement} */
+  // const closest = e.target.closest(`[data-positive]`);
+  // if (closest) {
+  //   const html = openModalWith({
+  //     title: 'Details',
+  //     version: STATE.get('version'),
+  //     props: viewDataPositive({
+  //       positive: closest.dataset.positive,
+  //       date: closest.dataset.date,
+  //     })
+  //   });
+
+  //   masterModal.innerHTML = html;
+  //   masterModal.style.display = 'flex';
+  // }
+
+  // /** @type {SVGAElement} */
+  // const sma1 = e.target.closest(`[data-class="sma1"]`);
+  // if (sma1) {
+  //   const html = openModalWith({
+  //     title: 'Details',
+  //     version: STATE.get('version'),
+  //     props: viewSma({
+  //       // positive: closest.dataset.positive,
+  //       period: sma1.dataset.period,
+  //       date: sma1.dataset.date,
+  //       sma: sma1.dataset.sma,
+  //     })
+  //   });
+
+  //   masterModal.innerHTML = html;
+  //   masterModal.style.display = 'flex';
+  // }
+
+  // });
+
 }
-
-
-/**
- * MODAL
- * Dynamically insert settings components into DOM
- * Called from init
- */
-// function loadSettingOptions() {
-//   const settingOptions = document.querySelector('#setting-options');
-//   //All of the settings components go here
-//   settingOptions.innerHTML = componentSma(STATE);
-
-//   //SMA - from component
-//   const smaCheckbox = document.querySelector('#sma-checkbox');
-//   smaCheckbox.addEventListener('change', e => {
-//     const checked = e.target.checked;
-
-//     STATE.setState({ smaIsChecked: checked });
-
-//     console.log(`checked: ${checked}, STATE`, STATE.get());
-//   });
-
-//   const smaDays = document.querySelector('#sma-days');
-//   smaDays.addEventListener('change', e => {
-//     const value = e.target.value;
-
-//     STATE.setState({ smaDays: parseInt(value) });
-
-//     console.log(`value: ${value}, STATE`, STATE.get());
-//   });
-
-// }

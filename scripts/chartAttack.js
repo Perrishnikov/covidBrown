@@ -195,7 +195,7 @@ function dynamicChart(params) {
         width="${barWidth}px" 
         height="${Math.round(POS_NEW * ppxPerNumber)}px" 
         data-positive="${att.POS_NEW}"
-        data-date="${date.toLocaleString()}"
+        data-date="${date.toLocaleDateString()}"
         />`;
 
     //adjust spacing for double digit dates
@@ -234,6 +234,7 @@ function dynamicChart(params) {
       y = Math.round(chartHeight - yOffset - yTextPadding - average * ppxPerNumber);
 
       smaLines += `<circle style="fill:red;"
+        data-class="sma1"
         data-date="${date}"
         data-period="${period}"
         data-sma="${average}"

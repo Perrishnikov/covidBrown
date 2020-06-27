@@ -2,21 +2,26 @@
 
 https://perrishnikov.github.io/covidBrown/
 
-## V1.2
+## v1.3
+* link to github
+* touch svg elements w/ popup
+* refactor
+
+## v1.2
 * added pub-sub
 * refactored
 * state management
 * settings - sma 
 
-## V1.1
+## v1.1
 * scrollMax to right
 * added Expires date 
 * added settings modal - no settings yet
 * dynamic numbers depending on height 
-* refactored
+* refactor
 * version tracking
 
-## V1
+## v1
 * MVP
 
 ## TODO
@@ -24,9 +29,7 @@ https://perrishnikov.github.io/covidBrown/
 * clean up dates
 * clean up stying, css, and id's
 * create legend
-* link to github
-
-* touch svg elements w/ popup
+* include sma (and other data) in click details
 * top 5 counties on WI chart. Add to stats
 * multi-select
 This example shows how to iterate through a collection of objects collected by querySelectorAll. This is because querySelectorAll returns a NodeList (which is a collection of objects).

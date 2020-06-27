@@ -5,10 +5,11 @@
  */
 function componentSma(props) {
   const { smaIsChecked, smaDays } = props.get();
-
+  // console.log(`smaIsChecked: ${smaIsChecked}, smaDays: ${smaDays}`);
+  
   const h = html`
   <label style="display: flex; align-items: center;" class="">
-    <input id="sma-checkbox" type="checkbox" checked=${smaIsChecked ? smaIsChecked : ''} />
+    <input id="sma-checkbox" type="checkbox" ${smaIsChecked ? 'checked' : ''} />
     <span style="margin-left: 6px;">Show SMA over</span>
     <input id="sma-days" style="width:35px; background-color: beige; margin-left: 6px; margin-right: 6px; text-align: center;" class="input" type="number" value="${smaDays ? smaDays : 0}" />
     <span> days </span>
@@ -18,8 +19,37 @@ function componentSma(props) {
 }
 
 
-function viewForPositive(props) {
+function viewDataPositive({ positive, date }) {
 
+  return html`
+  <div style="display: flex; align-items: center; font-size:1.1em;">
+    <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
+      <span>Date:</span>
+      <span>Positive:</span>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
+      <span id="">${date}</span>
+      <span id="">${positive} cases</span>
+    </div>
+  </div>
+  `;
+}
+
+function viewSma({ period, date, sma }) {
+  return html`
+  <div style="display: flex; align-items: center; font-size:1.1em;">
+    <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
+      <span>Date:</span>
+      <span>SMA:</span>
+      <span>Period:</span>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
+      <span id="">${date}</span>
+      <span id="">${sma} cases</span>
+      <span id="">${period} days</span>
+    </div>
+  </div>
+  `;
 }
 
 //title
@@ -42,12 +72,7 @@ function openModalWith({ version, title, props }) {
       </header>
 
       <section class="modal-card-body">
-        <div id="setting-options" class="content">
-          <!-- <p>Coming Soon</p> -->
-          ${props}
-        </div>
-
-        <!-- Content ... -->
+        ${props}
       </section>
 
       <footer class="modal-card-foot">
@@ -66,24 +91,16 @@ function openModalWith({ version, title, props }) {
   `;
 }
 
-export { componentSma, viewForPositive, openModalWith };
+export { componentSma, viewDataPositive, openModalWith, viewSma };
 
-//use template literal intellisense
+//use for template literal intellisense
 const html = (strings, ...keys) => {
   // console.log(keys);
   // console.log(strings);
-
-  // return (function(...values) {
-  // let dict = values[values.length - 1] || {};
   let result = [strings[0]];
   keys.forEach(function (key, i) {
-    // let value = Number.isInteger(key) ? values[key] : dict[key];
-    // result.push(value, strings[i + 1]);
     result.push(key, strings[i + 1]);
-    // result.push();
   });
   return result.join('');
-  // });
-
 };
 

@@ -29,6 +29,7 @@
   overflow: auto;
   position: relative;
   width: 90%;
+  font-size: .9em;
   /* border-radius: 6px; */
 }
 @media screen and (min-width:769px) {
@@ -37,14 +38,10 @@
     margin: 0 auto;
     max-height: calc(100vh - 40px);
     width: 640px;
+    font-size: .9em;
   }
 }
-.modal-close {
-  /* position: fixed; */
-  /* right: 16px; */
-  /* top: 16px; */
-  /* z-index: 20; */
-}
+
 .modal-card-head {
   border-bottom: 1px solid #dbdbdb;
   border-top-left-radius: 6px;
@@ -85,9 +82,7 @@
   border-bottom-right-radius: 6px;
   border-top: 1px solid #dbdbdb;
 }
-.content{
-  font-size: .9em;
-}
+
 /* Form */
 .checkbox,
 .radio {
