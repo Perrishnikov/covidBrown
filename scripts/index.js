@@ -21,7 +21,7 @@ const STATE = (function () {
   let self = {
 
     version: '1.3.1',
-    smaIsChecked: false,
+    smaIsChecked: true,
     smaDays: 7,
     geo: '',
     value: ''
@@ -208,8 +208,8 @@ function init() {
   dropdown.addEventListener('change', handleDropdown);
 
 
-  if (isMobile()) {
-    console.log('isMobile');
+  // if (isMobile()) {
+    // console.log('isMobile');
     // Test via a getter in the options object to see if the passive property is accessed
     // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
     // https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
@@ -217,12 +217,12 @@ function init() {
     // window.addEventListener('touchstart', e => {
     //   addWindowListeners(e);
     // }, { passive: false });
-    window.addEventListener('touchstart', addWindowListeners);
+    // window.addEventListener('touchstart', addWindowListeners);
 
-  } else {
+  // } else {
     // console.log('not Mobile');
     window.addEventListener('click', addWindowListeners);
-  }
+  // }
 
 
 
