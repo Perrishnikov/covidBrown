@@ -15,14 +15,13 @@ const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const masterModal = document.querySelector('#masterModal'); //set html
-const settingsIcon = document.querySelector('#settings-icon'); //add listner
 
 
 const STATE = (function () {
   let self = {
 
     version: '1.3.1',
-    smaIsChecked: true,
+    smaIsChecked: false,
     smaDays: 7,
     geo: '',
     value: ''
@@ -32,12 +31,16 @@ const STATE = (function () {
   return {
     get: thing => {
 
-      return self[thing] ? self[thing] : self;
+      if (thing) {
+        return self[thing] ? self[thing] : null;
+      } else {
+        return self;
+      }
+
     },
     setState: (obj) => {
-
       if (obj && typeof obj === 'object') {
-
+        // console.log(obj);
         // duplicate frozen object
         let tempObj = {};
         for (let i in self) {
@@ -48,7 +51,6 @@ const STATE = (function () {
           if (obj.hasOwnProperty(prop)) {
             // console.log(`obj.${prop} = ${obj[prop]}`);
             tempObj[prop] = obj[prop];
-            // Object.freeze(self[prop]);
           }
         }
 
@@ -58,12 +60,14 @@ const STATE = (function () {
         Object.freeze(self);
 
         events.publish('UPDATE', self);
-        return self[obj];
+        return self;
       } else {
         console.error('not found');
         return null;
       }
+
     }
+
   };
 
 }());
@@ -204,66 +208,63 @@ function init() {
   dropdown.addEventListener('change', handleDropdown);
 
 
-  settingsIcon.addEventListener('click', () => {
-    const comp = componentSma(STATE);
-    const html = openModalWith({
-      title: 'Settings',
-      version: STATE.get('version'),
-      props: comp,
-    });
+  if (isMobile()) {
+    console.log('isMobile');
+    // Test via a getter in the options object to see if the passive property is accessed
+    // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+    // https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
 
-    masterModal.innerHTML = html;
-    masterModal.style.display = 'flex';
-  });
+    // window.addEventListener('touchstart', e => {
+    //   addWindowListeners(e);
+    // }, { passive: false });
+    window.addEventListener('touchstart', addWindowListeners);
 
-
-  // if (isMobile()) {
-  //   // console.log('isMobile');
-  //   // Test via a getter in the options object to see if the passive property is accessed
-  //   // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
-  //   // https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
-  //   let supportsPassive = false;
-  //   try {
-  //     let opts = Object.defineProperty({}, 'passive', {
-  //       get: () => {
-  //         supportsPassive = true;
-  //       }
-  //     });
-  //     window.addEventListener('testPassive', null, opts);
-  //     window.removeEventListener('testPassive', null, opts);
-  //   } catch (e) { console.error('error on detection');}
-    
-
-  //   window.addEventListener('touchstart', addWindowListeners, supportsPassive ? { passive: true } : false);
-  // } else {
-  //   // console.log('not Mobile');
-  //   window.addEventListener('click', addWindowListeners);
-  // }
-
-  let supportsPassive = false;
-  try {
-    let opts = Object.defineProperty({}, 'passive', {
-      get: () => {
-        supportsPassive = true;
-      }
-    });
-    window.addEventListener('testPassive', null, opts);
-    window.removeEventListener('testPassive', null, opts);
-  } catch (e) { console.error('error on detection');}
-
-  window.addEventListener('click', addWindowListeners, supportsPassive ? { passive: true } : false);
+  } else {
+    // console.log('not Mobile');
+    window.addEventListener('click', addWindowListeners);
+  }
 
 
+
+  /**
+   * TODO - doc this
+   */
+  function smaDaysListener() {
+    const smaDays = document.querySelector('#sma-days');
+
+    smaDays.addEventListener('blur', (e) => {
+      const value = e.target.value;
+      // console.log(`ON CLICK value: ${value}, STATE`, STATE.get());
+      STATE.setState({ smaDays: parseInt(value) });
+      // console.log(`AFTER value: ${value}, STATE`, STATE.get());
+    }, true);
+
+  }
   function addWindowListeners(e) {
-    //!HACK THE EVENT LISTENERS
-    // console.dir(e.target);
+    //GLOBAL EVENT LISTENERS
 
     /* MODAL LISTENERS */
     const modalBackground = document.querySelector('.modal-background');
     const smaCheckbox = document.querySelector('#sma-checkbox');
-    const smaDays = document.querySelector('#sma-days');
 
-    // console.dir(e.target);
+    // Open SETTINGS Modal
+    if (e.target.closest('#settings-icon')) {
+
+      const comp2 = componentSma(STATE);
+      const html2 = openModalWith({
+        title: 'Settings',
+        version: STATE.get('version'),
+        props: comp2,
+      });
+
+      masterModal.innerHTML = html2;
+      masterModal.style.display = 'flex';
+
+      //Add this event listener everytime settings is opened //TODO - fix
+      smaDaysListener();
+
+    }
+
     /* Close the modal */
     if (e.target === modalBackground || e.target.closest('#modal-close')) {
       masterModal.style.display = 'none';
@@ -271,17 +272,16 @@ function init() {
 
     /** MODAL SETTINGS */
     if (e.target === smaCheckbox) {
-      const checked = e.target.checked;
+      //need to ! this because event doenst register new value, just previous
+      const checked = !e.target.checked;
+      // console.log(`ON CLICK - checked: ${checked}, STATE`, STATE.get());
       STATE.setState({ smaIsChecked: checked });
-      // console.log(`checked: ${checked}, STATE`, STATE.get());
-    }
-    if (e.target === smaDays) {
-      const value = e.target.value;
-      STATE.setState({ smaDays: parseInt(value) });
-      // console.log(`value: ${value}, STATE`, STATE.get());
     }
 
-    /** @type {SVGAElement} */
+    /** 
+     * CLOSE MODAL
+     * @type {SVGAElement} 
+     */
     const closest = e.target.closest(`[data-positive]`);
     if (closest) {
       const html = openModalWith({
@@ -297,8 +297,10 @@ function init() {
       masterModal.style.display = 'flex';
     }
 
-    /** OPEN MODAL */
-    /** @type {SVGAElement} */
+    /** 
+     * OPEN MODAL
+     * @type {SVGAElement} 
+     */
     const sma1 = e.target.closest(`[data-class="sma1"]`);
     if (sma1) {
       const html = openModalWith({
@@ -317,45 +319,4 @@ function init() {
     }
 
   }
-
-
-  /** WINDOW */
-  // window.addEventListener('click', e => {
-
-  // /** @type {SVGAElement} */
-  // const closest = e.target.closest(`[data-positive]`);
-  // if (closest) {
-  //   const html = openModalWith({
-  //     title: 'Details',
-  //     version: STATE.get('version'),
-  //     props: viewDataPositive({
-  //       positive: closest.dataset.positive,
-  //       date: closest.dataset.date,
-  //     })
-  //   });
-
-  //   masterModal.innerHTML = html;
-  //   masterModal.style.display = 'flex';
-  // }
-
-  // /** @type {SVGAElement} */
-  // const sma1 = e.target.closest(`[data-class="sma1"]`);
-  // if (sma1) {
-  //   const html = openModalWith({
-  //     title: 'Details',
-  //     version: STATE.get('version'),
-  //     props: viewSma({
-  //       // positive: closest.dataset.positive,
-  //       period: sma1.dataset.period,
-  //       date: sma1.dataset.date,
-  //       sma: sma1.dataset.sma,
-  //     })
-  //   });
-
-  //   masterModal.innerHTML = html;
-  //   masterModal.style.display = 'flex';
-  // }
-
-  // });
-
 }
