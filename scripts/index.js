@@ -208,21 +208,22 @@ function init() {
   dropdown.addEventListener('change', handleDropdown);
 
 
-  // if (isMobile()) {
-    // console.log('isMobile');
+  if (isMobile()) {
+    console.log('isMobile');
     // Test via a getter in the options object to see if the passive property is accessed
     // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
     // https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
 
-    // window.addEventListener('touchstart', e => {
-    //   addWindowListeners(e);
-    // }, { passive: false });
+    window.addEventListener('touchstart', e => {
+      // e.preventDefault();
+      addWindowListeners(e);
+    }, { passive: false });
     // window.addEventListener('touchstart', addWindowListeners);
 
-  // } else {
+  } else {
     // console.log('not Mobile');
     window.addEventListener('click', addWindowListeners);
-  // }
+  }
 
 
 
@@ -239,7 +240,13 @@ function init() {
       // console.log(`AFTER value: ${value}, STATE`, STATE.get());
     }, true);
 
+    if (isMobile()) {
+
+    } 
+
   }
+
+
   function addWindowListeners(e) {
     //GLOBAL EVENT LISTENERS
 
