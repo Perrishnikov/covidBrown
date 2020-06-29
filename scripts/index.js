@@ -218,7 +218,6 @@ function init() {
       // e.preventDefault();
       addWindowListeners(e);
     }, { passive: false });
-    // window.addEventListener('touchstart', addWindowListeners);
 
   } else {
     // console.log('not Mobile');
@@ -239,10 +238,6 @@ function init() {
       STATE.setState({ smaDays: parseInt(value) });
       // console.log(`AFTER value: ${value}, STATE`, STATE.get());
     }, true);
-
-    if (isMobile()) {
-
-    } 
 
   }
 
