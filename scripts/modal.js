@@ -11,7 +11,7 @@ function componentSma(props) {
   <div style="display: flex; align-items: center;" class="">
     <input id="sma-checkbox" type="checkbox" ${smaIsChecked ? 'checked' : ''} />
     <span style="margin-left: 6px;">Show SMA over</span>
-    <input id="sma-days" style="width:35px; background-color: beige; margin-left: 6px; margin-right: 6px; text-align: center;" class="input" type="number" value="${smaDays ? smaDays : 0}" />
+    <input id="sma-days" inputmode="numeric" style="width:35px; background-color: beige; margin-left: 6px; margin-right: 6px; text-align: center; font-size: 16px !important;" class="input" type="number" value="${smaDays ? smaDays : 0}" />
     <span> days </span>
 </div>`;
 

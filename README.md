@@ -3,6 +3,10 @@
 https://perrishnikov.github.io/covidBrown/
 
 
+## v1.4
+* Top 5 added
+* touch-action
+
 ## v1.3.1
 * increased size of touch events for fingers
 

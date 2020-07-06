@@ -20,7 +20,7 @@ const masterModal = document.querySelector('#masterModal'); //set html
 const STATE = (function () {
   let self = {
 
-    version: '1.3.1',
+    version: '1.4',
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
@@ -79,6 +79,7 @@ const STATE = (function () {
  */
 // eslint-disable-next-line no-unused-vars
 const SUBS = events.subscribe('UPDATE', async (state) => {
+  //Get data from local or fetch it, and render it
   const data = await getChartData(state);
   baseRender({ data, state });
 });
@@ -210,40 +211,85 @@ function init() {
 
   if (isMobile()) {
     console.log('isMobile');
-    // Test via a getter in the options object to see if the passive property is accessed
-    // https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
-    // https://developer.mozilla.org/en-US/docs/Web/API/TouchEvent
 
-    window.addEventListener('touchstart', e => {
-      // e.preventDefault();
-      addWindowListeners(e);
-    }, { passive: false });
+    /* Kinda hack to not trigger touch if we are scrolling */
+    let start = { x: null, y: null };
+    window.addEventListener('pointerdown', (e) => {
+
+      // console.log(`offsetX: ${e.offsetX}, offsetY: ${e.offsetY}`);
+      start.x = Math.round(e.offsetX);
+      start.y = Math.round(e.offsetY);
+    }, false);
+
+    window.addEventListener('pointerup', (e) => {
+      let end = {
+        x: Math.round(e.offsetX),
+        y: Math.round(e.offsetY)
+      };
+
+      // Disregard svg-chart touches; only want entities
+      //https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action
+      if (e.target.id !== 'svg-chart') {
+        if (start.x === end.x && start.y == end.y) {
+          //touch event
+          // console.dir(e);
+
+          window.addEventListener('pointerup', triggerWindowListeners, true);
+        } else {
+          //just a scroll event - dont need
+        }
+      }
+    }, true);
 
   } else {
     // console.log('not Mobile');
-    window.addEventListener('click', addWindowListeners);
+    window.addEventListener('click', triggerWindowListeners);
   }
 
 
 
   /**
+   * MODAL click
    * TODO - doc this
    */
   function smaDaysListener() {
     const smaDays = document.querySelector('#sma-days');
 
-    smaDays.addEventListener('blur', (e) => {
-      const value = e.target.value;
-      // console.log(`ON CLICK value: ${value}, STATE`, STATE.get());
+    // smaDays.addEventListener('blur', (e) => {
+    //   const value = e.target.value;
+    //   // console.log(`ON CLICK value: ${value}, STATE`, STATE.get());
+    //   STATE.setState({ smaDays: parseInt(value) });
+    //   // console.log(`AFTER value: ${value}, STATE`, STATE.get());
+    // }, true);
+    smaDays.addEventListener('focusin', (event) => {
+
+      // event.target.style.background = 'pink';    
+    });
+
+    smaDays.addEventListener('focusout', (event) => {
+      const value = event.target.value;
+      // event.target.style.background = '';
       STATE.setState({ smaDays: parseInt(value) });
-      // console.log(`AFTER value: ${value}, STATE`, STATE.get());
-    }, true);
+    });
 
   }
 
 
-  function addWindowListeners(e) {
+  /**
+   * 
+   * @param {Event} e 
+   */
+  function triggerWindowListeners(e) {
     //GLOBAL EVENT LISTENERS
+    let currentElement = document.activeElement;
+    // console.log(currentElement);
+    if (currentElement.id === 'sma-days') {
+      const value = e.target.value;
+      event.target.style.background = '';
+      STATE.setState({ smaDays: parseInt(value) });
+    }
+
+
 
     /* MODAL LISTENERS */
     const modalBackground = document.querySelector('.modal-background');
@@ -272,16 +318,22 @@ function init() {
       masterModal.style.display = 'none';
     }
 
+
     /** MODAL SETTINGS */
     if (e.target === smaCheckbox) {
+
       //need to ! this because event doenst register new value, just previous
-      const checked = !e.target.checked;
+      // const checked = !e.target.checked;
       // console.log(`ON CLICK - checked: ${checked}, STATE`, STATE.get());
-      STATE.setState({ smaIsChecked: checked });
+      // console.log(STATE.get('smaIsChecked'));
+      let bool = STATE.get('smaIsChecked');
+      let s = STATE.setState({ smaIsChecked: !bool });
+      //  console.log(s);
     }
 
+
     /** 
-     * CLOSE MODAL
+     * CLOSE MODAL on rect
      * @type {SVGAElement} 
      */
     const closest = e.target.closest(`[data-positive]`);
@@ -300,7 +352,7 @@ function init() {
     }
 
     /** 
-     * OPEN MODAL
+     * OPEN MODAL on rect
      * @type {SVGAElement} 
      */
     const sma1 = e.target.closest(`[data-class="sma1"]`);
@@ -319,6 +371,7 @@ function init() {
       masterModal.innerHTML = html;
       masterModal.style.display = 'flex';
     }
-
+    // e.preventDefault();
   }
+
 }
