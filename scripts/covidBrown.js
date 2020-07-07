@@ -120,7 +120,7 @@ const parseData = {
   },
 
   highestCasePerDayWithDate: data => {
-    let max = 30;
+    let max = 0;
     let date = '';
 
     data.forEach(day => {

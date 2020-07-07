@@ -35,7 +35,7 @@ https://perrishnikov.github.io/covidBrown/
 * MVP
 
 ## TODO
-* !fix iOS input bug
+* fix iOS resizing number input bug
 * clean up dates
 * clean up stying, css, and id's
 * create legend
@@ -53,7 +53,6 @@ let values = Array.prototype.map.call(elems, function(obj) {
 * url (query string) for direct link - "/geo="state"&entity=WI"
 * console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
   https://davidwalsh.name/prefers-color-scheme
-* summarize county data [x] total
 * change orientation to breakpoints. Check for iOS for font-size
 * look into resolution for mobile (window.devicePixelRatio}dppx)
 * stats

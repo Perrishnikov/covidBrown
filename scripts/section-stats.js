@@ -2,18 +2,25 @@
 function statsSection({ total, entity, max }) {
 
   return html`
-  <div style="display: flex; flex-direction: column; margin-left: 30px; margin-top:12px; margin-bottom:12px; line-height:1.5em;">
+  <div style="
+    display: flex; 
+    flex-direction: column; 
+    margin-left: 30px; 
+    margin-top:12px; 
+    margin-bottom:12px; 
+    line-height:1.5em;"
+    >
     <div style="font-weight: 700;">Stats for ${entity}</div>
     <div style="display: flex; flex-direction: column;">
 
       <div style="display: flex; flex-direction: column; align-items: flex-start; font-size:1em; ">
-        <div style="">
+        <div>
           <span>Total Cases:</span>
           <span style="margin-right: 12px;" id="">${numberWithCommas(total)}</span>
         </div>
-        <div style="">
+        <div>
         <span>Highest Single Day:</span>
-          <span style="" id="">${numberWithCommas(max.max)}</span>
+          <span id="">${numberWithCommas(max.max)}</span>
           <span> on ${max.date}</span>
         </div>
       
@@ -26,7 +33,7 @@ function statsSection({ total, entity, max }) {
 export { statsSection };
 
 function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 //use for template literal intellisense
