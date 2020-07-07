@@ -5,7 +5,7 @@
 import { storageAvailable, getWithExpiry, setWithExpiry, fetchData, isMobile } from './general.js';
 import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
-import { componentSma, viewDataPositive, openModalWith, viewSma } from './modal.js';
+import { componentSma, viewDataPositive, openModalWith, viewSma, viewAllTheData } from './modal.js';
 import { events } from './pub-sub.js';
 
 
@@ -153,6 +153,8 @@ function baseRender({ data, state }) {
     const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
     const d = new Date();
     const e = new Date(expiry);
+    const top5 = parseData.stateTop5(data);
+    // console.log(top5);
 
     svgWrapper.innerHTML = dynamicChart({
       data: features,
@@ -331,19 +333,23 @@ function init() {
       //  console.log(s);
     }
 
-
+    
     /** 
      * CLOSE MODAL on rect
      * @type {SVGAElement} 
      */
     const closest = e.target.closest(`[data-positive]`);
+    
     if (closest) {
+      console.log(closest.dataset);
       const html = openModalWith({
         title: 'Details',
         version: STATE.get('version'),
-        props: viewDataPositive({
+        props: viewAllTheData({
           positive: closest.dataset.positive,
           date: closest.dataset.date,
+          period: closest.dataset.period,
+          sma: closest.dataset.sma,
         })
       });
 

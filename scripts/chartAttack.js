@@ -172,6 +172,8 @@ function dynamicChart(params) {
     count++;
   }
 
+  // console.log(sma.sma.length);
+  // console.log(data.length);
   //horizontal bars
   for (let i = 0; i < data.length; i++) {
     const att = data[i].attributes;
@@ -181,6 +183,12 @@ function dynamicChart(params) {
     let date = new Date(att.LoadDttm);
     // date = sma.sma[i].date;
 
+    //TODO - move to a function to share with sma block below
+    let average, period;
+    average = sma.sma[i].value ? sma.sma[i].value.average : 0;
+    // date = sma.sma[i].date;
+    period = sma.sma[i].period;
+
     xBars += `<rect 
         style="fill-opacity: 0;"
         x="${0 + 10 + i * (barWidth + barSpacing) - (barSpacing * .5)}" 
@@ -189,6 +197,8 @@ function dynamicChart(params) {
         height="${Math.round(POS_NEW * ppxPerNumber)}px" 
         data-positive="${att.POS_NEW}"
         data-date="${date.toLocaleDateString()}"
+        data-period="${period}"
+        data-sma="${average}"
         />
         <rect 
         style="fill:black;"
@@ -198,6 +208,8 @@ function dynamicChart(params) {
         height="${Math.round(POS_NEW * ppxPerNumber)}px"
         data-positive="${att.POS_NEW}"
         data-date="${date.toLocaleDateString()}"
+        data-period="${period}"
+        data-sma="${average}"
         />
         `;
 

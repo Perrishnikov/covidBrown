@@ -89,6 +89,24 @@ const parseData = {
     });
 
     return { sma, period };
+  },
+
+
+  stateTop5: (features) => {
+    const [...data] = features.cachedFeatures || features.fetchedFeatures;
+    if(data[0].attributes.GEO === 'State'){
+
+      let sorted = data.sort((a,b) => {
+        // console.log(a);
+        // console.log(b);
+        return a.attributes.POS_NEW - b.attributes.POS_NEW;
+      });
+
+      // sorted.forEach(t => console.log(t.attributes.POS_NEW));
+      // console.log(data[0].attributes);
+      return sorted;
+    }
+    
   }
 };
 

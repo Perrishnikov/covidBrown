@@ -52,6 +52,25 @@ function viewSma({ period, date, sma }) {
   `;
 }
 
+function viewAllTheData({ period, date, sma, positive }) {
+  return html`
+  <div style="display: flex; align-items: center; font-size:1.1em;">
+    <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
+      <span>Date:</span>
+      <span>Positive:</span>
+      <span>SMA:</span>
+      <span>Period:</span>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
+      <span id="">${date}</span>
+      <span id="">${positive} cases</span>
+      <span id="">${sma} cases</span>
+      <span id="">${period} days</span>
+    </div>
+  </div>
+  `;
+}
+
 //title
 //settings for Settings and Data for Details
 //footer should be static
@@ -91,7 +110,7 @@ function openModalWith({ version, title, props }) {
   `;
 }
 
-export { componentSma, viewDataPositive, openModalWith, viewSma };
+export { componentSma, viewDataPositive, openModalWith, viewSma, viewAllTheData };
 
 //use for template literal intellisense
 const html = (strings, ...keys) => {
