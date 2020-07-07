@@ -93,10 +93,10 @@ const parseData = {
 
 
   stateTop5: (features) => {
-    const [...data] = features.cachedFeatures || features.fetchedFeatures;
-    if(data[0].attributes.GEO === 'State'){
+    const [...clone] = features.cachedFeatures || features.fetchedFeatures;
+    if (clone[0].attributes.GEO === 'State') {
 
-      let sorted = data.sort((a,b) => {
+      let sorted = clone.sort((a, b) => {
         // console.log(a);
         // console.log(b);
         return a.attributes.POS_NEW - b.attributes.POS_NEW;
@@ -106,7 +106,32 @@ const parseData = {
       // console.log(data[0].attributes);
       return sorted;
     }
-    
+
+  },
+
+  totalCases: features => {
+    const [...clone] = features;
+
+    const reduced = clone.reduce((acc, curr) => {
+      return acc + curr.attributes.POS_NEW;
+    }, 0);
+
+    return reduced;
+  },
+
+  highestCasePerDayWithDate: data => {
+    let max = 30;
+    let date = '';
+
+    data.forEach(day => {
+      // console.log(day.attributes.POS_NEW);
+      if (day.attributes.POS_NEW > max) {
+        max = day.attributes.POS_NEW;
+        
+        date = new Date(day.attributes.LoadDttm).toLocaleDateString();
+      }
+    });
+    return {max, date};
   }
 };
 

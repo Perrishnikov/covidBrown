@@ -5,8 +5,9 @@
 import { storageAvailable, getWithExpiry, setWithExpiry, fetchData, isMobile } from './general.js';
 import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
-import { componentSma, openModalWith, viewSma, viewAllTheData } from './modal.js';
+import { componentSma, openModalWith, viewSma, viewAllTheData } from './section-modal.js';
 import { events } from './pub-sub.js';
+import { statsSection } from './section-stats.js';
 
 
 const todaysDate = document.querySelector('#todaysDate');
@@ -15,6 +16,7 @@ const svgWrapper = document.querySelector('#svg-wrapper');
 const contextWrapper = document.querySelector('#context-wrapper');
 const dropdown = document.querySelector('#county-drop');
 const masterModal = document.querySelector('#masterModal'); //set html
+const contextStats = document.querySelector('#context-stats');
 
 
 const STATE = (function () {
@@ -173,6 +175,12 @@ function baseRender({ data, state }) {
     // const scrollingDiv = document.querySelector('#scrolling-div');
     // scrollingDiv.scrollLeft = scrollingDiv.scrollLeftMax;
     document.querySelector('#scrolling-div').scrollLeft += 5000;
+
+    contextStats.innerHTML = statsSection({
+      total: parseData.totalCases(features),
+      max: parseData.highestCasePerDayWithDate(features),
+      entity: STATE.get('value')
+    });
 
   } else {
 
@@ -333,15 +341,14 @@ function init() {
       //  console.log(s);
     }
 
-    
+
     /** 
      * CLOSE MODAL on rect
      * @type {SVGAElement} 
      */
     const closest = e.target.closest(`[data-positive]`);
-    
+
     if (closest) {
-      console.log(closest.dataset);
       const html = openModalWith({
         title: 'Details',
         version: STATE.get('version'),

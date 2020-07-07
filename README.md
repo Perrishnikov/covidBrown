@@ -5,7 +5,9 @@ https://perrishnikov.github.io/covidBrown/
 
 ## v1.4
 * Top 5 added
-* fixed scroll on mobile. Not touch-action
+* fixed scroll/touching of bars on mobile
+* Stats - total cases
+* Stats - highest single day
 
 ## v1.3.1
 * increased size of touch events for fingers
@@ -37,7 +39,6 @@ https://perrishnikov.github.io/covidBrown/
 * clean up dates
 * clean up stying, css, and id's
 * create legend
-* include sma (and other data) in click details
 * top 5 counties on WI chart. Add to stats
 * multi-select
 This example shows how to iterate through a collection of objects collected by querySelectorAll. This is because querySelectorAll returns a NodeList (which is a collection of objects).
@@ -52,7 +53,7 @@ let values = Array.prototype.map.call(elems, function(obj) {
 * url (query string) for direct link - "/geo="state"&entity=WI"
 * console.log(window.matchMedia('(prefers-color-scheme: dark)').matches);
   https://davidwalsh.name/prefers-color-scheme
-* summarize county data
+* summarize county data [x] total
 * change orientation to breakpoints. Check for iOS for font-size
 * look into resolution for mobile (window.devicePixelRatio}dppx)
 * stats
