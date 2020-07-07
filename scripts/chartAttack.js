@@ -203,7 +203,7 @@ function dynamicChart(params) {
         data-sma="${average}"
         />
         <rect 
-        style="fill:${i % 2 == 0 ? 'rgba(0,0,0,.6)' : 'rgba(0,0,0,.9)'}"
+        style="fill:${i % 2 == 0 ? 'rgba(0,0,0,.6)' : 'rgba(0,0,0,.9)'}; cursor:pointer;"
         x="${0 + 10 + i * (barWidth + barSpacing)}" 
         y="${Math.round(chartHeight - yOffset - yTextPadding - POS_NEW * ppxPerNumber)}" 
         width="${barWidth}px" 
@@ -282,7 +282,7 @@ function dynamicChart(params) {
         data-sma="${average}"
         r="${barWidth}"/>
       <circle 
-        style="fill:red;"
+        style="fill:red; cursor:pointer"
         cx="${x}" 
         cy="${y}"
         data-class="sma1"

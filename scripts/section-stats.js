@@ -2,12 +2,11 @@
 function statsSection({ total, entity, max }) {
 
   return html`
+  <hr style="margin-left:12px; margin-right:12px;" color="black" size="1">
   <div style="
     display: flex; 
     flex-direction: column; 
-    margin-left: 30px; 
-    margin-top:12px; 
-    margin-bottom:12px; 
+    margin:12px; 
     line-height:1.5em;"
     >
     <div style="font-weight: 700;">Stats for ${entity}</div>
@@ -15,12 +14,13 @@ function statsSection({ total, entity, max }) {
 
       <div style="display: flex; flex-direction: column; align-items: flex-start; font-size:1em; ">
         <div>
-          <span>Total Cases:</span>
-          <span style="margin-right: 12px;" id="">${numberWithCommas(total)}</span>
+          <span style="margin-right:6px;">Total Cases:</span>
+          <span style="font-weight: 700;">${numberWithCommas(total)}</span>
+          <span>as of ${new Date().toLocaleDateString()}</span>
         </div>
         <div>
-        <span>Highest Single Day:</span>
-          <span id="">${numberWithCommas(max.max)}</span>
+        <span style="margin-right:6px;">Highest Single Day:</span>
+          <span style="font-weight: 700;">${numberWithCommas(max.max)}</span>
           <span> on ${max.date}</span>
         </div>
       
