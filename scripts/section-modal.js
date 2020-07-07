@@ -102,7 +102,7 @@ function openModalWith({ version, title, props }) {
           </svg>
         </a>
         <span style="font-size: .7em;">Project: COVID Brown </span>
-        <span id="version" style="font-size: .7em; margin-left:12px;">${version}</span>
+        <span id="version" style="font-size: .7em; margin-left:12px;">v${version}</span>
 
       </footer>
     </div>

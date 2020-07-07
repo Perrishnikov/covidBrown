@@ -203,7 +203,7 @@ function dynamicChart(params) {
         data-sma="${average}"
         />
         <rect 
-        style="fill:${i % 2 == 0 ? 'rgba(0,0,0,.6)' : 'rgba(0,0,0,.9)'}; cursor:pointer;"
+        style="fill:${i % 2 == 0 ? 'rgba(0,0,0,.5)' : 'rgba(0,0,0,.9)'}; cursor:pointer;"
         x="${0 + 10 + i * (barWidth + barSpacing)}" 
         y="${Math.round(chartHeight - yOffset - yTextPadding - POS_NEW * ppxPerNumber)}" 
         width="${barWidth}px" 
@@ -227,11 +227,12 @@ function dynamicChart(params) {
       if (display.toString().length == 3) half += 5;
       if (display.toString().length == 4) half += 8;
 
-      xAxisLabels += `<text 
+      xAxisLabels += `
+      <text 
         x="${0 + 10 + i * (barWidth + barSpacing) + half}" 
         y="${Math.round(chartHeight - yOffset - yTextPadding) + 16}">
         ${display}
-        </text>`;
+      </text>`;
 
       //not being used
       dateLines += `
@@ -244,12 +245,12 @@ function dynamicChart(params) {
       />`;
 
       dateCircles += `
-        <circle 
+      <circle 
         cx="${0 + 10 + i * (barWidth + barSpacing) + (barWidth + barSpacing) / 4}" 
         cy="${Math.round(chartHeight - yOffset - yTextPadding) + 12}" 
         r="15"
         fill="rgba(0,0,0,.1)"
-        />`;
+      />`;
     }
   }
 
