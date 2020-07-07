@@ -4,7 +4,6 @@ https://perrishnikov.github.io/covidBrown/
 
 
 ## v1.4
-* Top 5 added
 * fixed scroll/touching of bars on mobile
 * Stats - total cases
 * Stats - highest single day
@@ -38,6 +37,7 @@ https://perrishnikov.github.io/covidBrown/
 ## TODO
 * fix iOS resizing number input bug
 * clean up stying, css, and id's
+* day/night mode
 * create legend
 * [x]top 5 counties on WI chart. Add to stats
 * multi-select
