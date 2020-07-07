@@ -5,7 +5,7 @@
 import { storageAvailable, getWithExpiry, setWithExpiry, fetchData, isMobile } from './general.js';
 import { parseData, validateFeatures, getUrl } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
-import { componentSma, viewDataPositive, openModalWith, viewSma, viewAllTheData } from './modal.js';
+import { componentSma, openModalWith, viewSma, viewAllTheData } from './modal.js';
 import { events } from './pub-sub.js';
 
 

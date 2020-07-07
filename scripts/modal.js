@@ -19,21 +19,21 @@ function componentSma(props) {
 }
 
 
-function viewDataPositive({ positive, date }) {
+// function viewDataPositive({ positive, date }) {
 
-  return html`
-  <div style="display: flex; align-items: center; font-size:1.1em;">
-    <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
-      <span>Date:</span>
-      <span>Positive:</span>
-    </div>
-    <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
-      <span id="">${date}</span>
-      <span id="">${positive} cases</span>
-    </div>
-  </div>
-  `;
-}
+//   return html`
+//   <div style="display: flex; align-items: center; font-size:1.1em;">
+//     <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
+//       <span>Date:</span>
+//       <span>Positive:</span>
+//     </div>
+//     <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
+//       <span id="">${date}</span>
+//       <span id="">${positive} cases</span>
+//     </div>
+//   </div>
+//   `;
+// }
 
 function viewSma({ period, date, sma }) {
   return html`
@@ -57,9 +57,9 @@ function viewAllTheData({ period, date, sma, positive }) {
   <div style="display: flex; align-items: center; font-size:1.1em;">
     <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
       <span>Date:</span>
-      <span>Positive:</span>
+      <span>New Positive:</span>
       <span>SMA:</span>
-      <span>Period:</span>
+      <span>SMA Period:</span>
     </div>
     <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
       <span id="">${date}</span>
@@ -110,7 +110,7 @@ function openModalWith({ version, title, props }) {
   `;
 }
 
-export { componentSma, viewDataPositive, openModalWith, viewSma, viewAllTheData };
+export { componentSma, openModalWith, viewSma, viewAllTheData };
 
 //use for template literal intellisense
 const html = (strings, ...keys) => {
