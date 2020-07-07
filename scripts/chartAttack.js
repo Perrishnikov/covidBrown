@@ -119,6 +119,8 @@ function dynamicChart(params) {
   //x-axis
   let xAxisLabels = ''; //data labels (dates)
   let xBars = ''; //data values (number)
+  let dateCircles = ''; // lines to connect date circles
+  let dateLines = ''; // circles around dates
   const barWidth = 10;
   const barSpacing = 10;
   const chartWidth = (numOfDays * (barWidth + barSpacing));
@@ -201,7 +203,7 @@ function dynamicChart(params) {
         data-sma="${average}"
         />
         <rect 
-        style="fill:black;"
+        style="fill:${i % 2 == 0 ? 'rgba(0,0,0,.6)' : 'rgba(0,0,0,.9)'}"
         x="${0 + 10 + i * (barWidth + barSpacing)}" 
         y="${Math.round(chartHeight - yOffset - yTextPadding - POS_NEW * ppxPerNumber)}" 
         width="${barWidth}px" 
@@ -221,15 +223,33 @@ function dynamicChart(params) {
       // let date = new Date(att.LoadDttm);
       // console.log(`${date.getMonth()+ 1}/${date.getDate()}`);
       let display = `${date.getMonth() + 1}/${date.getDate()}`;
-      if (display.toString().length == 2) half += 3;
-      if (display.toString().length == 3) half += 6;
-      if (display.toString().length == 4) half += 9;
+      if (display.toString().length == 2) half += 2;
+      if (display.toString().length == 3) half += 5;
+      if (display.toString().length == 4) half += 8;
 
       xAxisLabels += `<text 
         x="${0 + 10 + i * (barWidth + barSpacing) + half}" 
         y="${Math.round(chartHeight - yOffset - yTextPadding) + 16}">
         ${display}
         </text>`;
+
+      //not being used
+      dateLines += `
+      <line 
+        x1="${0 + 10 + i * (barWidth + barSpacing) + (barWidth + barSpacing) / 4}" 
+        y1="${Math.round(chartHeight - yOffset - yTextPadding) - 6}" 
+        x2="${0 + 10 + i * (barWidth + barSpacing) + (barWidth + barSpacing) / 4}" 
+        y2="${Math.round(chartHeight - yOffset - yTextPadding) + 6}"
+        stroke="#333"
+      />`;
+
+      dateCircles += `
+        <circle 
+        cx="${0 + 10 + i * (barWidth + barSpacing) + (barWidth + barSpacing) / 4}" 
+        cy="${Math.round(chartHeight - yOffset - yTextPadding) + 12}" 
+        r="15"
+        fill="rgba(0,0,0,.1)"
+        />`;
     }
   }
 
@@ -269,7 +289,7 @@ function dynamicChart(params) {
         data-date="${date}"
         data-period="${period}"
         data-sma="${average}"
-        r="${barWidth /3}"/>`;
+        r="${barWidth / 3}"/>`;
     }
   }
 
@@ -292,10 +312,13 @@ function dynamicChart(params) {
     <div id="scrolling-div" style="overflow-x: scroll; overscroll-behavior-x: none; overflow-y:hidden;">
 
       <svg id="svg-chart" x="${yAxisWidth}" height="${chartHeight + yLabelMargin}px" width="${chartWidth + yAxisWidth}" class="labels x-labels">
+
+        <g id="dateCircles">${dateCircles}</g>
         <g id="chart-xy-axis-lines">${yAxisLines}</g>
         <g id="chart-x-bars">${xBars}</g>
         <g id="chart-x-axis-labels">${xAxisLabels}</g>
         <g id="chart-sma">${smaLines}${smaLegend}</g>
+        
       </svg>
 
     </div>

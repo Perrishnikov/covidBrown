@@ -8,6 +8,7 @@ https://perrishnikov.github.io/covidBrown/
 * fixed scroll/touching of bars on mobile
 * Stats - total cases
 * Stats - highest single day
+* dates are more easily connected to a bar
 
 ## v1.3.1
 * increased size of touch events for fingers
@@ -36,10 +37,9 @@ https://perrishnikov.github.io/covidBrown/
 
 ## TODO
 * fix iOS resizing number input bug
-* clean up dates
 * clean up stying, css, and id's
 * create legend
-* top 5 counties on WI chart. Add to stats
+* [x]top 5 counties on WI chart. Add to stats
 * multi-select
 This example shows how to iterate through a collection of objects collected by querySelectorAll. This is because querySelectorAll returns a NodeList (which is a collection of objects).
 
