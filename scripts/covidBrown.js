@@ -10,10 +10,17 @@ function getUrl(value, geo) {
   // const url = '../data/sampleQuery2.json'; //local
   const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,POS_NEW,NEG_NEW,DTH_NEW,DEATHS,TEST_NEW&outSR=4326&f=json&orderByFields=DATE`;
 
-  //https://enterprise.arcgis.com/en/portal/latest/use/work-with-date-fields.htm
-  const dateQuery = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO %3D 'County' AND DATE %3D '07/17/2020 2:00:00 PM'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW, NEG_NEW, TEST_NEW&outSR=4326&f=json&orderByFields=POS_NEW DESC&resultRecordCount=5`;
-
   return url;
+}
+
+
+function getTop5Url(date){
+  // format = 07/17/2020
+
+  //https://enterprise.arcgis.com/en/portal/latest/use/work-with-date-fields.htm
+  const top5 = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO %3D 'County' AND DATE %3D '${date} 2:00:00 PM'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW, NEG_NEW, TEST_NEW&outSR=4326&f=json&orderByFields=POS_NEW DESC&resultRecordCount=5`;
+
+  return top5;
 }
 
 /**
@@ -98,23 +105,6 @@ const parseData = {
   },
 
 
-  stateTop5: (features) => {
-    const [...clone] = features.cachedFeatures || features.fetchedFeatures;
-    if (clone[0].attributes.GEO === 'State') {
-
-      let sorted = clone.sort((a, b) => {
-        // console.log(a);
-        // console.log(b);
-        return a.attributes.POS_NEW - b.attributes.POS_NEW;
-      });
-
-      // sorted.forEach(t => console.log(t.attributes.POS_NEW));
-      // console.log(data[0].attributes);
-      return sorted;
-    }
-
-  },
-
   totalCases: features => {
     const [...clone] = features;
 
@@ -141,4 +131,4 @@ const parseData = {
   }
 };
 
-export { getUrl, parseData, validateFeatures };
+export { getUrl, parseData, validateFeatures, getTop5Url };

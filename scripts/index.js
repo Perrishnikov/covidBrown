@@ -3,7 +3,7 @@
 // import { html, render } from 'https://unpkg.com/lit-html?module'; //PROD
 // import { html, render } from '../node_modules/lit-html/lit-html.js'; //DEV
 import { storageAvailable, getWithExpiry, setWithExpiry, fetchData, isMobile } from './general.js';
-import { parseData, validateFeatures, getUrl } from './covidBrown.js';
+import { parseData, validateFeatures, getUrl, getTop5Url } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
 import { componentSma, openModalWith, viewSma, viewAllTheData } from './section-modal.js';
 import { events } from './pub-sub.js';
@@ -155,7 +155,6 @@ function baseRender({ data, state }) {
     const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
     const d = new Date();
     const e = new Date(expiry);
-    const top5 = parseData.stateTop5(data);
     // console.log(top5);
 
     svgWrapper.innerHTML = dynamicChart({
@@ -293,11 +292,12 @@ function init() {
    * 
    * @param {Event} e 
    */
-  function triggerWindowListeners(e) {
+  async function triggerWindowListeners(e) {
     //GLOBAL EVENT LISTENERS
     let currentElement = document.activeElement;
     // console.log(currentElement);
     if (currentElement.id === 'sma-days') {
+      // console.log(`sma-days`);
       const value = e.target.value;
       event.target.style.background = '';
       STATE.setState({ smaDays: parseInt(value) });
@@ -353,19 +353,64 @@ function init() {
     const closest = e.target.closest(`[data-positive]`);
 
     if (closest) {
-      const html = openModalWith({
-        title: 'Details',
-        version: STATE.get('version'),
-        props: viewAllTheData({
-          positive: closest.dataset.positive,
-          date: closest.dataset.date,
-          period: closest.dataset.period,
-          sma: closest.dataset.sma,
-        })
-      });
 
-      masterModal.innerHTML = html;
-      masterModal.style.display = 'flex';
+      const date = closest.dataset.date;
+
+      //Get the Top5 
+      const { json, errors } = await fetchData(getTop5Url(date));
+
+      /* check for fetching error */
+      if (errors.length === 0) {
+          const { features, validationErrors } = validateFeatures(json);
+
+        //   /* check for parsing errors */
+          if (validationErrors.length === 0) {
+
+            const html = openModalWith({
+              title: 'Details',
+              version: STATE.get('version'),
+              props: viewAllTheData({
+                positive: closest.dataset.positive,
+                date: closest.dataset.date,
+                period: closest.dataset.period,
+                sma: closest.dataset.sma,
+                top5: features
+              })
+            });
+    
+            masterModal.innerHTML = html;
+            masterModal.style.display = 'flex';
+
+        
+          } else {
+            return { errors: validationErrors };
+          }
+
+
+      } else {
+
+        console.log(`errors`);
+        const html = openModalWith({
+          title: 'Details',
+          version: STATE.get('version'),
+          props: viewAllTheData({
+            positive: closest.dataset.positive,
+            date: closest.dataset.date,
+            period: closest.dataset.period,
+            sma: closest.dataset.sma
+          })
+        });
+
+        masterModal.innerHTML = html;
+        masterModal.style.display = 'flex';
+
+        return { errors };
+      }
+
+
+
+
+
     }
 
     /** 
@@ -374,6 +419,7 @@ function init() {
      */
     const sma1 = e.target.closest(`[data-class="sma1"]`);
     if (sma1) {
+
       const html = openModalWith({
         title: 'Date Details',
         version: STATE.get('version'),

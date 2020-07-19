@@ -183,6 +183,11 @@ function dynamicChart(params) {
     const yOffset = chartHeight - (yLineInc * yLineCount + (yTextPadding * 2)); //3 - difference with the rounding heights
 
     let date = new Date(att.LoadDttm);
+    let day = ('0' + date.getDate()).slice(-2);
+    let month = ('0' + (date.getMonth() + 1)).slice(-2);
+    let year = date.getFullYear();
+    // console.log(date.toLocaleDateString());
+    let fullDate = `${month}/${day}/${year}`;
     // date = sma.sma[i].date;
 
     //TODO - move to a function to share with sma block below
@@ -198,7 +203,7 @@ function dynamicChart(params) {
         width="${barWidth + (barSpacing * 1)}px" 
         height="${Math.round(POS_NEW * ppxPerNumber)}px" 
         data-positive="${att.POS_NEW}"
-        data-date="${date.toLocaleDateString()}"
+        data-date="${fullDate}"
         data-period="${period}"
         data-sma="${average}"
         />
@@ -209,7 +214,7 @@ function dynamicChart(params) {
         width="${barWidth}px" 
         height="${Math.round(POS_NEW * ppxPerNumber)}px"
         data-positive="${att.POS_NEW}"
-        data-date="${date.toLocaleDateString()}"
+        data-date="${fullDate}"
         data-period="${period}"
         data-sma="${average}"
         />

@@ -6,7 +6,7 @@
 function componentSma(props) {
   const { smaIsChecked, smaDays } = props.get();
   // console.log(`smaIsChecked: ${smaIsChecked}, smaDays: ${smaDays}`);
-  
+
   const h = html`
   <div style="display: flex; align-items: center;" class="">
     <input id="sma-checkbox" type="checkbox" ${smaIsChecked ? 'checked' : ''} />
@@ -52,7 +52,8 @@ function viewSma({ period, date, sma }) {
   `;
 }
 
-function viewAllTheData({ period, date, sma, positive }) {
+function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
+  console.log(top5);
   return html`
   <div style="display: flex; align-items: center; font-size:1.1em;">
     <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
@@ -60,14 +61,25 @@ function viewAllTheData({ period, date, sma, positive }) {
       <span>New Positive:</span>
       <span>SMA:</span>
       <span>SMA Period:</span>
+      ${top5 ? top5.map((item, i) => {
+        return html`<span>Top 5 #${i+1}:</span>`;
+      }).join('')
+      
+      : ''}
     </div>
     <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
       <span id="">${date}</span>
       <span id="">${positive} cases</span>
       <span id="">${sma} cases</span>
       <span id="">${period} days</span>
+      ${top5 ? top5.map(item => {
+        return html`<span>${item.attributes.NAME} @ ${item.attributes.POS_NEW}</span>`;
+      }).join('')
+      
+      : ''}
     </div>
   </div>
+  
   `;
 }
 

@@ -98,8 +98,13 @@ async function setWithExpiry(key, value) {
   let expiry = new Date();
   expiry.setHours(expirationTime, 0, 0);
 
+
+  //to pad with
+  const newDate = new Date();
+
   //if it's after 2:00, set date for tomorrow
   if (nowTime > twoOclock) {
+    // console.log(newDate.getDate() + 1);
     expiry.setDate(new Date().getDate() + 1); //tomorrow at 2:00
   } else {
     expiry.setDate(new Date().getDate()); //today at 2:00
