@@ -1,11 +1,17 @@
 /**
- *`https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?outFields=*&where=GEO%20%3D%20'County'%20AND%20NAME%20%3D%20'Rusk'`
+ https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?outFields=*&where=GEO%20%3D%20'County'%20AND%20NAME%20%3D%20'Rusk'
+
+ https://data.dhsgis.wi.gov/datasets/covid-19-historical-data-table/data?page=12&where=GEO%20%3D%20%27state%27%20AND%20NAME%20%3D%20%27WI%27
+
  * @param {string} value 
  * @param {'county'|'state'} geo 
  */
 function getUrl(value, geo) {
   // const url = '../data/sampleQuery2.json'; //local
-  const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,POS_NEW,NEG_NEW,TEST_NEW&outSR=4326&f=json`;
+  const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,POS_NEW,NEG_NEW,DTH_NEW,DEATHS,TEST_NEW&outSR=4326&f=json&orderByFields=DATE`;
+
+  //https://enterprise.arcgis.com/en/portal/latest/use/work-with-date-fields.htm
+  const dateQuery = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO %3D 'County' AND DATE %3D '07/17/2020 2:00:00 PM'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW, NEG_NEW, TEST_NEW&outSR=4326&f=json&orderByFields=POS_NEW DESC&resultRecordCount=5`;
 
   return url;
 }

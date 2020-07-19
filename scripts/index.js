@@ -255,6 +255,7 @@ function init() {
     }, true);
 
   } else {
+    //Not mobile
     // console.log('not Mobile');
     window.addEventListener('click', triggerWindowListeners);
   }
