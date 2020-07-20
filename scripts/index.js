@@ -99,13 +99,16 @@ async function getChartData({ value, geo }) {
     // const cachedFeatures = await getWithExpiry(value);
     let { data, expiry } = await getWithExpiry(value);
 
+    //cached data found, return it
     if (data) {
+      console.log(`data found, returning cache`);
       return { cachedFeatures: data, expiry };
     }
     /* else, fetch new item and set cached item */
     else {
       const { json, errors } = await fetchData(getUrl(value, geo));
 
+      console.log(`fetched new data for ${value}...`);
       /* check for fetching error */
       if (errors.length === 0) {
 
@@ -115,7 +118,6 @@ async function getChartData({ value, geo }) {
         if (validationErrors.length === 0) {
           let key = await setWithExpiry(value, features);
           //? message to DOM that this was fetched?
-
           // eslint-disable-next-line no-shadow
           let { data, expiry } = await getWithExpiry(key);
           return { fetchedFeatures: data, expiry };
@@ -148,7 +150,6 @@ async function getChartData({ value, geo }) {
  */
 function baseRender({ data, state }) {
   const features = data.cachedFeatures || data.fetchedFeatures;
-
   const { expiry, errors } = data;
 
   if (!errors) {
@@ -205,7 +206,7 @@ async function handleDropdown() {
   const value = selected.value;
 
   /**@type {number} */
-  const pop = selected.dataset.pop;
+  const pop = selected.dataset.pop || 0;
 
   STATE.setState({ geo, value, pop });
 }

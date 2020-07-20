@@ -50,9 +50,10 @@ function storageAvailable(type) {
  * @returns {null|string}
  */
 async function getWithExpiry(key) {
-  // console.log(key);
   const itemStr = localStorage.getItem(key);
 
+  // console.log(itemStr);
+  //if not in localStorage...
   if (!itemStr) {
     console.log(`${key} not found - go fetch`);
     return { data: null, expiry: null };
@@ -62,7 +63,7 @@ async function getWithExpiry(key) {
     const item = JSON.parse(itemStr);
     const now = new Date();
     const expDate = new Date(item.expiry);
-
+    console.log(`${key} found in storage---\nnow: ${now},\nexpDate: ${expDate}`);
     // compare the expiry time of the item with the current time
     if (now > expDate) {
       // If the item is expired, delete the item from storage and return null
@@ -89,15 +90,16 @@ async function setWithExpiry(key, value) {
   const expirationTime = 14; // 2:00 pm
 
   const now = new Date();
-  const nowTime = now.toLocaleTimeString();
+  const nowTime = now;
   const twoTime = new Date();
   twoTime.setHours(expirationTime, 0, 0); // 2:00 pm
   const twoOclock = twoTime.toLocaleTimeString();
-
+console.log(`nowTime: ${nowTime}`);
+console.log(`twoTime: ${twoTime}`);
 
   let expiry = new Date();
   expiry.setHours(expirationTime, 0, 0);
-
+console.log(`expiry: ${expiry}`);
 
   //to pad with
   const newDate = new Date();
@@ -105,8 +107,10 @@ async function setWithExpiry(key, value) {
   //if it's after 2:00, set date for tomorrow
   if (nowTime > twoOclock) {
     // console.log(newDate.getDate() + 1);
+    console.log(`set Cache for Date +1`);
     expiry.setDate(new Date().getDate() + 1); //tomorrow at 2:00
   } else {
+    console.log(`set Cache for Date +0`);
     expiry.setDate(new Date().getDate()); //today at 2:00
   }
   // `item` is an object which contains the original value
@@ -116,7 +120,7 @@ async function setWithExpiry(key, value) {
     expiry: expiry
   };
 
-  console.log(`setting localStorage for ${key}`);
+  console.log(`setting localStorage for ${key} on ${expiry}`);
   localStorage.setItem(key, JSON.stringify(item));
   // let k = localStorage.getItem(key);
   // console.log(k);
