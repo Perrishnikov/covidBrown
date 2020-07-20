@@ -4,7 +4,6 @@ https://perrishnikov.github.io/covidBrown/
 
 ## v1.5
 * top 5 counties on WI popup
-* Deaths for stats
 * fixed bug that didn't order cases by date
 
 ## v1.4
@@ -43,7 +42,7 @@ https://perrishnikov.github.io/covidBrown/
 * clean up stying, css, and id's
 * day/night mode
 * create legend
-
+* Deaths for stats
 * multi-select
 This example shows how to iterate through a collection of objects collected by querySelectorAll. This is because querySelectorAll returns a NodeList (which is a collection of objects).
 

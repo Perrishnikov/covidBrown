@@ -18,7 +18,7 @@ function getTop5Url(date){
   // format = 07/17/2020
 
   //https://enterprise.arcgis.com/en/portal/latest/use/work-with-date-fields.htm
-  const top5 = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO %3D 'County' AND DATE %3D '${date} 2:00:00 PM'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW, NEG_NEW, TEST_NEW&outSR=4326&f=json&orderByFields=POS_NEW DESC&resultRecordCount=5`;
+  const top5 = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO %3D 'County' AND DATE %3D '${date} 2:00:00 PM'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW, NEG_NEW, TEST_NEW&outSR=4326&f=json&orderByFields=POS_NEW DESC&resultRecordCount=10`;
 
   return top5;
 }

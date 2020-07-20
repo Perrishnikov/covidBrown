@@ -22,7 +22,7 @@ const contextStats = document.querySelector('#context-stats');
 const STATE = (function () {
   let self = {
 
-    version: '1.4',
+    version: '1.5',
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
@@ -178,7 +178,8 @@ function baseRender({ data, state }) {
     contextStats.innerHTML = statsSection({
       total: parseData.totalCases(features),
       max: parseData.highestCasePerDayWithDate(features),
-      entity: STATE.get('value')
+      entity: STATE.get('value'),
+      pop: STATE.get('pop')
     });
 
   } else {
@@ -203,7 +204,10 @@ async function handleDropdown() {
   /**@type {string} - county (or state) */
   const value = selected.value;
 
-  STATE.setState({ geo, value });
+  /**@type {number} */
+  const pop = selected.dataset.pop;
+
+  STATE.setState({ geo, value, pop });
 }
 
 

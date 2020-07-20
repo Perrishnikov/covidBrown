@@ -53,7 +53,7 @@ function viewSma({ period, date, sma }) {
 }
 
 function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
-  console.log(top5);
+
   return html`
   <div style="display: flex; align-items: center; font-size:1.1em;">
     <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
@@ -61,10 +61,13 @@ function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
       <span>New Positive:</span>
       <span>SMA:</span>
       <span>SMA Period:</span>
-      ${top5 ? top5.map((item, i) => {
-        return html`<span>Top 5 #${i+1}:</span>`;
-      }).join('')
-      
+      ${top5 ? `<span>Top ${top5.length}:</span> 
+        ${top5.map((item, i) => {
+          return html`
+          <span>#${i+1}:</span>
+          `;
+        }).join('')
+      }`
       : ''}
     </div>
     <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
@@ -72,16 +75,18 @@ function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
       <span id="">${positive} cases</span>
       <span id="">${sma} cases</span>
       <span id="">${period} days</span>
-      ${top5 ? top5.map(item => {
-        return html`<span>${item.attributes.NAME} @ ${item.attributes.POS_NEW}</span>`;
-      }).join('')
-      
+      ${top5 ? `<span>.</span> 
+        ${top5.map((item, i) => {
+          return html`<span>${item.attributes.NAME} @ ${item.attributes.POS_NEW}</span>`;
+        }).join('')
+      }`
       : ''}
     </div>
   </div>
   
   `;
 }
+
 
 //title
 //settings for Settings and Data for Details
