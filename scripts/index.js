@@ -220,13 +220,14 @@ function init() {
 
   contextToFooter();
 
-  //mobile orientation change or resize browser
-  window.addEventListener('resize', handleDropdown);
+
   dropdown.addEventListener('change', handleDropdown);
 
 
   if (isMobile()) {
     console.log('isMobile');
+
+    window.addEventListener('orientationchange', handleDropdown)
 
     /* Kinda hack to not trigger touch if we are scrolling */
     let start = { x: null, y: null };
@@ -258,6 +259,8 @@ function init() {
     }, true);
 
   } else {
+    //mobile orientation change or resize browser
+    window.addEventListener('resize', handleDropdown);
     //Not mobile
     // console.log('not Mobile');
     window.addEventListener('click', triggerWindowListeners);
@@ -365,30 +368,30 @@ function init() {
 
       /* check for fetching error */
       if (errors.length === 0) {
-          const { features, validationErrors } = validateFeatures(json);
+        const { features, validationErrors } = validateFeatures(json);
 
         //   /* check for parsing errors */
-          if (validationErrors.length === 0) {
+        if (validationErrors.length === 0) {
 
-            const html = openModalWith({
-              title: 'Details',
-              version: STATE.get('version'),
-              props: viewAllTheData({
-                positive: closest.dataset.positive,
-                date: closest.dataset.date,
-                period: closest.dataset.period,
-                sma: closest.dataset.sma,
-                top5: features
-              })
-            });
-    
-            masterModal.innerHTML = html;
-            masterModal.style.display = 'flex';
+          const html = openModalWith({
+            title: 'Details',
+            version: STATE.get('version'),
+            props: viewAllTheData({
+              positive: closest.dataset.positive,
+              date: closest.dataset.date,
+              period: closest.dataset.period,
+              sma: closest.dataset.sma,
+              top5: features
+            })
+          });
 
-        
-          } else {
-            return { errors: validationErrors };
-          }
+          masterModal.innerHTML = html;
+          masterModal.style.display = 'flex';
+
+
+        } else {
+          return { errors: validationErrors };
+        }
 
 
       } else {
