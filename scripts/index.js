@@ -5,7 +5,7 @@
 import { storageAvailable, getWithExpiry, setWithExpiry, fetchData, isMobile } from './general.js';
 import { parseData, validateFeatures, getUrl, getTop5Url } from './covidBrown.js';
 import { dynamicChart } from './chartAttack.js';
-import { componentSma, openModalWith, viewSma, viewAllTheData } from './section-modal.js';
+import { componentSma, openModalWith, viewSma, viewAllTheData, componentRestLocalStorage } from './section-modal.js';
 import { events } from './pub-sub.js';
 import { statsSection } from './section-stats.js';
 
@@ -311,6 +311,13 @@ function init() {
     }
 
 
+    if (e.target.id === 'resetLocalStorage') {
+
+      console.log(`resetLocalStorage`);
+      localStorage.clear();
+  
+    }
+
 
     /* MODAL LISTENERS */
     const modalBackground = document.querySelector('.modal-background');
@@ -320,10 +327,12 @@ function init() {
     if (e.target.closest('#settings-icon')) {
 
       const comp2 = componentSma(STATE);
+      const resetLocalStorage = componentRestLocalStorage();
+
       const html2 = openModalWith({
         title: 'Settings',
         version: STATE.get('version'),
-        props: comp2,
+        props: [comp2, resetLocalStorage],
       });
 
       masterModal.innerHTML = html2;
@@ -443,6 +452,8 @@ function init() {
     }
     // e.preventDefault();
   }
+
+
 
 }
 

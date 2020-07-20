@@ -18,6 +18,10 @@ function componentSma(props) {
   return h;
 }
 
+function componentRestLocalStorage() {
+  return html`<div><button id="resetLocalStorage">Reset Cache</button></div>`;
+}
+
 
 // function viewDataPositive({ positive, date }) {
 
@@ -63,10 +67,10 @@ function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
       <span>SMA Period:</span>
       ${top5 ? `<span>Top ${top5.length}:</span> 
         ${top5.map((item, i) => {
-          return html`
-          <span>#${i+1}:</span>
+    return html`
+          <span>#${i + 1}:</span>
           `;
-        }).join('')
+  }).join('')
       }`
       : ''}
     </div>
@@ -77,8 +81,8 @@ function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
       <span id="">${period} days</span>
       ${top5 ? `<span>.</span> 
         ${top5.map((item, i) => {
-          return html`<span>${item.attributes.NAME} @ ${item.attributes.POS_NEW}</span>`;
-        }).join('')
+        return html`<span>${item.attributes.NAME} @ ${item.attributes.POS_NEW}</span>`;
+      }).join('')
       }`
       : ''}
     </div>
@@ -93,7 +97,7 @@ function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
 //footer should be static
 
 function openModalWith({ version, title, props }) {
-
+  console.log(props);
   return html`
   <!-- <div id="masterModal" class="modal"> -->
     <div class="modal-background"></div>
@@ -108,7 +112,7 @@ function openModalWith({ version, title, props }) {
       </header>
 
       <section class="modal-card-body">
-        ${props}
+        ${props.join('')}
       </section>
 
       <footer class="modal-card-foot">
@@ -127,7 +131,7 @@ function openModalWith({ version, title, props }) {
   `;
 }
 
-export { componentSma, openModalWith, viewSma, viewAllTheData };
+export { componentSma, openModalWith, viewSma, viewAllTheData, componentRestLocalStorage };
 
 //use for template literal intellisense
 const html = (strings, ...keys) => {
