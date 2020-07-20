@@ -327,12 +327,11 @@ function init() {
     if (e.target.closest('#settings-icon')) {
 
       const comp2 = componentSma(STATE);
-      const resetLocalStorage = componentRestLocalStorage();
 
       const html2 = openModalWith({
         title: 'Settings',
         version: STATE.get('version'),
-        props: [comp2, resetLocalStorage],
+        props: comp2
       });
 
       masterModal.innerHTML = html2;

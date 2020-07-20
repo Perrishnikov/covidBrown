@@ -13,7 +13,9 @@ function componentSma(props) {
     <span style="margin-left: 6px;">Show SMA over</span>
     <input id="sma-days" inputmode="numeric" style="width:35px; background-color: beige; margin-left: 6px; margin-right: 6px; text-align: center; font-size: 16px !important;" class="input" type="number" value="${smaDays ? smaDays : 0}" />
     <span> days </span>
-</div>`;
+  </div>
+  ${componentRestLocalStorage()}
+  `;
 
   return h;
 }
@@ -97,7 +99,7 @@ function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
 //footer should be static
 
 function openModalWith({ version, title, props }) {
-  console.log(props);
+  // console.log(props.length);
   return html`
   <!-- <div id="masterModal" class="modal"> -->
     <div class="modal-background"></div>
@@ -112,7 +114,8 @@ function openModalWith({ version, title, props }) {
       </header>
 
       <section class="modal-card-body">
-        ${props.join('')}
+        ${props}
+        
       </section>
 
       <footer class="modal-card-foot">
