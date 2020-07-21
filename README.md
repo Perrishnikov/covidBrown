@@ -44,7 +44,8 @@ https://perrishnikov.github.io/covidBrown/
 * day/night mode
 * create legend
 * Deaths for stats
-* multi-select
+* Favorites
+* multi-select?
 This example shows how to iterate through a collection of objects collected by querySelectorAll. This is because querySelectorAll returns a NodeList (which is a collection of objects).
 
 In this case, we return all the selected options' values on the screen:
@@ -60,5 +61,3 @@ let values = Array.prototype.map.call(elems, function(obj) {
 * change orientation to breakpoints. Check for iOS for font-size
 * look into resolution for mobile (window.devicePixelRatio}dppx)
 * stats
-  1. entity population with percentages of infected
-* multiple sma's?
