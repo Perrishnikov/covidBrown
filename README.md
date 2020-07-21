@@ -5,6 +5,7 @@ https://perrishnikov.github.io/covidBrown/
 ## v1.5
 * top 5 counties on WI popup
 * fixed bug that didn't order cases by date
+* added reset cache button 
 
 ## v1.4
 * fixed scroll/touching of bars on mobile
