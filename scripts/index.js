@@ -101,7 +101,7 @@ async function getChartData({ value, geo }) {
 
     //cached data found, return it
     if (data) {
-      console.log(`data found, returning cache`);
+      // console.log(`data found, returning cache`);
       return { cachedFeatures: data, expiry };
     }
     /* else, fetch new item and set cached item */
