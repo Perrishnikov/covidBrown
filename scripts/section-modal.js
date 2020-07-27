@@ -80,7 +80,7 @@ function viewAllTheData({ period, date, sma, positive, top5 = '', deaths }) {
     <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
       <span id="">${date}</span>
       <span id="">${positive} cases</span>
-      <span id="">${deaths}</span>
+      <span id="">${deaths? deaths : 0}</span>
       <span id="">${sma} cases</span>
       <span id="">${period} days</span>
       ${top5 ? `<span>.</span> 
