@@ -22,7 +22,7 @@ const contextStats = document.querySelector('#context-stats');
 const STATE = (function () {
   let self = {
 
-    version: '1.5',
+    version: '1.6',
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
@@ -157,7 +157,6 @@ function baseRender({ data, state }) {
     const d = new Date();
     const e = new Date(expiry);
     
-    console.log(features);
 
     svgWrapper.innerHTML = dynamicChart({
       data: features,
@@ -392,7 +391,8 @@ function init() {
               date: closest.dataset.date,
               period: closest.dataset.period,
               sma: closest.dataset.sma,
-              top5: features
+              top5: features,
+              deaths: closest.dataset.deaths
             })
           });
 
@@ -415,7 +415,8 @@ function init() {
             positive: closest.dataset.positive,
             date: closest.dataset.date,
             period: closest.dataset.period,
-            sma: closest.dataset.sma
+            sma: closest.dataset.sma,
+            deaths: closest.dataset.deaths
           })
         });
 

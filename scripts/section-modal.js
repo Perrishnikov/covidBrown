@@ -58,27 +58,29 @@ function viewSma({ period, date, sma }) {
   `;
 }
 
-function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
+function viewAllTheData({ period, date, sma, positive, top5 = '', deaths }) {
 
   return html`
   <div style="display: flex; align-items: center; font-size:1.1em;">
     <div style="line-height:1.5em; display: flex; flex-direction: column; align-items: flex-end; justify-content:space-between; margin-right:12px;">
       <span>Date:</span>
       <span>New Positive:</span>
+      <span>New Deaths:</span>
       <span>SMA:</span>
       <span>SMA Period:</span>
       ${top5 ? `<span>Top ${top5.length}:</span> 
         ${top5.map((item, i) => {
-    return html`
-          <span>#${i + 1}:</span>
-          `;
-  }).join('')
+          return html`
+            <span>#${i + 1}:</span>
+            `;
+          }).join('')
       }`
       : ''}
     </div>
     <div style="display: flex; flex-direction: column; align-items: start; justify-content:space-between; line-height:1.5em;">
       <span id="">${date}</span>
       <span id="">${positive} cases</span>
+      <span id="">${deaths}</span>
       <span id="">${sma} cases</span>
       <span id="">${period} days</span>
       ${top5 ? `<span>.</span> 
@@ -99,8 +101,8 @@ function viewAllTheData({ period, date, sma, positive, top5 = '' }) {
 //footer should be static
 
 function openModalWith({ version, title, props }) {
-  // console.log(props.length);
-  return html`
+
+return html`
   <!-- <div id="masterModal" class="modal"> -->
     <div class="modal-background"></div>
 

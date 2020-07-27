@@ -116,12 +116,13 @@ function chartAttack(params) {
 function dynamicChart(params) {
   const { data, numOfDays, highestCasesPerDay, windowHeight, orientation, sma } = params;
 
-  console.log(params);
+  // console.log(params);
   //x-axis
   let xAxisLabels = ''; //data labels (dates)
   let xBars = ''; //data values (number)
   let dateCircles = ''; // lines to connect date circles
-  let dateLines = ''; // circles around dates
+  let deathLines = '';
+
   const barWidth = 10;
   const barSpacing = 10;
   const chartWidth = (numOfDays * (barWidth + barSpacing));
@@ -183,6 +184,8 @@ function dynamicChart(params) {
     const POS_NEW = att.POS_NEW > 0 ? att.POS_NEW : 0;
     const yOffset = chartHeight - (yLineInc * yLineCount + (yTextPadding * 2)); //3 - difference with the rounding heights
 
+    const DTH_NEW = att.DTH_NEW > 0 ? att.DTH_NEW : 0;
+
     let date = new Date(att.LoadDttm);
     let day = ('0' + date.getDate()).slice(-2);
     let month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -218,8 +221,22 @@ function dynamicChart(params) {
         data-date="${fullDate}"
         data-period="${period}"
         data-sma="${average}"
+        data-deaths="${DTH_NEW}"
         />
         `;
+
+
+      //Deaths
+      deathLines += `<circle 
+        style="fill-opacity: ${DTH_NEW > 0 ? 1 : 0}; 
+        fill:whitesmoke"
+        cx="${0 + 10 + i * (barWidth + barSpacing) + (barWidth /2)}" 
+        cy="${Math.round(chartHeight - yOffset - yTextPadding - DTH_NEW * ppxPerNumber)}" 
+        data-class="sma1"
+        data-date="${date}"
+        data-period="${period}"
+        data-sma="${average}"
+        r="${barWidth / 3}"/>`;
 
 
 
@@ -239,16 +256,6 @@ function dynamicChart(params) {
         y="${Math.round(chartHeight - yOffset - yTextPadding) + 16}">
         ${display}
       </text>`;
-
-      //not being used
-      dateLines += `
-      <line 
-        x1="${0 + 10 + i * (barWidth + barSpacing) + (barWidth + barSpacing) / 4}" 
-        y1="${Math.round(chartHeight - yOffset - yTextPadding) - 6}" 
-        x2="${0 + 10 + i * (barWidth + barSpacing) + (barWidth + barSpacing) / 4}" 
-        y2="${Math.round(chartHeight - yOffset - yTextPadding) + 6}"
-        stroke="#333"
-      />`;
 
       dateCircles += `
       <circle 
@@ -325,6 +332,7 @@ function dynamicChart(params) {
         <g id="chart-x-bars">${xBars}</g>
         <g id="chart-x-axis-labels">${xAxisLabels}</g>
         <g id="chart-sma">${smaLines}${smaLegend}</g>
+        <g id="chart-deaths">${deathLines}</g>
         
       </svg>
 

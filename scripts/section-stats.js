@@ -3,7 +3,6 @@ function statsSection({ total, entity, max, pop, deaths }) {
 
   const percent = total / pop * 100;
 
-  console.log(deaths);
   return html`
   <hr style="margin-left:12px; margin-right:12px;" color="black" size="1">
   <div style="

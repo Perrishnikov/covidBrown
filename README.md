@@ -2,6 +2,9 @@
 
 https://perrishnikov.github.io/covidBrown/
 
+## v1.6 
+* The doctor is in (death)
+
 ## v1.5
 * top 5 counties on WI popup
 * fixed bug that didn't order cases by date
