@@ -116,6 +116,7 @@ function chartAttack(params) {
 function dynamicChart(params) {
   const { data, numOfDays, highestCasesPerDay, windowHeight, orientation, sma } = params;
 
+  console.log(params);
   //x-axis
   let xAxisLabels = ''; //data labels (dates)
   let xBars = ''; //data values (number)

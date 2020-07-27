@@ -156,7 +156,8 @@ function baseRender({ data, state }) {
     const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
     const d = new Date();
     const e = new Date(expiry);
-    // console.log(top5);
+    
+    console.log(features);
 
     svgWrapper.innerHTML = dynamicChart({
       data: features,
@@ -180,7 +181,8 @@ function baseRender({ data, state }) {
       total: parseData.totalCases(features),
       max: parseData.highestCasePerDayWithDate(features),
       entity: STATE.get('value'),
-      pop: STATE.get('pop')
+      pop: STATE.get('pop'),
+      deaths: parseData.doSomethingDeaths(features)
     });
 
   } else {

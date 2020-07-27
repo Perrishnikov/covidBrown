@@ -1,8 +1,9 @@
 
-function statsSection({ total, entity, max, pop }) {
+function statsSection({ total, entity, max, pop, deaths }) {
 
   const percent = total / pop * 100;
 
+  console.log(deaths);
   return html`
   <hr style="margin-left:12px; margin-right:12px;" color="black" size="1">
   <div style="
@@ -42,6 +43,13 @@ function statsSection({ total, entity, max, pop }) {
             <span style="font-weight: 700;">${numberWithCommas(max.max)}</span>
           <span> on ${max.date}</span>
         </div>
+
+        ${deaths ? html`
+          <div>
+            <span style="margin-right:6px;">Total Deaths:</span>
+              <span style="font-weight: 700;">${numberWithCommas(deaths)}</span>
+          </div>
+        ` : ''}
         
 
     </div>

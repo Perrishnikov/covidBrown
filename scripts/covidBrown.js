@@ -8,7 +8,7 @@
  */
 function getUrl(value, geo) {
   // const url = '../data/sampleQuery2.json'; //local
-  const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,POS_NEW,NEG_NEW,DTH_NEW,DEATHS,TEST_NEW&outSR=4326&f=json&orderByFields=DATE`;
+  const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW&outSR=4326&f=json&orderByFields=DATE`;
 
   return url;
 }
@@ -128,6 +128,16 @@ const parseData = {
       }
     });
     return {max, date};
+  },
+
+  doSomethingDeaths: features => {
+    const [...clone] = features;
+
+    const reduced = clone.reduce((acc, curr) => {
+      return acc + curr.attributes.DTH_NEW;
+    }, 0);
+
+    return reduced;
   }
 };
 
