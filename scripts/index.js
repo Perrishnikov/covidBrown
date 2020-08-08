@@ -187,7 +187,7 @@ function baseRender({ data, state }) {
   } else {
 
     svgWrapper.innerHTML = errors.map(error => {
-      return `<div>${error}</div>`;
+      return `<div>${error} in data. </div>`;
     }).join('');
   }
 
@@ -372,7 +372,7 @@ function init() {
     if (closest) {
 
       const date = closest.dataset.date;
-
+console.log(`date: ${date}`);
       //Get the Top5 
       const { json, errors } = await fetchData(getTop5Url(date));
 

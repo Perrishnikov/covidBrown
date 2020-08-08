@@ -8,7 +8,7 @@
  */
 function getUrl(value, geo) {
   // const url = '../data/sampleQuery2.json'; //local
-  const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW&outSR=4326&f=json&orderByFields=DATE`;
+  const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE&outSR=4326&f=json&orderByFields=DATE`;
 
   return url;
 }
@@ -18,9 +18,11 @@ function getTop5Url(date){
   // format = 07/17/2020
 
   //https://enterprise.arcgis.com/en/portal/latest/use/work-with-date-fields.htm
-  const top5 = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO %3D 'County' AND DATE %3D '${date} 2:00:00 PM'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,LoadDttm,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW, NEG_NEW, TEST_NEW&outSR=4326&f=json&orderByFields=POS_NEW DESC&resultRecordCount=10`;
+  const oldTop5 = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO %3D 'County' AND DATE %3D '${date} 2:00:00:00 PM'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE&outSR=4326&f=json&orderByFields=POS_NEW DESC&resultRecordCount=10`;
 
-  return top5;
+  const newTop5 = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO = 'county' AND DATE >= TIMESTAMP '${date} 14:00:00' AND DATE <= TIMESTAMP '${date} 23:59:59'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE&f=json&orderByFields=POS_NEW DESC&resultRecordCount=10`;
+
+  return newTop5;
 }
 
 /**
@@ -87,7 +89,7 @@ const parseData = {
     /**@type {number} */
     let value;
     const sma = data.map((element, index, arr) => {
-      date = new Date(arr[index].attributes.LoadDttm).toLocaleDateString();
+      date = new Date(arr[index].attributes.DATE).toLocaleDateString();
 
       if (index < period) {
         value = null;
@@ -124,7 +126,7 @@ const parseData = {
       if (day.attributes.POS_NEW > max) {
         max = day.attributes.POS_NEW;
         
-        date = new Date(day.attributes.LoadDttm).toLocaleDateString();
+        date = new Date(day.attributes.DATE).toLocaleDateString();
       }
     });
     return {max, date};
