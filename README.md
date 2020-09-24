@@ -2,6 +2,9 @@
 
 https://perrishnikov.github.io/covidBrown/
 
+## v1.61 
+* Fixed query
+
 ## v1.6 
 * The doctor is in (death)
 

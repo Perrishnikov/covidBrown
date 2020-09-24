@@ -8,7 +8,9 @@
  */
 function getUrl(value, geo) {
   // const url = '../data/sampleQuery2.json'; //local
-  const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE&outSR=4326&f=json&orderByFields=DATE`;
+  // const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE&outSR=4326&f=json&orderByFields=DATE&resultRecordCount=365`;
+
+  const url = `https://dhsgis.wi.gov/server/rest/services/DHS_COVID19/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE%2CDATE&f=json&resultRecordCount=365`;
 
   return url;
 }
@@ -22,7 +24,10 @@ function getTop5Url(date){
 
   const newTop5 = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO = 'county' AND DATE >= TIMESTAMP '${date} 14:00:00' AND DATE <= TIMESTAMP '${date} 23:59:59'&returnGeometry=false&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE&f=json&orderByFields=POS_NEW DESC&resultRecordCount=10`;
 
-  return newTop5;
+
+  const newerTop5 = `https://dhsgis.wi.gov/server/rest/services/DHS_COVID19/COVID19_WI/FeatureServer/10/query?returnGeometry=false&f=json&orderByFields=POS_NEW DESC&resultRecordCount=10&where=GEO = 'county' AND DATE >= TIMESTAMP '${date} 14:00:00' AND DATE <= TIMESTAMP '${date} 23:59:59'&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE`;
+
+  return newerTop5;
 }
 
 /**

@@ -22,7 +22,7 @@ const contextStats = document.querySelector('#context-stats');
 const STATE = (function () {
   let self = {
 
-    version: '1.6',
+    version: '1.61',
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
@@ -108,6 +108,7 @@ async function getChartData({ value, geo }) {
     else {
       const { json, errors } = await fetchData(getUrl(value, geo));
 
+
       console.log(`fetched new data for ${value}...`);
       /* check for fetching error */
       if (errors.length === 0) {
@@ -116,6 +117,7 @@ async function getChartData({ value, geo }) {
 
         /* check for parsing errors */
         if (validationErrors.length === 0) {
+          // console.log(features);
           let key = await setWithExpiry(value, features);
           //? message to DOM that this was fetched?
           // eslint-disable-next-line no-shadow
@@ -174,7 +176,7 @@ function baseRender({ data, state }) {
     // TODO - scrollingSvg created in chartAttack - needs to be disconnected 
     // const scrollingDiv = document.querySelector('#scrolling-div');
     // scrollingDiv.scrollLeft = scrollingDiv.scrollLeftMax;
-    document.querySelector('#scrolling-div').scrollLeft += 5000;
+    document.querySelector('#scrolling-div').scrollLeft += 20000;
 
     contextStats.innerHTML = statsSection({
       total: parseData.totalCases(features),
@@ -376,6 +378,7 @@ console.log(`date: ${date}`);
       //Get the Top5 
       const { json, errors } = await fetchData(getTop5Url(date));
 
+      console.log(json);
       /* check for fetching error */
       if (errors.length === 0) {
         const { features, validationErrors } = validateFeatures(json);
