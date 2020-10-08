@@ -10,7 +10,7 @@ function getUrl(value, geo) {
   // const url = '../data/sampleQuery2.json'; //local
   // const url = `https://services1.arcgis.com/ISZ89Z51ft1G16OK/ArcGIS/rest/services/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&returnGeometry=true&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE&outSR=4326&f=json&orderByFields=DATE&resultRecordCount=365`;
 
-  const url = `https://dhsgis.wi.gov/server/rest/services/DHS_COVID19/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE%2CDATE&f=json&resultRecordCount=365`;
+  const url = `https://dhsgis.wi.gov/server/rest/services/DHS_COVID19/COVID19_WI/FeatureServer/10/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE%2CDATE&f=json&orderByFields=DATE&resultRecordCount=365`;
 
   return url;
 }

@@ -2,6 +2,9 @@
 
 https://perrishnikov.github.io/covidBrown/
 
+## v1.62 
+* Fixed orderby on main query
+
 ## v1.61 
 * Fixed query
 

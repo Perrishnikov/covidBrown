@@ -22,7 +22,7 @@ const contextStats = document.querySelector('#context-stats');
 const STATE = (function () {
   let self = {
 
-    version: '1.61',
+    version: '1.62',
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
