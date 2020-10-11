@@ -11,6 +11,8 @@ async function fetchData(url) {
   if (response.status == 200) {
     const json = await response.json();
 
+    //! console.log(json);
+
     if (json) {
       return { json, errors: [] };
     } else {

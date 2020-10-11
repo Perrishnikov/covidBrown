@@ -2,6 +2,9 @@
 
 https://perrishnikov.github.io/covidBrown/
 
+## v1.63
+* They moved server for state to 11, and 12 for counties
+
 ## v1.62 
 * Fixed orderby on main query
 

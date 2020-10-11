@@ -22,7 +22,7 @@ const contextStats = document.querySelector('#context-stats');
 const STATE = (function () {
   let self = {
 
-    version: '1.62',
+    version: '1.63',
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
@@ -158,7 +158,7 @@ function baseRender({ data, state }) {
     const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
     const d = new Date();
     const e = new Date(expiry);
-    
+
 
     svgWrapper.innerHTML = dynamicChart({
       data: features,
@@ -319,7 +319,7 @@ function init() {
 
       console.log(`resetLocalStorage`);
       localStorage.clear();
-  
+
     }
 
 
@@ -374,7 +374,7 @@ function init() {
     if (closest) {
 
       const date = closest.dataset.date;
-console.log(`date: ${date}`);
+
       //Get the Top5 
       const { json, errors } = await fetchData(getTop5Url(date));
 
