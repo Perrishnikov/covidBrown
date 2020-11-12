@@ -8,10 +8,11 @@
 async function fetchData(url) {
   const response = await fetch(url);
 
+  console.log(response);
   if (response.status == 200) {
     const json = await response.json();
 
-    //! console.log(json);
+    //  console.log(json);
 
     if (json) {
       return { json, errors: [] };

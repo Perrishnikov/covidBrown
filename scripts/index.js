@@ -22,7 +22,7 @@ const contextStats = document.querySelector('#context-stats');
 const STATE = (function () {
   let self = {
 
-    version: '1.63',
+    version: '1.64',
     smaIsChecked: true,
     smaDays: 7,
     geo: '',
@@ -82,7 +82,9 @@ const STATE = (function () {
 // eslint-disable-next-line no-unused-vars
 const SUBS = events.subscribe('UPDATE', async (state) => {
   //Get data from local or fetch it, and render it
+  
   const data = await getChartData(state);
+  // console.log(data);
   baseRender({ data, state });
 });
 
