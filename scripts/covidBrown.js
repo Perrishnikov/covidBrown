@@ -27,7 +27,7 @@ function getUrl(value, geo) {
     // const allCountiesUrl = `https://dhsgis.wi.gov/server/rest/services/DHS_COVID19/COVID19_WI/FeatureServer/12/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE%2CDATE&f=json&orderByFields=DATE&resultRecordCount=365`;
 
     //11-12-20
-    const allCountiesUrl = `https://dhsgis.wi.gov/server/rest/services/DHS_COVID19/COVID19_WI/MapServer/12/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE%2CDATE&f=json&orderByFields=DATE&resultRecordCount=365`;
+    const allCountiesUrl = `https://dhsgis.wi.gov/server/rest/services/DHS_COVID19/COVID19_WI/MapServer/12/query?where=GEO%3D'${geo}'AND NAME%3D'${value}'&outFields=OBJECTID,GEO,NAME,NEGATIVE,POSITIVE,DEATHS,DTH_NEW,POS_NEW,NEG_NEW,TEST_NEW,DATE%2CDATE&f=json&orderByFields=DATE&resultRecordCount=730`;
 
 
 

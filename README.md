@@ -2,6 +2,9 @@
 
 https://perrishnikov.github.io/covidBrown/
 
+## v1.65
+* Changed counties return record from 365 to 730
+
 ## v1.64
 * They moved server from FeatureServer to MapServer
 
